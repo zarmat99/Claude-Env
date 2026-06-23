@@ -34,7 +34,10 @@ export class LightingSystem {
     update(worldTime, playerX, playerY) {
         const gameHour = this.getGameHour(worldTime);
         const alpha = this.calculateDarknessAlpha(gameHour);
-        this.overlay.setAlpha(alpha);
+        if (Math.abs(alpha - (this._lastAlpha ?? -1)) > 0.001) {
+            this.overlay.setAlpha(alpha);
+            this._lastAlpha = alpha;
+        }
 
         // Only redraw torch graphics when transitioning or torches exist
         if (alpha > 0.05 && this.torches.length > 0) {

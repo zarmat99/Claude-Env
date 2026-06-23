@@ -64,6 +64,16 @@ export class Enemy {
     update(playerSprite, playerData, tileMap, delta) {
         if (!this.alive) return;
 
+        // Skip expensive wander/healthbar logic for off-screen non-aggro enemies
+        if (!this.aggro) {
+            const cam = this.scene.cameras.main;
+            const onScreen = (
+                this.sprite.x > cam.scrollX - 200 && this.sprite.x < cam.scrollX + cam.width + 200 &&
+                this.sprite.y > cam.scrollY - 200 && this.sprite.y < cam.scrollY + cam.height + 200
+            );
+            if (!onScreen) return;
+        }
+
         const sx   = this.sprite.x;
         const sy   = this.sprite.y;
         const dist = Phaser.Math.Distance.Between(sx, sy, playerSprite.x, playerSprite.y);
