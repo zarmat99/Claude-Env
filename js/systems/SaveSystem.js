@@ -53,6 +53,8 @@ export function serializePlayer(player) {
         exploredTiles: uint8ArrayToBase64(player.exploredTiles),
 
         worldTime: player.worldTime,
+        ending: player.ending || null,
+        chosenAllianceFaction: player.chosenAllianceFaction || null,
         kills:     { ...player.kills },
         crafted:   { ...player.crafted },
 
@@ -107,6 +109,8 @@ export function deserializePlayer(data) {
             : new Uint8Array(40000),
 
         worldTime: data.worldTime || 0,
+        ending: data.ending || null,
+        chosenAllianceFaction: data.chosenAllianceFaction || null,
         kills:     { ...(data.kills || {}) },
         crafted:   { ...(data.crafted || {}) },
 

@@ -51,14 +51,14 @@ export const WORLD_SIZE = { width: WORLD_WIDTH, height: WORLD_HEIGHT };
 // ── Story-based world locations ──────────────────────────────────────────────
 // Coordinates reflect narrative geography; NPC spawn tiles in npcs.js align.
 export const WORLD_LOCATIONS = {
-    greyhollow:               { x:  82, y:  98, name: 'Greyhollow',               type: 'town',    size: 14 },
-    thornmere:                { x: 142, y:  52, name: 'Thornmere',                type: 'city',    size: 18 },
-    grey_penitents_monastery: { x:  78, y:  32, name: 'Grey Penitents Monastery', type: 'special', size: 10 },
-    iron_compact_hq:          { x:  30, y:  68, name: 'Iron Compact HQ',          type: 'town',    size: 12 },
-    rootwarden_sanctuary:     { x: 165, y:  85, name: 'Rootwarden Sanctuary',     type: 'special', size:  8 },
-    emberpeak:                { x: 158, y: 168, name: 'Emberpeak Caldera',        type: 'city',    size: 12 },
-    underlurk_entrance:       { x:  88, y: 148, name: 'Underlurk Entrance',       type: 'special', size:  3 },
-    abandoned_farmstead:      { x: 102, y: 115, name: 'Abandoned Farmstead',      type: 'special', size:  4 },
+    greyhollow:               { x:  82, y:  98, name: 'Greyhollow',               type: 'town',    size: 22 },
+    thornmere:                { x: 142, y:  52, name: 'Thornmere',                type: 'city',    size: 30 },
+    grey_penitents_monastery: { x:  78, y:  32, name: 'Grey Penitents Monastery', type: 'special', size: 16 },
+    iron_compact_hq:          { x:  30, y:  68, name: 'Iron Compact HQ',          type: 'town',    size: 22 },
+    rootwarden_sanctuary:     { x: 165, y:  85, name: 'Rootwarden Sanctuary',     type: 'special', size: 16 },
+    emberpeak:                { x: 158, y: 168, name: 'Emberpeak Caldera',        type: 'city',    size: 24 },
+    underlurk_entrance:       { x:  88, y: 148, name: 'Underlurk Entrance',       type: 'special', size:  7 },
+    abandoned_farmstead:      { x: 102, y: 115, name: 'Abandoned Farmstead',      type: 'special', size:  8 },
 };
 
 // Rootstones: world-pillar crystals that keep the Shards of Varethos aloft.
@@ -197,6 +197,18 @@ export function generateWorld(seed = 12345) {
         clearRing(tiles, pos.x, pos.y, 1, TILE.DIRT);
     }
 
+    // Shape the campaign spaces as real, traversable regions rather than isolated markers.
+    placeStoryRegions(tiles);
+
+    // Keep story-critical NPC positions and their immediate approach walkable.
+    const civicPoints = [
+        [85,80], [165,85], [143,50], [30,68], [78,32],
+        [85,102], [83,100], [82,94], [75,104], [138,53],
+        [108,80], [88,150], [148,82], [102,115], [76,33]
+    ];
+    for (const [x, y] of civicPoints) clearRing(tiles, x, y, 1, TILE.STONE_FLOOR);
+    for (const [x, y] of civicPoints) tiles[y * WORLD_WIDTH + x] = TILE.STONE_FLOOR;
+
     const metadata = {
         towns:     Object.entries(WORLD_LOCATIONS)
                        .filter(([, l]) => l.type === 'town' || l.type === 'city')
@@ -220,7 +232,7 @@ function placeSettlement(tiles, loc, locationId) {
     if (locationId === 'abandoned_farmstead')  { placeFarmstead(tiles, x, y, half); return; }
     if (locationId === 'underlurk_entrance')   { placeUnderlurk(tiles, x, y, half); return; }
 
-    // General walled settlement (town / city / monastery / HQ)
+    // General walled settlement with broad avenues, districts and enterable buildings.
     for (let dy = -half; dy <= half; dy++) {
         for (let dx = -half; dx <= half; dx++) {
             const tx = x + dx, ty = y + dy;
@@ -234,34 +246,41 @@ function placeSettlement(tiles, loc, locationId) {
                 continue;
             }
 
-            // Main cross-roads through the centre
-            if (dx === 0 || dy === 0) { tiles[idx] = TILE.ROAD; continue; }
-
-            // Building blocks: one per quadrant, offset from the crossroads
-            const bLo = 2, bHi = Math.min(half - 2, 5);
-            if (adx >= bLo && adx <= bHi && ady >= bLo && ady <= bHi) {
-                const onWall = (adx === bLo || adx === bHi || ady === bLo || ady === bHi);
-                tiles[idx] = onWall ? TILE.STONE_WALL : TILE.STONE_FLOOR;
-                continue;
-            }
-
-            tiles[idx] = TILE.STONE_FLOOR;
+            // Main cross-roads are three tiles wide in larger settlements.
+            const avenue = size >= 20 ? 1 : 0;
+            tiles[idx] = (adx <= avenue || ady <= avenue) ? TILE.ROAD : TILE.STONE_FLOOR;
         }
     }
 
-    // For city-size settlements add an extra inner road ring
+    // Larger settlements get a navigable inner ring road.
     if (size >= 16) {
-        for (let dz = -half + 7; dz <= half - 7; dz++) {
-            const tx1 = x + dz, ty1 = y + (half - 7);
-            const tx2 = x + dz, ty2 = y - (half - 7);
-            const tx3 = x + (half - 7), ty3 = y + dz;
-            const tx4 = x - (half - 7), ty4 = y + dz;
+        const ring = Math.max(4, half - 4);
+        for (let dz = -ring; dz <= ring; dz++) {
+            const tx1 = x + dz, ty1 = y + ring;
+            const tx2 = x + dz, ty2 = y - ring;
+            const tx3 = x + ring, ty3 = y + dz;
+            const tx4 = x - ring, ty4 = y + dz;
             for (const [tx, ty] of [[tx1,ty1],[tx2,ty2],[tx3,ty3],[tx4,ty4]]) {
                 if (tx >= 0 && tx < WORLD_WIDTH && ty >= 0 && ty < WORLD_HEIGHT) {
-                    const t = tiles[ty * WORLD_WIDTH + tx];
-                    if (t === TILE.STONE_FLOOR) tiles[ty * WORLD_WIDTH + tx] = TILE.ROAD;
+                    tiles[ty * WORLD_WIDTH + tx] = TILE.ROAD;
                 }
             }
+        }
+    }
+
+    // Stamp many small buildings between the roads. Every building has a real door.
+    const stride = size >= 26 ? 6 : 7;
+    for (let by = -half + 2; by <= half - 5; by += stride) {
+        for (let bx = -half + 2; bx <= half - 5; bx += stride) {
+            const cx = bx + 2;
+            const cy = by + 2;
+            const avenue = size >= 20 ? 2 : 1;
+            if (Math.abs(cx) <= avenue || Math.abs(cy) <= avenue) continue;
+            if (size >= 16) {
+                const ring = Math.max(4, half - 4);
+                if (Math.abs(Math.abs(cx) - ring) <= 2 || Math.abs(Math.abs(cy) - ring) <= 2) continue;
+            }
+            placeBuilding(tiles, x + bx, y + by, 5, 5, cx, cy);
         }
     }
 
@@ -271,6 +290,65 @@ function placeSettlement(tiles, loc, locationId) {
     // Central landmark tile
     if (y >= 0 && y < WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH) {
         tiles[y * WORLD_WIDTH + x] = centralLandmark(locationId);
+    }
+}
+
+function placeStoryRegions(tiles) {
+    // Underlurk: a broad carved cavern with two surface connections.
+    for (let y = 146; y <= 164; y++) {
+        for (let x = 86; x <= 104; x++) {
+            const edge = x === 86 || x === 104 || y === 146 || y === 164;
+            tiles[y * WORLD_WIDTH + x] = edge ? TILE.CAVE_WALL : TILE.CAVE_FLOOR;
+        }
+    }
+    for (const [x, y] of [[88,146], [88,148], [104,160]]) {
+        tiles[y * WORLD_WIDTH + x] = TILE.CAVE_ENTRANCE;
+    }
+    drawLine(tiles, 88, 148, 100, 160);
+
+    // Deep Aetherwood trail and Heart Grove.
+    drawLine(tiles, 165, 85, 180, 100);
+    for (const [cx, cy, radius, fill] of [
+        [174,92,3,TILE.DARK_FOREST], [180,100,4,TILE.GRASS],
+        [173,103,2,TILE.DARK_FOREST], [102,115,3,TILE.DIRT],
+        [82,82,3,TILE.DIRT], [84,84,2,TILE.DIRT]
+    ]) {
+        clearArea(tiles, cx, cy, radius, fill);
+    }
+    tiles[82 * WORLD_WIDTH + 82] = TILE.ROOTSTONE;
+
+    // Emberpeak pilgrimage path: volcanic ground remains dramatic but walkable.
+    drawLine(tiles, 158, 168, 158, 178);
+    clearArea(tiles, 158, 173, 6, TILE.VOLCANIC);
+    tiles[173 * WORLD_WIDTH + 156] = TILE.LAVA;
+    tiles[175 * WORLD_WIDTH + 161] = TILE.LAVA;
+}
+
+function clearArea(tiles, cx, cy, radius, fill) {
+    for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+            if (dx * dx + dy * dy > radius * radius) continue;
+            const x = cx + dx, y = cy + dy;
+            if (x < 0 || x >= WORLD_WIDTH || y < 0 || y >= WORLD_HEIGHT) continue;
+            tiles[y * WORLD_WIDTH + x] = fill;
+        }
+    }
+}
+
+function placeBuilding(tiles, left, top, width, height, relCenterX, relCenterY) {
+    const doorOnVerticalSide = Math.abs(relCenterX) > Math.abs(relCenterY);
+    const doorX = doorOnVerticalSide ? (relCenterX > 0 ? left : left + width - 1) : left + Math.floor(width / 2);
+    const doorY = doorOnVerticalSide ? top + Math.floor(height / 2) : (relCenterY > 0 ? top : top + height - 1);
+
+    for (let y = top; y < top + height; y++) {
+        for (let x = left; x < left + width; x++) {
+            if (x < 0 || x >= WORLD_WIDTH || y < 0 || y >= WORLD_HEIGHT) continue;
+            const edge = x === left || x === left + width - 1 || y === top || y === top + height - 1;
+            tiles[y * WORLD_WIDTH + x] = edge ? TILE.STONE_WALL : TILE.STONE_FLOOR;
+        }
+    }
+    if (doorX >= 0 && doorX < WORLD_WIDTH && doorY >= 0 && doorY < WORLD_HEIGHT) {
+        tiles[doorY * WORLD_WIDTH + doorX] = TILE.ROAD;
     }
 }
 
@@ -372,15 +450,16 @@ function placeUnderlurk(tiles, x, y, half) {
 }
 
 function placeStation(tiles, x, y) {
-    // 3×3 stone monitoring hut
-    for (let dy = -1; dy <= 1; dy++) {
-        for (let dx = -1; dx <= 1; dx++) {
+    // 5×5 monitoring hut with an actual southern doorway and interior console.
+    for (let dy = -2; dy <= 2; dy++) {
+        for (let dx = -2; dx <= 2; dx++) {
             const tx = x+dx, ty = y+dy;
             if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
-            const onEdge = (Math.abs(dx) === 1 || Math.abs(dy) === 1);
+            const onEdge = (Math.abs(dx) === 2 || Math.abs(dy) === 2);
             tiles[ty * WORLD_WIDTH + tx] = onEdge ? TILE.STONE_WALL : TILE.STONE_FLOOR;
         }
     }
+    tiles[(y + 2) * WORLD_WIDTH + x] = TILE.ROAD;
     // Data crystal chest inside
     if (y >= 0 && y < WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH)
         tiles[y * WORLD_WIDTH + x] = TILE.CHEST;

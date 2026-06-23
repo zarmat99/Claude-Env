@@ -4,6 +4,7 @@ import { TILE } from './Biomes.js';
 import { getTile, isPassable, WORLD_SIZE } from './WorldGen.js';
 
 const TILE_SIZE = 16;
+const ATLAS_TILE_SIZE = 32;
 
 export class TileMap {
     constructor(scene, tiles, biomeMap) {
@@ -71,10 +72,10 @@ export class TileMap {
                 const screenX    = (col - 1) * TILE_SIZE - subX;
                 const screenY    = (row - 1) * TILE_SIZE - subY;
 
-                // Atlas layout: 25 tiles × 16px wide in a single row — srcX = tileId * 16
+                // Generated atlas: 25 detailed 32px tiles rendered at the 16px world scale.
                 this.ctx.drawImage(
                     this.tilesAtlas,
-                    tileId * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE,
+                    tileId * ATLAS_TILE_SIZE, 0, ATLAS_TILE_SIZE, ATLAS_TILE_SIZE,
                     screenX, screenY, TILE_SIZE, TILE_SIZE
                 );
             }

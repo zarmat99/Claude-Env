@@ -376,6 +376,7 @@ export const QUESTS = {
         ],
         onComplete: [
           { type: 'set_flag',      flag: 'void_anchors_located' },
+          { type: 'give_item',     itemId: 'resonance_sample', quantity: 3 },
           { type: 'advance_stage', quest: 'main_act4', stage: 'destroy_anchors' }
         ]
       },

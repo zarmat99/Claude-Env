@@ -8,9 +8,10 @@ import { NPC } from '../entities/NPC.js';
 import { Enemy } from '../entities/Enemy.js';
 import { HUD } from '../ui/HUD.js';
 import { MobileControls } from '../ui/MobileControls.js';
-import { subscribeToEvents } from '../systems/QuestSystem.js';
+import { subscribeToEvents } from '../systems/CampaignQuestSystem.js';
 import { save as saveGame } from '../systems/SaveSystem.js';
 import { addItem } from '../systems/InventorySystem.js';
+import { StoryWorldSystem } from '../systems/StoryWorldSystem.js';
 import EventBus from '../systems/EventBus.js';
 
 const TILE_SIZE = 16;
@@ -51,10 +52,15 @@ export default class GameScene extends Phaser.Scene {
         // Spawn NPCs near starting area
         this.npcs = [];
         this.spawnNPCs(worldData);
+        if (player.flags.has('cael_dead')) this.setNpcVisible('cael', false);
+        if (player.flags.has('elder_sathis_dead')) this.setNpcVisible('elder_sathis', false);
 
         // Spawn enemies
         this.enemies = [];
         this.spawnEnemies(worldData);
+
+        // Physical story sites, bosses, rituals, herbs and side-quest encounters.
+        this.storyWorld = new StoryWorldSystem(this);
 
         // World items group
         this.worldItems = this.add.group();
@@ -98,6 +104,10 @@ export default class GameScene extends Phaser.Scene {
         EventBus.on('dialogue_end',      this.onDialogueEnd,    this);
         EventBus.on('show_notification', this.showNotification, this);
         EventBus.on('item_collected',    this.onItemCollected,  this);
+        EventBus.on('trigger_ending',    this.onTriggerEnding,  this);
+        EventBus.on('flag_set',          this.onFlagSet,        this);
+        EventBus.on('world_state_changed', this.onWorldStateChanged, this);
+        EventBus.on('quest_stage_complete', this.onQuestStageComplete, this);
 
         // Quest system event wiring
         subscribeToEvents(() => this.registry.get('player'), this);
@@ -173,7 +183,6 @@ export default class GameScene extends Phaser.Scene {
         const flags  = (player && player.flags) || new Set();
         for (const npcData of Object.values(NPCS)) {
             if (!npcData.spawnTile) continue;
-            if (npcData.unlockFlag && !flags.has(npcData.unlockFlag)) continue;
             const px = npcData.spawnTile.x * TILE_SIZE + TILE_SIZE / 2;
             const py = npcData.spawnTile.y * TILE_SIZE + TILE_SIZE / 2;
             const npc = new NPC(this, px, py, npcData);
@@ -233,11 +242,18 @@ export default class GameScene extends Phaser.Scene {
         const range = TILE_SIZE * 1.8;
 
         for (const npc of this.npcs) {
+            if (npc.sprite.visible === false) continue;
             const dist = Phaser.Math.Distance.Between(px, py, npc.sprite.x, npc.sprite.y);
             if (dist < range) {
                 this.hud.showInteractHint(`[E] Talk to ${npc.data.name}`);
                 return;
             }
+        }
+
+        const storyHint = this.storyWorld?.getHint();
+        if (storyHint) {
+            this.hud.showInteractHint(storyHint);
+            return;
         }
 
         // Check for chests
@@ -280,13 +296,20 @@ export default class GameScene extends Phaser.Scene {
         const range = TILE_SIZE * 1.8;
 
         for (const npc of this.npcs) {
+            if (npc.sprite.visible === false) continue;
             const dist = Phaser.Math.Distance.Between(px, py, npc.sprite.x, npc.sprite.y);
             if (dist < range) {
-                this.scene.launch('Dialogue', { npcId: npc.data.id, dialogueTree: npc.data.dialogueRoot });
+                if (this.storyWorld?.tryNpcChoice(npc.data.id)) return;
+                this.scene.launch('Dialogue', {
+                    npcId: npc.data.id,
+                    dialogueTree: this.resolveDialogueTree(npc.data)
+                });
                 this.scene.pause('Game');
                 return;
             }
         }
+
+        if (this.storyWorld?.interactNearest()) return;
 
         // Check tile under player for interactable features
         const tx = Math.floor(px / TILE_SIZE);
@@ -327,7 +350,9 @@ export default class GameScene extends Phaser.Scene {
     }
 
     onCombatEnd(result, loot) {
-        if (this.scene.isPaused('Game')) this.scene.resume('Game');
+        if (this.scene.isPaused('Game') && !this.scene.isActive('Story') && !this.scene.isActive('Ending')) {
+            this.scene.resume('Game');
+        }
 
         if (result === 'victory' && loot && loot.length > 0) {
             const player = this.registry.get('player');
@@ -349,11 +374,71 @@ export default class GameScene extends Phaser.Scene {
     }
 
     onDialogueEnd(npcId) {
-        if (this.scene.isPaused('Game')) this.scene.resume('Game');
+        if (this.scene.isPaused('Game') && !this.scene.isActive('Story') && !this.scene.isActive('Ending')) {
+            this.scene.resume('Game');
+        }
     }
 
     onItemCollected(itemId, qty) {
         EventBus.emit('show_notification', `Picked up: ${itemId.replace(/_/g, ' ')} x${qty}`, '#aabb88');
+    }
+
+    onTriggerEnding(endingId) {
+        if (!this.scene.isActive('Ending')) {
+            this.scene.launch('Ending', { endingId });
+            this.scene.pause('Game');
+        }
+    }
+
+    onFlagSet(flag) {
+        if (flag === 'cael_dead') this.setNpcVisible('cael', false);
+        if (flag === 'elder_sathis_dead') this.setNpcVisible('elder_sathis', false);
+    }
+
+    setNpcVisible(npcId, visible) {
+        const npc = this.npcs.find(entry => entry.data.id === npcId);
+        if (!npc) return;
+        npc.sprite.setVisible(visible);
+        npc.nameLabel.setVisible(visible);
+        if (npc.titleLabel) npc.titleLabel.setVisible(visible);
+    }
+
+    onWorldStateChanged(change) {
+        if (change !== 'thornpillar_destroyed') return;
+        const worldData = this.registry.get('worldData');
+        if (worldData?.tiles) {
+            worldData.tiles[82 * 200 + 82] = TILE.CAVE_ENTRANCE;
+            this.tileMap.setTiles(worldData.tiles);
+        }
+    }
+
+    onQuestStageComplete(questId, stageId, nextStageId) {
+        if (questId === 'main_act2' && nextStageId === 'cael_assassination') {
+            this.setNpcVisible('cael', false);
+            this.scene.launch('Story', {
+                mode: 'narrative',
+                title: 'A Light Extinguished',
+                body: 'A Greyhollow bell sounds before dawn. Warden Cael has been murdered at Station Verath. The wound is precise; the arcane residue is not. Whatever he discovered frightened someone enough to silence him.'
+            });
+            this.scene.pause('Game');
+        }
+        if (questId === 'main_act3' && nextStageId === 'escape_underlurk') {
+            EventBus.emit('show_notification', 'Cult bells sound through the Chasm. Reach the northern exit!', '#ff7777');
+        }
+    }
+
+    resolveDialogueTree(npcData) {
+        const player = this.registry.get('player');
+        if (!player) return npcData.dialogueRoot;
+        if (npcData.id === 'cael' && player.quests.active.has('main_act1')) {
+            return npcData.dialogueActiveQuest || npcData.dialogueRoot;
+        }
+        if (npcData.id === 'elder_sathis') {
+            return player.flags.has('sathis_met') || player.quests.completed.has('main_act1')
+                ? (npcData.dialogueOngoing || npcData.dialogueRoot)
+                : npcData.dialogueRoot;
+        }
+        return npcData.dialogueRoot;
     }
 
     showNotification(text, color = '#ffffff') {
@@ -401,5 +486,10 @@ export default class GameScene extends Phaser.Scene {
         EventBus.off('dialogue_end',      this.onDialogueEnd,    this);
         EventBus.off('show_notification', this.showNotification, this);
         EventBus.off('item_collected',    this.onItemCollected,  this);
+        EventBus.off('trigger_ending',    this.onTriggerEnding,  this);
+        EventBus.off('flag_set',          this.onFlagSet,        this);
+        EventBus.off('world_state_changed', this.onWorldStateChanged, this);
+        EventBus.off('quest_stage_complete', this.onQuestStageComplete, this);
+        if (this.storyWorld) this.storyWorld.destroy();
     }
 }

@@ -18,7 +18,7 @@ import { addXP, getSkillLevel, getXPToNextLevel } from '../js/systems/SkillSyste
 import {
     subscribeToEvents, startQuest, advanceStage,
     isQuestActive, isQuestComplete, getActiveObjectives
-} from '../js/systems/QuestSystem.js';
+} from '../js/systems/CampaignQuestSystem.js';
 import { changeRep, getRep, getDisposition } from '../js/systems/FactionSystem.js';
 import { start as dlgStart, selectChoice as dlgChoose, isDialogueActive } from '../js/systems/DialogueSystem.js';
 import { craft, canCraft, getKnownRecipes } from '../js/systems/CraftingSystem.js';

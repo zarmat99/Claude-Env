@@ -8,6 +8,8 @@ import InventoryScene from './scenes/InventoryScene.js';
 import DialogueScene from './scenes/DialogueScene.js';
 import WorldMapScene from './scenes/MapScene.js';
 import CraftingScene from './scenes/CraftingScene.js';
+import StoryScene from './scenes/StoryScene.js';
+import EndingScene from './scenes/EndingScene.js';
 import { installGameAPI } from './api/GameAPI.js';
 
 const config = {
@@ -22,7 +24,7 @@ const config = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
-    scene: [BootScene, PreloadScene, MainMenuScene, CharacterCreateScene, GameScene, CombatScene, InventoryScene, DialogueScene, WorldMapScene, CraftingScene],
+    scene: [BootScene, PreloadScene, MainMenuScene, CharacterCreateScene, GameScene, CombatScene, InventoryScene, DialogueScene, WorldMapScene, CraftingScene, StoryScene, EndingScene],
     physics: {
         default: 'arcade',
         arcade: { debug: false }

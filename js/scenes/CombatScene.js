@@ -54,7 +54,7 @@ export default class CombatScene extends Phaser.Scene {
         const eKey = enemy.spriteKey;
         if (this.textures.exists(eKey)) {
             this.enemySprite = this.add.image(enemyPanelX, enemyPanelY - 20, eKey)
-                .setScale(3).setDepth(2);
+                .setDisplaySize(enemy.isBoss ? 92 : 72, enemy.isBoss ? 104 : 82).setDepth(2);
         } else {
             this.enemySprite = this.add.rectangle(enemyPanelX, enemyPanelY - 20, 48, 60, 0xcc3333)
                 .setDepth(2);
@@ -312,6 +312,7 @@ export default class CombatScene extends Phaser.Scene {
     endCombat(result, loot = []) {
         if (this.ended) return;
         this.ended = true;
+        this.pendingLoot = loot;
         this.setActionsEnabled(false);
         this.input.keyboard.removeAllListeners();
 

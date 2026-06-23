@@ -1,6 +1,6 @@
 // DialogueSystem.js — Interprets and drives dialogue trees for Aethermoor NPCs
 import EventBus from './EventBus.js';
-import { startQuest, advanceStage, isQuestActive, isQuestComplete } from './QuestSystem.js';
+import { startQuest, advanceStage, isQuestActive, isQuestComplete } from './CampaignQuestSystem.js';
 import { addItem, removeItem, hasItem } from './InventorySystem.js';
 import { changeRep, getRep, getDisposition } from './FactionSystem.js';
 
@@ -42,9 +42,7 @@ export async function start(treeId, player, npcId) {
     _state.npcId       = npcId;
     _state.player      = player;
     _state.tree        = tree;
-    _state.currentNode = tree.nodes[tree.startNode] || tree.nodes[Object.keys(tree.nodes)[0]];
-
-    EventBus.emit('npc_talked_to', npcId);
+    _state.currentNode = tree.nodes[tree.startNode || tree.root] || tree.nodes[Object.keys(tree.nodes)[0]];
 
     return getCurrentDisplay(player);
 }
@@ -68,7 +66,8 @@ export function selectChoice(choiceIndex, player, scene) {
     }
 
     // Advance to next node or end
-    if (!choice.nextNode || choice.nextNode === 'END') {
+    const nextNodeId = choice.nextNode ?? choice.next;
+    if (!nextNodeId || nextNodeId === 'END') {
         // Conversation over
         const npcId = _state.npcId;
         _clearState();
@@ -76,9 +75,9 @@ export function selectChoice(choiceIndex, player, scene) {
         return { done: true, display: null };
     }
 
-    const nextNode = _state.tree.nodes[choice.nextNode];
+    const nextNode = _state.tree.nodes[nextNodeId];
     if (!nextNode) {
-        console.warn(`[DialogueSystem] Node not found: ${choice.nextNode}`);
+        console.warn(`[DialogueSystem] Node not found: ${nextNodeId}`);
         const npcId = _state.npcId;
         _clearState();
         EventBus.emit('dialogue_end', npcId);
@@ -152,14 +151,14 @@ function evaluateSingleCondition(cond, player) {
             return !player.flags.has(cond.flag);
 
         case 'skill_gte':
-            return (player.skills[cond.skillId]?.level || 0) >= cond.value;
+            return (player.skills[cond.skillId || cond.skill]?.level || 0) >= (cond.value ?? cond.level ?? 0);
 
         case 'attribute_gte':
-            return (player.attributes[cond.attribute] || 0) >= cond.value;
+            return (player.attributes[cond.attribute] || 0) >= (cond.value ?? cond.level ?? 0);
 
         case 'rep_gte': {
-            const rep = player.factionRep[cond.factionId] || 0;
-            return rep >= cond.value;
+            const rep = player.factionRep[cond.factionId || cond.faction] || 0;
+            return rep >= (cond.value ?? cond.level ?? 0);
         }
 
         case 'disposition_gte': {
@@ -187,7 +186,8 @@ function evaluateSingleCondition(cond, player) {
             return cond.races.includes(player.race);
 
         case 'gold_gte':
-            return (player.gold || 0) >= cond.value;
+        case 'has_gold':
+            return (player.gold || 0) >= (cond.value ?? cond.amount ?? 0);
 
         default:
             console.warn(`[DialogueSystem] Unknown condition type: ${cond.type}`);
@@ -209,6 +209,9 @@ function applySingleEffect(effect, player, scene) {
     switch (effect.type) {
         case 'set_flag':
             player.flags.add(effect.flag);
+            if (effect.flag === 'concordat_alliance_offered') player.chosenAllianceFaction = 'auric_concordat';
+            if (effect.flag === 'iron_compact_alliance_offered') player.chosenAllianceFaction = 'iron_compact';
+            if (effect.flag === 'penitents_alliance_offered') player.chosenAllianceFaction = 'grey_penitents';
             EventBus.emit('flag_set', effect.flag);
             break;
 
@@ -226,7 +229,7 @@ function applySingleEffect(effect, player, scene) {
             break;
 
         case 'change_rep':
-            changeRep(player, effect.factionId, effect.amount, scene);
+            changeRep(player, effect.factionId || effect.faction, effect.amount, scene);
             break;
 
         case 'add_gold':

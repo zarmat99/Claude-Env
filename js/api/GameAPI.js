@@ -10,7 +10,7 @@ import { NPCS } from '../data/npcs.js';
 import { getItem } from '../data/items.js';
 import { addItem, equipItem, useItem, getItemCount } from '../systems/InventorySystem.js';
 import { isDialogueActive, getCurrentDisplay } from '../systems/DialogueSystem.js';
-import { getActiveObjectives } from '../systems/QuestSystem.js';
+import { getActiveObjectives } from '../systems/CampaignQuestSystem.js';
 import { save as saveGame, load as loadGame } from '../systems/SaveSystem.js';
 
 const TILE = 16;
@@ -60,7 +60,13 @@ export function installGameAPI(game) {
             const enemies = (gs.enemies || []).filter(e => e.alive)
                 .map(e => ({ id: e.enemyId, dist: d(e), aggro: e.aggro }))
                 .filter(e => e.dist <= radiusTiles).sort((a, b) => a.dist - b.dist);
-            return { npcs, enemies };
+            const story = gs.storyWorld
+                ? gs.storyWorld.getNearby(radiusTiles).map(s => ({
+                    id: s.site.id, name: s.site.name, kind: s.site.kind,
+                    dist: Math.round(s.distance)
+                }))
+                : [];
+            return { npcs, enemies, story };
         },
 
         dialogue() {
@@ -81,7 +87,9 @@ export function installGameAPI(game) {
                 enemy: st.enemy.name,
                 enemyHp: Math.max(0, Math.ceil(st.enemy.health)), enemyMaxHp: st.enemy.maxHealth,
                 playerHp: Math.ceil(st.player.derived.health),
-                round: st.round, active: st.active
+                round: st.round, active: st.active,
+                playerTurn: cs.playerTurn,
+                ended: cs.ended
             };
         },
 
@@ -91,6 +99,32 @@ export function installGameAPI(game) {
                 const def = getItem(s.itemId);
                 return { itemId: s.itemId, name: def ? def.name : s.itemId, qty: s.quantity, type: def ? def.type : '?' };
             });
+        },
+
+        // Create a normal fresh character, then enter the world.
+        async newGame({ name = 'Traveler', race = 'varesh', bonus = {} } = {}) {
+            const current = game.scene.getScenes(true)[0];
+            if (!current) return false;
+            if (!ON('CharacterCreate')) {
+                current.scene.start('CharacterCreate');
+                await sleep(120);
+            }
+            const cs = S('CharacterCreate');
+            if (!cs || typeof cs.startGame !== 'function') return false;
+            const attrs = { STR: 0, END: 0, AGI: 0, INT: 0, WIL: 0, PER: 0 };
+            let spent = 0;
+            for (const key of Object.keys(attrs)) {
+                const value = Math.max(0, Math.floor(Number(bonus[key]) || 0));
+                attrs[key] = Math.min(value, 5 - spent);
+                spent += attrs[key];
+            }
+            cs.playerName = String(name).slice(0, 20);
+            cs.selectedRace = race;
+            cs.customAttributes = attrs;
+            cs.statPoints = 5 - spent;
+            cs.startGame();
+            await sleep(250);
+            return !!P() && ON('Game');
         },
 
         // ── Movement ────────────────────────────────────────────────────────
@@ -129,6 +163,70 @@ export function installGameAPI(game) {
             return false;
         },
 
+        // Find a walkable route, then traverse it through the real movement loop.
+        async navigateTo(tileX, tileY, { timeoutMs = 90000 } = {}) {
+            const gs = GS();
+            if (!gs || !gs.playerEntity || !gs.tileMap) return false;
+            const width = 200, height = 200;
+            const startX = Math.floor(gs.playerEntity.sprite.x / TILE);
+            const startY = Math.floor(gs.playerEntity.sprite.y / TILE);
+            const targetX = Math.max(0, Math.min(width - 1, Math.floor(tileX)));
+            const targetY = Math.max(0, Math.min(height - 1, Math.floor(tileY)));
+            const startId = startY * width + startX;
+            const targetId = targetY * width + targetX;
+            const cameFrom = new Int32Array(width * height);
+            cameFrom.fill(-1);
+            const seen = new Uint8Array(width * height);
+            const queue = new Int32Array(width * height);
+            let head = 0, tail = 0;
+            queue[tail++] = startId;
+            seen[startId] = 1;
+
+            const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+            while (head < tail && !seen[targetId]) {
+                const id = queue[head++];
+                const x = id % width, y = Math.floor(id / width);
+                for (const [dx, dy] of dirs) {
+                    const nx = x + dx, ny = y + dy;
+                    if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+                    const nextId = ny * width + nx;
+                    if (seen[nextId] || !gs.tileMap.isWalkable(nx, ny)) continue;
+                    seen[nextId] = 1;
+                    cameFrom[nextId] = id;
+                    queue[tail++] = nextId;
+                }
+            }
+            if (!seen[targetId]) return false;
+
+            const reversed = [];
+            for (let id = targetId; id !== startId; id = cameFrom[id]) {
+                reversed.push({ x: id % width, y: Math.floor(id / width) });
+            }
+            reversed.reverse();
+
+            // Keep only corners, reducing hundreds of tile steps to a few straight walks.
+            const waypoints = [];
+            let lastDx = null, lastDy = null;
+            let previous = { x: startX, y: startY };
+            for (const step of reversed) {
+                const dx = step.x - previous.x, dy = step.y - previous.y;
+                if (lastDx !== null && (dx !== lastDx || dy !== lastDy)) {
+                    waypoints.push(previous);
+                }
+                lastDx = dx; lastDy = dy; previous = step;
+            }
+            if (reversed.length) waypoints.push(reversed[reversed.length - 1]);
+
+            const deadline = Date.now() + timeoutMs;
+            for (const point of waypoints) {
+                const remaining = deadline - Date.now();
+                if (remaining <= 0) return false;
+                const ok = await this.walkTo(point.x, point.y, { timeoutMs: Math.min(remaining, 15000) });
+                if (!ok || ON('Combat')) return ON('Combat');
+            }
+            return true;
+        },
+
         // ── Actions ─────────────────────────────────────────────────────────
         interact() { const gs = GS(); if (gs) gs.interact(); return true; },
         openInventory() { const gs = GS(); if (gs) gs.openInventory(); return true; },
@@ -136,6 +234,12 @@ export function installGameAPI(game) {
         openJournal() { const gs = GS(); if (gs) gs.openJournal(); return true; },
         closePanels() {
             for (const k of ['Inventory', 'WorldMap', 'Crafting']) if (ON(k)) game.scene.stop(k);
+            return true;
+        },
+        closeDialogue() {
+            const d = S('Dialogue');
+            if (!ON('Dialogue') || !d) return false;
+            d.closeDialogue();
             return true;
         },
 
@@ -146,7 +250,11 @@ export function installGameAPI(game) {
             const data = npc ? npc.data : NPCS[npcId];
             if (!data) return false;
             if (npc) this.teleport(Math.round(npc.sprite.x / TILE), Math.round(npc.sprite.y / TILE));
-            gs.scene.launch('Dialogue', { npcId: data.id, dialogueTree: data.dialogueRoot });
+            if (npc && gs.storyWorld?.tryNpcChoice(data.id)) return true;
+            gs.scene.launch('Dialogue', {
+                npcId: data.id,
+                dialogueTree: gs.resolveDialogueTree ? gs.resolveDialogueTree(data) : data.dialogueRoot
+            });
             gs.scene.pause('Game');
             return true;
         },
@@ -170,6 +278,21 @@ export function installGameAPI(game) {
             }
             return { ended: !ON('Combat'), rounds, result: this.combat() };
         },
+        combatUse(itemId) {
+            const cs = S('Combat'); const p = P();
+            if (!ON('Combat') || !cs || !p || cs.ended) return false;
+            cs.useItemInCombat(itemId, p);
+            return true;
+        },
+        combatContinue() {
+            const cs = S('Combat');
+            if (!ON('Combat') || !cs || !cs.ended) return false;
+            const loot = cs.pendingLoot || [];
+            if (cs.enemyEntity) cs.enemyEntity.die();
+            EventBus.emit('combat_end', 'victory', loot);
+            cs.scene.stop('Combat');
+            return true;
+        },
 
         // ── Inventory actions ───────────────────────────────────────────────
         equip(itemId) { const ok = equipItem(P(), itemId, GS()); EventBus.emit('hud_update'); return ok; },
@@ -187,11 +310,11 @@ export function installGameAPI(game) {
         help() {
             const groups = {
                 inspect: ['state()', 'player()', 'nearby(r)', 'dialogue()', 'combat()', 'inventory()'],
-                move:    ['setMove({up,down,left,right,run})', 'stop()', 'teleport(x,y)', 'await walkTo(x,y)'],
-                act:     ['interact()', 'talkTo(id)', 'choose(i)', 'openInventory()', 'openMap()', 'openJournal()', 'closePanels()'],
-                combat:  ['combatAction(key)', 'await autoFight()'],
+                move:    ['setMove({up,down,left,right,run})', 'stop()', 'teleport(x,y)', 'await walkTo(x,y)', 'await navigateTo(x,y)'],
+                act:     ['interact()', 'talkTo(id)', 'choose(i)', 'closeDialogue()', 'openInventory()', 'openMap()', 'openJournal()', 'closePanels()'],
+                combat:  ['combatAction(key)', 'combatUse(id)', 'combatContinue()', 'await autoFight()'],
                 items:   ['equip(id)', 'use(id)', 'give(id,qty)', 'count(id)'],
-                meta:    ['save()', 'load()', 'setTime(h)', 'heal()', 'seed()']
+                meta:    ['await newGame(opts)', 'save()', 'load()', 'setTime(h)', 'heal()', 'seed()']
             };
             console.table ? console.table(groups) : console.log(groups);
             return groups;
