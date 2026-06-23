@@ -10,7 +10,8 @@ async function ensureDialogues() {
     if (Object.keys(DIALOGUES).length > 0) return;
     try {
         const mod = await import('../data/dialogues.js');
-        DIALOGUES = mod.DIALOGUES || {};
+        // dialogues.js exports DIALOGUE_TREES (older code expected DIALOGUES)
+        DIALOGUES = mod.DIALOGUE_TREES || mod.DIALOGUES || {};
     } catch (e) {
         // dialogues.js not yet created
     }

@@ -179,9 +179,11 @@ export function generateLoot(enemy) {
         }
     }
 
-    // Always drop some gold if enemy has a goldRange
-    if (enemy.goldRange) {
-        const [min, max] = enemy.goldRange;
+    // Always drop some gold if enemy has a gold range.
+    // Enemy data defines this as `gold: [min, max]`; older code used `goldRange`.
+    const goldRange = enemy.gold || enemy.goldRange;
+    if (Array.isArray(goldRange)) {
+        const [min, max] = goldRange;
         const gold = min + Math.floor(Math.random() * (max - min + 1));
         if (gold > 0) loot.push({ itemId: 'gold_coin', quantity: gold });
     }

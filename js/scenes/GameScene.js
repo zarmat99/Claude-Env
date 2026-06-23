@@ -66,6 +66,9 @@ export default class GameScene extends Phaser.Scene {
         // On-screen touch controls (only render on touch devices)
         this.mobileControls = new MobileControls(this, player);
 
+        // Movement override set by window.GameAPI for automated play (null = off)
+        this.apiMoveState = null;
+
         // Input
         this.cursors = this.input.keyboard.createCursorKeys();
         this.wasd    = this.input.keyboard.addKeys({
@@ -111,9 +114,17 @@ export default class GameScene extends Phaser.Scene {
         const player = this.registry.get('player');
         if (!player) return;
 
-        // Update player movement (merge touch joystick state when present)
+        // Update player movement (merge touch joystick + GameAPI override when present)
         const touch = this.mobileControls ? this.mobileControls.getMoveState() : null;
-        this.playerEntity.update(this.cursors, this.wasd, this.tileMap, player, delta, touch);
+        const auto  = this.apiMoveState;
+        const merged = (touch || auto) ? {
+            left:  !!(touch && touch.left)  || !!(auto && auto.left),
+            right: !!(touch && touch.right) || !!(auto && auto.right),
+            up:    !!(touch && touch.up)    || !!(auto && auto.up),
+            down:  !!(touch && touch.down)  || !!(auto && auto.down),
+            run:   !!(touch && touch.run)   || !!(auto && auto.run)
+        } : null;
+        this.playerEntity.update(this.cursors, this.wasd, this.tileMap, player, delta, merged);
 
         // Redraw tilemap based on camera position
         const cam = this.cameras.main;

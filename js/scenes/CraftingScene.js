@@ -1,5 +1,7 @@
 import { getKnownRecipes, canCraft, craft } from '../systems/CraftingSystem.js';
 import { getSkillLevel } from '../systems/SkillSystem.js';
+import { getItemCount } from '../systems/InventorySystem.js';
+import { getItem } from '../data/items.js';
 import EventBus from '../systems/EventBus.js';
 
 const TABS = ['smithing', 'alchemy', 'smelting'];
@@ -287,7 +289,6 @@ export default class CraftingScene extends Phaser.Scene {
         y += lineH;
 
         for (const ing of recipe.ingredients) {
-            const { hasItem, getItemCount } = this._getInvHelpers();
             const have = getItemCount(player, ing.itemId);
             const has  = have >= ing.quantity;
             const itemName = this._getItemName(ing.itemId);
@@ -380,27 +381,9 @@ export default class CraftingScene extends Phaser.Scene {
 
     // ── Helpers ────────────────────────────────────────────────────────────────
 
-    _getInvHelpers() {
-        // Inline require-like pattern — avoids top-level circular imports at scene level
-        return {
-            hasItem:      (p, id, qty) => {
-                return (p.inventory || []).some(s => s && s.id === id && s.quantity >= (qty || 1));
-            },
-            getItemCount: (p, id) => {
-                const slot = (p.inventory || []).find(s => s && s.id === id);
-                return slot ? slot.quantity : 0;
-            }
-        };
-    }
-
     _getItemName(itemId) {
-        try {
-            // Attempt to get name from item data; fall back to formatted id
-            const world = this.registry.get('worldData');
-            if (world && world.items && world.items[itemId]) {
-                return world.items[itemId].name;
-            }
-        } catch (_) { /* ignore */ }
+        const def = getItem(itemId);
+        if (def && def.name) return def.name;
         return itemId.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 }

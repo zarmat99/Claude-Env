@@ -8,6 +8,7 @@ import InventoryScene from './scenes/InventoryScene.js';
 import DialogueScene from './scenes/DialogueScene.js';
 import WorldMapScene from './scenes/MapScene.js';
 import CraftingScene from './scenes/CraftingScene.js';
+import { installGameAPI } from './api/GameAPI.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -29,4 +30,8 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+
+// Expose the automation/inspection API as window.GameAPI (browser console + Playwright)
+installGameAPI(game);
+
 export default game;

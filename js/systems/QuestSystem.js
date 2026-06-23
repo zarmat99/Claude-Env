@@ -27,76 +27,37 @@ export function subscribeToEvents(getPlayerFn, scene) {
     if (_subscribed) return;
     _subscribed = true;
 
-    EventBus.on('enemy_killed', (enemyId, enemyData) => {
-        const player = getPlayerFn();
-        if (!player) return;
-        for (const [questId, stageIndex] of player.quests.active.entries()) {
-            const def = getQuestDef(questId);
-            if (!def) continue;
-            const stage = def.stages[stageIndex];
-            if (!stage) continue;
-            for (const obj of (stage.objectives || [])) {
-                if (obj.type === 'kill' && obj.target === enemyId) {
-                    checkObjective('kill', enemyId, player, { questId, stageIndex, obj });
+    // Objective type aliases — quests.js uses descriptive names (talk_to,
+    // visit_location, collect_item…) while gameplay emits coarse events.
+    // Map each event to the set of objective types it can satisfy.
+    const dispatch = (eventName, typeSet) => {
+        EventBus.on(eventName, (targetId) => {
+            const player = getPlayerFn();
+            if (!player) return;
+            for (const [questId, stageIndex] of player.quests.active.entries()) {
+                const def = getQuestDef(questId);
+                if (!def) continue;
+                const stage = def.stages[stageIndex];
+                if (!stage) continue;
+                for (const obj of (stage.objectives || [])) {
+                    // Pass obj.type through so progress keys stay consistent.
+                    if (typeSet.has(obj.type) && obj.target === targetId) {
+                        checkObjective(obj.type, obj.target, player, { questId, stageIndex, obj });
+                    }
                 }
             }
-        }
-    });
+        });
+    };
 
-    EventBus.on('item_collected', (itemId, qty) => {
-        const player = getPlayerFn();
-        if (!player) return;
-        for (const [questId, stageIndex] of player.quests.active.entries()) {
-            const def = getQuestDef(questId);
-            if (!def) continue;
-            const stage = def.stages[stageIndex];
-            if (!stage) continue;
-            for (const obj of (stage.objectives || [])) {
-                if (obj.type === 'collect' && obj.target === itemId) {
-                    checkObjective('collect', itemId, player, { questId, stageIndex, obj });
-                }
-            }
-        }
-    });
+    dispatch('enemy_killed',    new Set(['kill', 'defeat_enemies', 'destroy_target', 'optional_defeat']));
+    dispatch('item_collected',  new Set(['collect', 'collect_item']));
+    dispatch('npc_talked_to',   new Set(['talk', 'talk_to', 'find_npc', 'interact_with']));
+    dispatch('location_reached', new Set(['reach', 'visit_location', 'reach_location', 'enter_location', 'search_location', 'search_area']));
 
-    EventBus.on('npc_talked_to', (npcId) => {
-        const player = getPlayerFn();
-        if (!player) return;
-        for (const [questId, stageIndex] of player.quests.active.entries()) {
-            const def = getQuestDef(questId);
-            if (!def) continue;
-            const stage = def.stages[stageIndex];
-            if (!stage) continue;
-            for (const obj of (stage.objectives || [])) {
-                if (obj.type === 'talk' && obj.target === npcId) {
-                    checkObjective('talk', npcId, player, { questId, stageIndex, obj });
-                }
-            }
-        }
-    });
-
-    EventBus.on('location_reached', (locationId) => {
-        const player = getPlayerFn();
-        if (!player) return;
-        for (const [questId, stageIndex] of player.quests.active.entries()) {
-            const def = getQuestDef(questId);
-            if (!def) continue;
-            const stage = def.stages[stageIndex];
-            if (!stage) continue;
-            for (const obj of (stage.objectives || [])) {
-                if (obj.type === 'reach' && obj.target === locationId) {
-                    checkObjective('reach', locationId, player, { questId, stageIndex, obj });
-                }
-            }
-        }
-    });
-
-    // Allow manual quest advancement from dialogue/scene
-    EventBus.on('quest_stage_complete', (questId, stageId, nextStageId) => {
-        const player = getPlayerFn();
-        if (!player) return;
-        advanceStage(questId, stageId, player, scene);
-    });
+    // NOTE: we intentionally do NOT listen to 'quest_stage_complete' here.
+    // advanceStage() emits that event, so re-calling advanceStage() from a
+    // listener caused unbounded recursion. Stage advancement is driven by
+    // checkObjective()/advanceStage() directly.
 }
 
 // ─── Core Quest API ───────────────────────────────────────────────────────────
@@ -309,6 +270,26 @@ export function runOnCompleteActions(actions, player, scene) {
             case 'remove_item':
                 // handled by InventorySystem
                 import('./InventorySystem.js').then(m => m.removeItem(player, action.itemId, action.quantity || 1));
+                break;
+            case 'remove_items':
+                // Plural form used in quests.js: remove every copy of each listed item
+                import('./InventorySystem.js').then(m => {
+                    for (const itemId of (action.items || [])) {
+                        const count = (player.inventory || [])
+                            .filter(s => s.itemId === itemId)
+                            .reduce((n, s) => n + s.quantity, 0);
+                        if (count > 0) m.removeItem(player, itemId, count);
+                    }
+                });
+                break;
+            case 'advance_stage':
+                // No-op: the quest engine auto-advances to the next stage when a
+                // stage's objectives complete. This action exists in quest data as
+                // an authoring hint and must NOT call advanceStage() (double-advance).
+                break;
+            case 'world_state':
+            case 'trigger_ending':
+                // Narrative hooks handled by scenes; safe to ignore in the engine.
                 break;
             case 'change_rep':
                 changeRep(player, action.factionId, action.amount, scene);
