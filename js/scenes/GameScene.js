@@ -166,25 +166,43 @@ export default class GameScene extends Phaser.Scene {
     }
 
     spawnNPCs(worldData) {
+        // The world is now coherent and hand-placed, so every NPC lives at its
+        // story location. Spawn all of them except those gated behind an unlock
+        // flag that has not yet been set (e.g. hidden Vorrkai settlement).
+        const player = this.registry.get('player');
+        const flags  = (player && player.flags) || new Set();
         for (const npcData of Object.values(NPCS)) {
             if (!npcData.spawnTile) continue;
-            const dx = Math.abs(npcData.spawnTile.x - 100);
-            const dy = Math.abs(npcData.spawnTile.y - 103);
-            if (dx < 30 && dy < 30) {
-                const px = npcData.spawnTile.x * TILE_SIZE + TILE_SIZE / 2;
-                const py = npcData.spawnTile.y * TILE_SIZE + TILE_SIZE / 2;
-                const npc = new NPC(this, px, py, npcData);
-                this.npcs.push(npc);
-            }
+            if (npcData.unlockFlag && !flags.has(npcData.unlockFlag)) continue;
+            const px = npcData.spawnTile.x * TILE_SIZE + TILE_SIZE / 2;
+            const py = npcData.spawnTile.y * TILE_SIZE + TILE_SIZE / 2;
+            const npc = new NPC(this, px, py, npcData);
+            this.npcs.push(npc);
         }
     }
 
     spawnEnemies(worldData) {
+        // Hand-placed by region so danger matches the story geography, never
+        // random. Player starts at Greyhollow (82,98); spawns are kept clear of it.
         const spawns = [
-            { x: 115, y: 102, id: 'goblin'     },
-            { x: 90,  y: 88,  id: 'goblin'     },
-            { x: 118, y: 110, id: 'bandit'     },
-            { x: 85,  y: 115, id: 'cave_spider'}
+            // Greyhollow grassland fringe — weak early threats
+            { x:  95, y: 112, id: 'goblin'          },
+            { x:  68, y:  90, id: 'goblin'          },
+            { x: 110, y: 106, id: 'bandit'          },
+            // Aetherwood dark forest (east) — dangerous
+            { x: 160, y: 100, id: 'cave_spider'     },
+            { x: 173, y:  94, id: 'wraith'          },
+            { x: 176, y: 112, id: 'void_hound'      },
+            // Northern tundra
+            { x: 112, y:  18, id: 'skeleton'        },
+            { x:  58, y:  22, id: 'skeleton'        },
+            // Southern swamps
+            { x:  60, y: 150, id: 'swamp_crawler'   },
+            { x:  92, y: 144, id: 'swamp_crawler'   },
+            // Emberpeak caldera (south-east) — high level
+            { x: 154, y: 164, id: 'lava_salamander' },
+            // Iron Compact badlands (west)
+            { x:  42, y:  76, id: 'bandit'          }
         ];
         for (const s of spawns) {
             const e = new Enemy(this, s.x * TILE_SIZE, s.y * TILE_SIZE, s.id);
@@ -194,9 +212,9 @@ export default class GameScene extends Phaser.Scene {
 
     spawnWorldItems(worldData) {
         const pickups = [
-            { x: 101, y: 104, itemId: 'health_potion_minor' },
-            { x: 104, y: 101, itemId: 'iron_ore'            },
-            { x: 98,  y: 105, itemId: 'bread'               }
+            { x: 84, y: 100, itemId: 'health_potion_minor' },  // Greyhollow square
+            { x: 86, y: 102, itemId: 'iron_ore'            },  // near smithy
+            { x: 80, y:  99, itemId: 'bread'               }   // by the inn
         ];
         for (const p of pickups) {
             const sprite = this.add.rectangle(

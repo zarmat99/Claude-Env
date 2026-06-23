@@ -67,7 +67,7 @@ function createPlayer(raceId = 'varesh', name = 'Tester') {
             .map(s => [s, { xp: 0, level: 1, perksUnlocked: [] }])
         ),
         equipment: { head: null, chest: null, legs: null, hands: null, feet: null, weapon: null, offhand: null, ring: null },
-        worldX: 100, worldY: 103,
+        worldX: 82, worldY: 98,
         flags: new Set(),
         quests: { active: new Map(), completed: new Set(), failed: new Set() },
         inventory: [

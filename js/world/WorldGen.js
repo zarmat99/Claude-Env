@@ -1,358 +1,428 @@
-// WorldGen.js — Procedural world generation with inline 2D simplex noise
+// WorldGen.js — Story-driven world generation for Aethermoor
+// The world is hand-crafted to match the narrative geography of Varethos:
+// Greyhollow (player start) at center-west, with distinct zones radiating out
+// toward Thornmere (NE), Grey Penitents Monastery (N), Aetherwood (E),
+// Iron Compact HQ (W), Southern Swamps, and Emberpeak Caldera (SE).
 
-import { TILE, BIOME, BIOME_DATA, determineBiome } from './Biomes.js';
+import { TILE, BIOME_DATA } from './Biomes.js';
 
-// ============================================================
-//  Inline 2D Simplex Noise
-// ============================================================
-
+// ── Inline 2D Simplex Noise (seeded) ────────────────────────────────────────
 class SimplexNoise {
     constructor(seed = 42) {
-        this.perm = new Uint8Array(512);
+        this.perm  = new Uint8Array(512);
         this.gradP = new Array(512);
-
         const grad3 = [
             [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
             [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
             [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]
         ];
-
-        // Build permutation table from seed via LCG
         let s = seed >>> 0;
         const lcg = () => { s = (Math.imul(1664525, s) + 1013904223) >>> 0; return s; };
-
         const p = new Uint8Array(256);
         for (let i = 0; i < 256; i++) p[i] = i;
-        for (let i = 255; i > 0; i--) {
-            const j = lcg() % (i + 1);
-            const t = p[i]; p[i] = p[j]; p[j] = t;
-        }
-
-        for (let i = 0; i < 512; i++) {
-            this.perm[i] = p[i & 255];
-            this.gradP[i] = grad3[this.perm[i] % 12];
-        }
+        for (let i = 255; i > 0; i--) { const j = lcg() % (i+1); const t = p[i]; p[i] = p[j]; p[j] = t; }
+        for (let i = 0; i < 512; i++) { this.perm[i] = p[i&255]; this.gradP[i] = grad3[this.perm[i]%12]; }
     }
-
-    dot2(g, x, y) {
-        return g[0] * x + g[1] * y;
-    }
-
+    dot2(g, x, y) { return g[0]*x + g[1]*y; }
     noise2D(xin, yin) {
-        const F2 = 0.5 * (Math.sqrt(3) - 1);
-        const G2 = (3 - Math.sqrt(3)) / 6;
-
-        const s = (xin + yin) * F2;
-        const i = Math.floor(xin + s);
-        const j = Math.floor(yin + s);
-        const t = (i + j) * G2;
-
-        const x0 = xin - (i - t);
-        const y0 = yin - (j - t);
-
+        const F2 = 0.5*(Math.sqrt(3)-1), G2 = (3-Math.sqrt(3))/6;
+        const s = (xin+yin)*F2;
+        const i = Math.floor(xin+s), j = Math.floor(yin+s);
+        const t = (i+j)*G2;
+        const x0 = xin-(i-t), y0 = yin-(j-t);
         let i1, j1;
-        if (x0 > y0) { i1 = 1; j1 = 0; }
-        else          { i1 = 0; j1 = 1; }
-
-        const x1 = x0 - i1 + G2;
-        const y1 = y0 - j1 + G2;
-        const x2 = x0 - 1 + 2 * G2;
-        const y2 = y0 - 1 + 2 * G2;
-
-        const ii = i & 255;
-        const jj = j & 255;
-        const gi0 = this.gradP[ii +        this.perm[jj       ]];
-        const gi1 = this.gradP[ii + i1   + this.perm[jj + j1  ]];
-        const gi2 = this.gradP[ii + 1    + this.perm[jj + 1   ]];
-
-        let n0, n1, n2;
-
-        let t0 = 0.5 - x0*x0 - y0*y0;
-        if (t0 < 0) { n0 = 0; } else { t0 *= t0; n0 = t0 * t0 * this.dot2(gi0, x0, y0); }
-
-        let t1 = 0.5 - x1*x1 - y1*y1;
-        if (t1 < 0) { n1 = 0; } else { t1 *= t1; n1 = t1 * t1 * this.dot2(gi1, x1, y1); }
-
-        let t2 = 0.5 - x2*x2 - y2*y2;
-        if (t2 < 0) { n2 = 0; } else { t2 *= t2; n2 = t2 * t2 * this.dot2(gi2, x2, y2); }
-
-        // Scale to -1..1
-        return 70 * (n0 + n1 + n2);
-    }
-
-    // Fractional Brownian Motion — layered octaves
-    fbm(x, y, octaves = 4, lacunarity = 2.0, gain = 0.5) {
-        let value = 0;
-        let amplitude = 1;
-        let frequency = 1;
-        let maxValue = 0;
-        for (let o = 0; o < octaves; o++) {
-            value += this.noise2D(x * frequency, y * frequency) * amplitude;
-            maxValue += amplitude;
-            amplitude *= gain;
-            frequency *= lacunarity;
-        }
-        return value / maxValue; // normalised -1..1
+        if (x0 > y0) { i1=1; j1=0; } else { i1=0; j1=1; }
+        const x1=x0-i1+G2, y1=y0-j1+G2, x2=x0-1+2*G2, y2=y0-1+2*G2;
+        const ii=i&255, jj=j&255;
+        const gi0=this.gradP[ii+this.perm[jj]], gi1=this.gradP[ii+i1+this.perm[jj+j1]], gi2=this.gradP[ii+1+this.perm[jj+1]];
+        let n0,n1,n2;
+        let t0=0.5-x0*x0-y0*y0; if(t0<0){n0=0;}else{t0*=t0;n0=t0*t0*this.dot2(gi0,x0,y0);}
+        let t1=0.5-x1*x1-y1*y1; if(t1<0){n1=0;}else{t1*=t1;n1=t1*t1*this.dot2(gi1,x1,y1);}
+        let t2=0.5-x2*x2-y2*y2; if(t2<0){n2=0;}else{t2*=t2;n2=t2*t2*this.dot2(gi2,x2,y2);}
+        return 70*(n0+n1+n2);
     }
 }
 
-// ============================================================
-//  World constants
-// ============================================================
-
+// ── World constants ──────────────────────────────────────────────────────────
 const WORLD_WIDTH  = 200;
 const WORLD_HEIGHT = 200;
-
 export const WORLD_SIZE = { width: WORLD_WIDTH, height: WORLD_HEIGHT };
 
+// ── Story-based world locations ──────────────────────────────────────────────
+// Coordinates reflect narrative geography; NPC spawn tiles in npcs.js align.
 export const WORLD_LOCATIONS = {
-    greyhollow:               { x: 100, y: 102, name: 'Greyhollow',                  type: 'town',    size: 8  },
-    thornmere:                { x:  60, y:  80, name: 'Thornmere',                    type: 'city',    size: 12 },
-    emberpeak:                { x: 160, y: 140, name: 'Emberpeak Caldera',            type: 'city',    size: 10 },
-    aetherwood:               { x:  30, y:  50, name: 'Aetherwood',                   type: 'area',    size: 20 },
-    underlurk_entrance:       { x: 120, y: 160, name: 'Underlurk Entrance',           type: 'special', size:  3 },
-    rootwarden_sanctuary:     { x:  80, y:  90, name: 'Rootwarden Sanctuary',         type: 'special', size:  5 },
-    iron_compact_hq:          { x: 140, y:  60, name: 'Iron Compact HQ',              type: 'town',    size:  8 },
-    grey_penitents_monastery: { x:  40, y: 130, name: 'Grey Penitents Monastery',     type: 'special', size:  6 }
+    greyhollow:               { x:  82, y:  98, name: 'Greyhollow',               type: 'town',    size: 14 },
+    thornmere:                { x: 142, y:  52, name: 'Thornmere',                type: 'city',    size: 18 },
+    grey_penitents_monastery: { x:  78, y:  32, name: 'Grey Penitents Monastery', type: 'special', size: 10 },
+    iron_compact_hq:          { x:  30, y:  68, name: 'Iron Compact HQ',          type: 'town',    size: 12 },
+    rootwarden_sanctuary:     { x: 165, y:  85, name: 'Rootwarden Sanctuary',     type: 'special', size:  8 },
+    emberpeak:                { x: 158, y: 168, name: 'Emberpeak Caldera',        type: 'city',    size: 12 },
+    underlurk_entrance:       { x:  88, y: 148, name: 'Underlurk Entrance',       type: 'special', size:  3 },
+    abandoned_farmstead:      { x: 102, y: 115, name: 'Abandoned Farmstead',      type: 'special', size:  4 },
 };
 
+// Rootstones: world-pillar crystals that keep the Shards of Varethos aloft.
 export const ROOTSTONE_POSITIONS = [
-    { x: 100, y:  95, name: 'Thornpillar',     health: 0.65, id: 'thornpillar' },
-    { x:  25, y:  45, name: 'Aetherveil',       health: 1.0,  id: 'aetherveil'  },
-    { x: 165, y: 145, name: 'Emberheart',        health: 0.9,  id: 'emberheart'  },
-    { x:  55, y: 160, name: 'Mossanchor',        health: 0.85, id: 'mossanchor'  },
-    { x: 140, y:  30, name: 'Crystalline Peak',  health: 0.95, id: 'crystalpeak' },
-    { x:  80, y: 175, name: 'Deeproot',          health: 0.7,  id: 'deeproot'    },
-    { x:  10, y: 100, name: 'Ashveil Stone',     health: 0.3,  id: 'ashveil'     }
+    { x:  82, y:  82, name: 'Thornpillar',      health: 0.65, id: 'thornpillar'  },
+    { x: 165, y:  78, name: 'Aetherveil',       health: 1.00, id: 'aetherveil'   },
+    { x: 162, y: 148, name: 'Emberheart',       health: 0.90, id: 'emberheart'   },
+    { x:  48, y: 155, name: 'Mossanchor',       health: 0.85, id: 'mossanchor'   },
+    { x: 140, y:  20, name: 'Crystalline Peak', health: 0.95, id: 'crystalpeak'  },
+    { x:  75, y: 175, name: 'Deeproot',         health: 0.70, id: 'deeproot'     },
+    { x:   8, y:  98, name: 'Ashveil Stone',    health: 0.30, id: 'ashveil'      },
 ];
 
-// Dungeon cave entrances (12 total)
+// Monitoring stations — Act 1 quest target locations.
+const MONITORING_STATIONS = [
+    { x: 88, y: 75, id: 'station_verath', name: 'Station Verath (north foothills)' },
+    { x: 80, y: 70, id: 'station_ossian', name: 'Station Ossian (Thornpillar base)' },
+    { x:108, y: 88, id: 'station_keld',   name: 'Station Keld (eastern ridge)'      },
+];
+
+// Dungeon / cave entrances spread across the world.
 const DUNGEON_POSITIONS = [
-    { x: 120, y: 160 }, { x:  35, y:  90 }, { x: 170, y:  45 },
-    { x:  70, y: 145 }, { x: 150, y: 110 }, { x:  20, y: 165 },
-    { x:  90, y:  35 }, { x: 180, y: 175 }, { x:  55, y:  60 },
-    { x: 130, y:  85 }, { x:  10, y:  30 }, { x: 175, y: 130 }
+    { x:  88, y: 148, id: 'underlurk_mine'  },
+    { x:  28, y:  52, id: 'northern_ruins'  },
+    { x: 168, y:  50, id: 'eastern_cave'    },
+    { x:  52, y: 125, id: 'swamp_dungeon'   },
+    { x: 148, y: 130, id: 'aetherwood_cave' },
+    { x: 178, y: 178, id: 'volcanic_cave'   },
+    { x:  12, y: 148, id: 'western_cave'    },
+    { x: 122, y:  68, id: 'hillside_cave'   },
 ];
 
-// Numeric biome IDs (stored in biomeMap Uint8Array)
 const BIOME_ID = {
-    WATER:       0,
-    COASTAL:     1,
-    GRASSLAND:   2,
-    FOREST:      3,
-    DARK_FOREST: 4,
-    SWAMP:       5,
-    DESERT:      6,
-    TUNDRA:      7,
-    MOUNTAIN:    8,
-    VOLCANIC:    9,
-    UNDERLURK:   10
+    WATER: 0, COASTAL: 1, GRASSLAND: 2, FOREST: 3, DARK_FOREST: 4,
+    SWAMP: 5, DESERT: 6, TUNDRA: 7, MOUNTAIN: 8, VOLCANIC: 9, UNDERLURK: 10
 };
 
-// ============================================================
-//  Main generation function
-// ============================================================
+// ── Zone definitions (elliptical Voronoi — nearest zone wins) ────────────────
+// cx/cy = zone center, rx/ry = radii (normalize distance for ellipse comparison).
+const ZONES = [
+    // Northern tundra band
+    { biome: 'TUNDRA',      cx: 100, cy:  16, rx: 110, ry: 18 },
+    // Grey Penitents highlands (cold hills NW-center)
+    { biome: 'TUNDRA',      cx:  78, cy:  36, rx:  32, ry: 22 },
+    // Thornmere plateau (NE, open grassland)
+    { biome: 'GRASSLAND',   cx: 142, cy:  52, rx:  45, ry: 35 },
+    // Iron Compact territory (W, arid badlands)
+    { biome: 'DESERT',      cx:  28, cy:  72, rx:  30, ry: 28 },
+    // Greyhollow valley (center-left, gentle farmland)
+    { biome: 'GRASSLAND',   cx:  82, cy:  98, rx:  42, ry: 38 },
+    // Aetherwood fringe (E, lighter forest transition)
+    { biome: 'FOREST',      cx: 150, cy:  88, rx:  22, ry: 32 },
+    // Aetherwood core (deep magical forest)
+    { biome: 'DARK_FOREST', cx: 172, cy:  92, rx:  30, ry: 52 },
+    // Southern swamps (S-center)
+    { biome: 'SWAMP',       cx:  58, cy: 150, rx:  42, ry: 30 },
+    // Underlurk approach
+    { biome: 'SWAMP',       cx:  90, cy: 148, rx:  20, ry: 18 },
+    // Emberpeak volcanic (far SE)
+    { biome: 'VOLCANIC',    cx: 162, cy: 172, rx:  42, ry: 34 },
+    // Global fallback
+    { biome: 'GRASSLAND',   cx: 100, cy: 100, rx: 200, ry: 200 },
+];
+
+// Road connections between settlements (drawn before placements so walls overwrite).
+const ROADS = [
+    { from: [ 82,  98], to: [ 78,  32] }, // Greyhollow → Monastery
+    { from: [ 82,  98], to: [142,  52] }, // Greyhollow → Thornmere
+    { from: [ 82,  98], to: [ 30,  68] }, // Greyhollow → Iron Compact HQ
+    { from: [ 82,  98], to: [ 88, 148] }, // Greyhollow → Underlurk
+    { from: [142,  52], to: [158, 168] }, // Thornmere → Emberpeak
+    { from: [ 82,  98], to: [148,  82] }, // Greyhollow → Aetherwood edge
+    { from: [148,  82], to: [165,  85] }, // Aetherwood edge → Rootwarden Sanctuary
+];
+
+// ── Biome assignment ─────────────────────────────────────────────────────────
+
+function getZoneBiome(x, y) {
+    if (x < 6 || x >= WORLD_WIDTH - 6 || y < 6 || y >= WORLD_HEIGHT - 6) return 'MOUNTAIN';
+    let minD2 = Infinity, winner = 'GRASSLAND';
+    for (const z of ZONES) {
+        const dx = (x - z.cx) / z.rx;
+        const dy = (y - z.cy) / z.ry;
+        const d2 = dx*dx + dy*dy;
+        if (d2 < minD2) { minD2 = d2; winner = z.biome; }
+    }
+    return winner;
+}
+
+// ── Main generation function ─────────────────────────────────────────────────
 
 export function generateWorld(seed = 12345) {
-    const tiles   = new Uint8Array(WORLD_WIDTH * WORLD_HEIGHT);
+    const tiles    = new Uint8Array(WORLD_WIDTH * WORLD_HEIGHT);
     const biomeMap = new Uint8Array(WORLD_WIDTH * WORLD_HEIGHT);
+    const detNoise = new SimplexNoise(seed + 137);
+    const featNoise = new SimplexNoise(seed + 503);
 
-    // --- Noise generators (different seeds for variety) ---
-    const heightNoise  = new SimplexNoise(seed);
-    const moistNoise   = new SimplexNoise(seed + 137);
-    const tempNoise    = new SimplexNoise(seed + 271);
-    const detailNoise  = new SimplexNoise(seed + 503);
-
-    // --- Pass 1: Generate noise maps and assign biomes + base tiles ---
-    const heightMap = new Float32Array(WORLD_WIDTH * WORLD_HEIGHT);
-    const moistMap  = new Float32Array(WORLD_WIDTH * WORLD_HEIGHT);
-    const tempMap   = new Float32Array(WORLD_WIDTH * WORLD_HEIGHT);
-
-    // Collect raw values first for normalisation
-    let hMin = Infinity, hMax = -Infinity;
-    let mMin = Infinity, mMax = -Infinity;
-    let tMin = Infinity, tMax = -Infinity;
-
+    // Pass 1: Zone-based biome with micro-noise texture
     for (let y = 0; y < WORLD_HEIGHT; y++) {
         for (let x = 0; x < WORLD_WIDTH; x++) {
-            const nx = x / WORLD_WIDTH;
-            const ny = y / WORLD_HEIGHT;
-
-            // Use different scales per map
-            const h = heightNoise.fbm(nx * 3.5, ny * 3.5, 5, 2.0, 0.5)
-                    + 0.4 * heightNoise.fbm(nx * 7, ny * 7, 2, 2.0, 0.5);
-            const m = moistNoise.fbm(nx * 2.8, ny * 2.8, 4, 2.0, 0.5);
-            const t = tempNoise.fbm(nx * 2.2, ny * 2.2, 3, 2.0, 0.5)
-                    - 0.4 * ny; // cooler at top (north)
-
-            const idx = y * WORLD_WIDTH + x;
-            heightMap[idx] = h;
-            moistMap[idx]  = m;
-            tempMap[idx]   = t;
-
-            if (h < hMin) hMin = h; if (h > hMax) hMax = h;
-            if (m < mMin) mMin = m; if (m > mMax) mMax = m;
-            if (t < tMin) tMin = t; if (t > tMax) tMax = t;
-        }
-    }
-
-    const hRange = hMax - hMin || 1;
-    const mRange = mMax - mMin || 1;
-    const tRange = tMax - tMin || 1;
-
-    // Island mask: fade to ocean at edges
-    const CX = WORLD_WIDTH  / 2;
-    const CY = WORLD_HEIGHT / 2;
-    const maxDist = Math.min(CX, CY) * 0.85;
-
-    for (let y = 0; y < WORLD_HEIGHT; y++) {
-        for (let x = 0; x < WORLD_WIDTH; x++) {
-            const idx = y * WORLD_WIDTH + x;
-
-            // Normalise to 0..1
-            let h = (heightMap[idx] - hMin) / hRange;
-            let m = (moistMap[idx]  - mMin) / mRange;
-            let t = (tempMap[idx]   - tMin) / tRange;
-
-            // Island mask: lower height toward world edges
-            const dx = (x - CX) / CX;
-            const dy = (y - CY) / CY;
-            const distNorm = Math.sqrt(dx*dx + dy*dy);
-            const mask = 1 - Math.pow(Math.max(0, distNorm - 0.15) / 0.85, 2);
-            h = h * 0.7 + mask * 0.3;
-            h = Math.max(0, Math.min(1, h));
-
-            const biomeName = determineBiome(h, m, t);
-            const biomeData = BIOME_DATA[biomeName];
-
-            biomeMap[idx] = BIOME_ID[biomeName] ?? 2;
-
-            // Pick tile based on biome + detail noise
-            const detail = (detailNoise.noise2D(x * 0.3, y * 0.3) + 1) / 2;
-            let tileId = biomeData.primaryTile;
-
-            if (detail > 0.65) tileId = biomeData.secondaryTile || biomeData.primaryTile;
-
-            // Feature tiles
-            if (biomeData.featureTiles.length > 0 && detail > (1 - biomeData.featureChance)) {
-                const fIdx = Math.floor(detail * biomeData.featureTiles.length) % biomeData.featureTiles.length;
-                tileId = biomeData.featureTiles[fIdx];
+            const idx    = y * WORLD_WIDTH + x;
+            const biome  = getZoneBiome(x, y);
+            biomeMap[idx] = BIOME_ID[biome] ?? 2;
+            const bd = BIOME_DATA[biome];
+            const detail = (detNoise.noise2D(x * 0.18, y * 0.18) + 1) / 2;
+            const feat   = (featNoise.noise2D(x * 0.42, y * 0.42) + 1) / 2;
+            let tileId = bd.primaryTile;
+            if (detail > 0.62) tileId = bd.secondaryTile || tileId;
+            if (bd.featureTiles.length > 0 && feat > (1 - bd.featureChance * 2.5)) {
+                tileId = bd.featureTiles[Math.floor(feat * bd.featureTiles.length) % bd.featureTiles.length];
             }
-
             tiles[idx] = tileId;
         }
     }
 
-    // --- Pass 2: Place settlements ---
-    for (const [locationId, loc] of Object.entries(WORLD_LOCATIONS)) {
-        placeSettlement(tiles, loc, locationId);
+    // Pass 2: Roads (before settlements so walls correctly overwrite road tiles)
+    for (const road of ROADS) drawLine(tiles, road.from[0], road.from[1], road.to[0], road.to[1]);
+
+    // Pass 3: Settlements
+    for (const [id, loc] of Object.entries(WORLD_LOCATIONS)) {
+        if (loc.size > 0) placeSettlement(tiles, loc, id);
     }
 
-    // --- Pass 3: Place Rootstones ---
+    // Pass 4: Monitoring stations (small stone huts in the wilderness)
+    for (const st of MONITORING_STATIONS) placeStation(tiles, st.x, st.y);
+
+    // Pass 5: Rootstones (clear impassable terrain around each)
     for (const rs of ROOTSTONE_POSITIONS) {
-        const idx = rs.y * WORLD_WIDTH + rs.x;
-        tiles[idx] = TILE.ROOTSTONE;
-        // Clear 1-tile radius so the rootstone is accessible
-        for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-                if (dx === 0 && dy === 0) continue;
-                const nx = rs.x + dx;
-                const ny = rs.y + dy;
-                if (nx >= 0 && nx < WORLD_WIDTH && ny >= 0 && ny < WORLD_HEIGHT) {
-                    const ni = ny * WORLD_WIDTH + nx;
-                    if (tiles[ni] === TILE.MOUNTAIN || tiles[ni] === TILE.MOUNTAIN_TOP ||
-                        tiles[ni] === TILE.CAVE_WALL || tiles[ni] === TILE.STONE_WALL) {
-                        tiles[ni] = TILE.GRASS;
-                    }
-                }
-            }
-        }
+        tiles[rs.y * WORLD_WIDTH + rs.x] = TILE.ROOTSTONE;
+        clearRing(tiles, rs.x, rs.y, 1, TILE.GRASS);
     }
 
-    // --- Pass 4: Place dungeon cave entrances ---
+    // Pass 6: Dungeon entrances
     for (const pos of DUNGEON_POSITIONS) {
-        const idx = pos.y * WORLD_WIDTH + pos.x;
-        tiles[idx] = TILE.CAVE_ENTRANCE;
-        // Ensure surrounded by passable ground
-        for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-                if (dx === 0 && dy === 0) continue;
-                const nx = pos.x + dx;
-                const ny = pos.y + dy;
-                if (nx >= 0 && nx < WORLD_WIDTH && ny >= 0 && ny < WORLD_HEIGHT) {
-                    const ni = ny * WORLD_WIDTH + nx;
-                    const t = tiles[ni];
-                    if (t === TILE.MOUNTAIN || t === TILE.MOUNTAIN_TOP ||
-                        t === TILE.WATER || t === TILE.CAVE_WALL) {
-                        tiles[ni] = TILE.DIRT;
-                    }
-                }
-            }
-        }
+        tiles[pos.y * WORLD_WIDTH + pos.x] = TILE.CAVE_ENTRANCE;
+        clearRing(tiles, pos.x, pos.y, 1, TILE.DIRT);
     }
 
-    // Build metadata
     const metadata = {
-        towns: Object.entries(WORLD_LOCATIONS)
-            .filter(([, l]) => l.type === 'town' || l.type === 'city')
-            .map(([id, l]) => ({ ...l, id })),
-        dungeons: DUNGEON_POSITIONS.map((p, i) => ({ ...p, id: `dungeon_${i}` })),
+        towns:     Object.entries(WORLD_LOCATIONS)
+                       .filter(([, l]) => l.type === 'town' || l.type === 'city')
+                       .map(([id, l]) => ({ ...l, id })),
+        dungeons:  DUNGEON_POSITIONS.map(p => ({ ...p })),
         rootstones: ROOTSTONE_POSITIONS.map(r => ({ ...r })),
-        locations: WORLD_LOCATIONS
+        locations: WORLD_LOCATIONS,
+        monitoringStations: MONITORING_STATIONS,
     };
 
     return { tiles, biomeMap, metadata };
 }
 
-// ============================================================
-//  Settlement placement helper
-// ============================================================
+// ── Settlement placement ─────────────────────────────────────────────────────
 
 function placeSettlement(tiles, loc, locationId) {
-    const { x, y, size, type } = loc;
+    const { x, y, size } = loc;
     const half = Math.floor(size / 2);
 
+    if (locationId === 'rootwarden_sanctuary') { placeSanctuary(tiles, x, y, half); return; }
+    if (locationId === 'abandoned_farmstead')  { placeFarmstead(tiles, x, y, half); return; }
+    if (locationId === 'underlurk_entrance')   { placeUnderlurk(tiles, x, y, half); return; }
+
+    // General walled settlement (town / city / monastery / HQ)
     for (let dy = -half; dy <= half; dy++) {
         for (let dx = -half; dx <= half; dx++) {
-            const tx = x + dx;
-            const ty = y + dy;
+            const tx = x + dx, ty = y + dy;
             if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
             const idx = ty * WORLD_WIDTH + tx;
-            const adx = Math.abs(dx);
-            const ady = Math.abs(dy);
+            const adx = Math.abs(dx), ady = Math.abs(dy);
 
-            // Outer wall ring
+            // Outer perimeter wall (with gates)
             if (adx === half || ady === half) {
-                // Gates in the cardinal directions
-                if ((adx === half && ady <= 1) || (ady === half && adx <= 1)) {
-                    tiles[idx] = TILE.ROAD; // gate opening
-                } else {
-                    tiles[idx] = TILE.STONE_WALL;
+                tiles[idx] = isGate(dx, dy, half, locationId) ? TILE.ROAD : TILE.STONE_WALL;
+                continue;
+            }
+
+            // Main cross-roads through the centre
+            if (dx === 0 || dy === 0) { tiles[idx] = TILE.ROAD; continue; }
+
+            // Building blocks: one per quadrant, offset from the crossroads
+            const bLo = 2, bHi = Math.min(half - 2, 5);
+            if (adx >= bLo && adx <= bHi && ady >= bLo && ady <= bHi) {
+                const onWall = (adx === bLo || adx === bHi || ady === bLo || ady === bHi);
+                tiles[idx] = onWall ? TILE.STONE_WALL : TILE.STONE_FLOOR;
+                continue;
+            }
+
+            tiles[idx] = TILE.STONE_FLOOR;
+        }
+    }
+
+    // For city-size settlements add an extra inner road ring
+    if (size >= 16) {
+        for (let dz = -half + 7; dz <= half - 7; dz++) {
+            const tx1 = x + dz, ty1 = y + (half - 7);
+            const tx2 = x + dz, ty2 = y - (half - 7);
+            const tx3 = x + (half - 7), ty3 = y + dz;
+            const tx4 = x - (half - 7), ty4 = y + dz;
+            for (const [tx, ty] of [[tx1,ty1],[tx2,ty2],[tx3,ty3],[tx4,ty4]]) {
+                if (tx >= 0 && tx < WORLD_WIDTH && ty >= 0 && ty < WORLD_HEIGHT) {
+                    const t = tiles[ty * WORLD_WIDTH + tx];
+                    if (t === TILE.STONE_FLOOR) tiles[ty * WORLD_WIDTH + tx] = TILE.ROAD;
                 }
-            } else if (adx === 0 && ady === 0) {
-                // Central landmark
-                if (locationId === 'underlurk_entrance') {
-                    tiles[idx] = TILE.CAVE_ENTRANCE;
-                } else {
-                    tiles[idx] = TILE.STONE_FLOOR;
+            }
+        }
+    }
+
+    // Place extra outer features around specific settlements
+    placeOuterFeatures(tiles, x, y, half, locationId);
+
+    // Central landmark tile
+    if (y >= 0 && y < WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH) {
+        tiles[y * WORLD_WIDTH + x] = centralLandmark(locationId);
+    }
+}
+
+function isGate(dx, dy, half, locationId) {
+    const adx = Math.abs(dx), ady = Math.abs(dy);
+    const onNS = (ady === half && adx <= 1);
+    const onEW = (adx === half && ady <= 1);
+    if (locationId === 'grey_penitents_monastery') return dy === half && adx <= 1; // S gate only
+    if (locationId === 'iron_compact_hq')          return onEW;                    // E and W only
+    return onNS || onEW;
+}
+
+function centralLandmark(locationId) {
+    if (locationId === 'grey_penitents_monastery') return TILE.ROOTSTONE;
+    if (locationId === 'emberpeak')                return TILE.LAVA;
+    return TILE.STONE_FLOOR;
+}
+
+function placeOuterFeatures(tiles, x, y, half, locationId) {
+    if (locationId === 'greyhollow') {
+        // Farm plots to the west of the town walls
+        for (let fy = -3; fy <= 3; fy++) {
+            for (let fx = half + 2; fx <= half + 6; fx++) {
+                const tx = x - fx, ty = y + fy;
+                if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+                tiles[ty * WORLD_WIDTH + tx] = (Math.abs(fy) === 3) ? TILE.DIRT : TILE.GRASS;
+            }
+        }
+    }
+    if (locationId === 'thornmere') {
+        // Market square outside eastern gate
+        for (let fy = -2; fy <= 2; fy++) {
+            for (let fx = half + 1; fx <= half + 4; fx++) {
+                const tx = x + fx, ty = y + fy;
+                if (tx >= 0 && tx < WORLD_WIDTH && ty >= 0 && ty < WORLD_HEIGHT) {
+                    tiles[ty * WORLD_WIDTH + tx] = TILE.STONE_FLOOR;
                 }
-            } else {
-                // Interior: roads + stone floors
-                if (dx === 0 || dy === 0) {
-                    tiles[idx] = TILE.ROAD;
-                } else if ((adx + ady) % 4 === 0) {
-                    tiles[idx] = TILE.STONE_WALL; // building walls
-                } else {
-                    tiles[idx] = TILE.STONE_FLOOR;
+            }
+        }
+    }
+    if (locationId === 'grey_penitents_monastery') {
+        // Graveyard / garden south of monastery
+        for (let gy = half + 2; gy <= half + 5; gy++) {
+            for (let gx = -3; gx <= 3; gx++) {
+                const tx = x + gx, ty = y + gy;
+                if (tx >= 0 && tx < WORLD_WIDTH && ty >= 0 && ty < WORLD_HEIGHT) {
+                    tiles[ty * WORLD_WIDTH + tx] = (Math.abs(gx) % 2 === 0) ? TILE.STONE_FLOOR : TILE.GRASS;
                 }
             }
         }
     }
 }
 
-// ============================================================
-//  Utility exports
-// ============================================================
+function placeSanctuary(tiles, x, y, half) {
+    // Organic circular clearing: rootstone altar, stone paths, surrounding forest
+    for (let dy = -half; dy <= half; dy++) {
+        for (let dx = -half; dx <= half; dx++) {
+            const tx = x+dx, ty = y+dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            const r = Math.sqrt(dx*dx + dy*dy);
+            const idx = ty * WORLD_WIDTH + tx;
+            if (r === 0) {
+                tiles[idx] = TILE.ROOTSTONE;
+            } else if (r <= 2) {
+                tiles[idx] = TILE.STONE_FLOOR;
+            } else if (Math.abs(dx) <= 1 || Math.abs(dy) <= 1) {
+                tiles[idx] = TILE.ROAD;
+            } else if (r <= half) {
+                tiles[idx] = TILE.FOREST;
+            }
+        }
+    }
+}
+
+function placeFarmstead(tiles, x, y, half) {
+    for (let dy = -half; dy <= half; dy++) {
+        for (let dx = -half; dx <= half; dx++) {
+            const tx = x+dx, ty = y+dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            const adx = Math.abs(dx), ady = Math.abs(dy);
+            const onEdge = (adx === half || ady === half);
+            tiles[ty * WORLD_WIDTH + tx] = onEdge ? TILE.DIRT : TILE.STONE_FLOOR;
+        }
+    }
+    if (y >= 0 && y < WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH)
+        tiles[y * WORLD_WIDTH + x] = TILE.CHEST;
+}
+
+function placeUnderlurk(tiles, x, y, half) {
+    for (let dy = -half; dy <= half; dy++) {
+        for (let dx = -half; dx <= half; dx++) {
+            const tx = x+dx, ty = y+dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            tiles[ty * WORLD_WIDTH + tx] = TILE.DIRT;
+        }
+    }
+    if (y >= 0 && y < WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH)
+        tiles[y * WORLD_WIDTH + x] = TILE.CAVE_ENTRANCE;
+}
+
+function placeStation(tiles, x, y) {
+    // 3×3 stone monitoring hut
+    for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+            const tx = x+dx, ty = y+dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            const onEdge = (Math.abs(dx) === 1 || Math.abs(dy) === 1);
+            tiles[ty * WORLD_WIDTH + tx] = onEdge ? TILE.STONE_WALL : TILE.STONE_FLOOR;
+        }
+    }
+    // Data crystal chest inside
+    if (y >= 0 && y < WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH)
+        tiles[y * WORLD_WIDTH + x] = TILE.CHEST;
+}
+
+function clearRing(tiles, x, y, radius, fill) {
+    for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            const tx = x+dx, ty = y+dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            const t = tiles[ty * WORLD_WIDTH + tx];
+            if (t === TILE.MOUNTAIN || t === TILE.MOUNTAIN_TOP ||
+                t === TILE.CAVE_WALL || t === TILE.STONE_WALL) {
+                tiles[ty * WORLD_WIDTH + tx] = fill;
+            }
+        }
+    }
+}
+
+// Bresenham line — places ROAD tiles, does not overwrite walls or Rootstones.
+function drawLine(tiles, x0, y0, x1, y1) {
+    let dx = Math.abs(x1-x0), dy = Math.abs(y1-y0);
+    let sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy, cx = x0, cy = y0;
+    while (true) {
+        if (cx >= 0 && cx < WORLD_WIDTH && cy >= 0 && cy < WORLD_HEIGHT) {
+            const t = tiles[cy * WORLD_WIDTH + cx];
+            if (t !== TILE.STONE_WALL && t !== TILE.CAVE_ENTRANCE &&
+                t !== TILE.ROOTSTONE  && t !== TILE.MOUNTAIN &&
+                t !== TILE.MOUNTAIN_TOP) {
+                tiles[cy * WORLD_WIDTH + cx] = TILE.ROAD;
+            }
+        }
+        if (cx === x1 && cy === y1) break;
+        const e2 = 2 * err;
+        if (e2 > -dy) { err -= dy; cx += sx; }
+        if (e2 <  dx) { err += dx; cy += sy; }
+    }
+}
+
+// ── Utility exports ──────────────────────────────────────────────────────────
 
 export function getTile(tiles, x, y) {
     if (x < 0 || x >= WORLD_WIDTH || y < 0 || y >= WORLD_HEIGHT) return TILE.MOUNTAIN;

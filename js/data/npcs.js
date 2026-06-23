@@ -12,12 +12,12 @@ export const NPCS = {
     race: 'varesh',
     faction: 'rootwarden_circle',
     spriteKey: 'npc_scholar',
-    spawnTile: { x: 103, y: 101 },
+    spawnTile: { x: 85, y: 80 },
     schedule: [
-      { hour: 6,  tile: { x: 103, y: 101 } },  // monitoring station — early morning
-      { hour: 12, tile: { x: 104, y: 101 } },  // walks south to inspect relay crystal
-      { hour: 17, tile: { x: 103, y: 102 } },  // notes on a bench outside
-      { hour: 20, tile: { x: 100, y: 105 } }   // Greyhollow inn — resting
+      { hour: 6,  tile: { x: 85, y: 80 } },   // Thornpillar monitoring station — early morning
+      { hour: 12, tile: { x: 84, y: 81 } },   // walks down to inspect relay crystal
+      { hour: 17, tile: { x: 86, y: 81 } },   // notes on a bench outside
+      { hour: 20, tile: { x: 83, y: 100 } }   // Greyhollow inn — resting
     ],
     dialogueRoot: 'cael_intro',
     dialogueActiveQuest: 'cael_quest_active',
@@ -29,7 +29,7 @@ export const NPCS = {
     questGiver: ['main_act1'],
     killsQuestId: 'main_act1',                 // killing him before quest completion flags failure
     postDeathItem: 'cael_notes',               // item placed in world on death
-    postDeathTile: { x: 103, y: 101 },
+    postDeathTile: { x: 85, y: 80 },
     voiceType: 'male_scholarly',
     level: 4,
     disposition: { default: 50 },
@@ -43,12 +43,12 @@ export const NPCS = {
     race: 'thornkin',
     faction: 'rootwarden_circle',
     spriteKey: 'npc_rootwarden_elder',
-    spawnTile: { x: 210, y: 88 },              // Rootwarden Sanctuary, Aetherwood
+    spawnTile: { x: 165, y: 85 },              // Rootwarden Sanctuary, Aetherwood
     schedule: [
-      { hour: 5,  tile: { x: 210, y: 86 } },  // dawn prayer at the Sanctuary root altar
-      { hour: 9,  tile: { x: 210, y: 88 } },  // main chamber
-      { hour: 14, tile: { x: 212, y: 90 } },  // elder's study
-      { hour: 21, tile: { x: 210, y: 92 } }   // rest chamber
+      { hour: 5,  tile: { x: 165, y: 83 } },  // dawn prayer at the Sanctuary root altar
+      { hour: 9,  tile: { x: 165, y: 85 } },  // main chamber
+      { hour: 14, tile: { x: 167, y: 87 } },  // elder's study
+      { hour: 21, tile: { x: 165, y: 89 } }   // rest chamber
     ],
     dialogueRoot: 'elder_sathis_first_meet',
     dialogueOngoing: 'elder_sathis_ongoing',
@@ -72,12 +72,12 @@ export const NPCS = {
     race: 'varesh',
     faction: 'auric_concordat',
     spriteKey: 'npc_high_consul',
-    spawnTile: { x: 350, y: 60 },              // Concordat Hall, Thornmere
+    spawnTile: { x: 143, y: 50 },              // Concordat Hall, Thornmere
     schedule: [
-      { hour: 8,  tile: { x: 350, y: 60 } },  // audience chamber
-      { hour: 13, tile: { x: 352, y: 58 } },  // private office
-      { hour: 19, tile: { x: 354, y: 65 } },  // Thornmere upper terrace
-      { hour: 22, tile: { x: 350, y: 70 } }   // private quarters
+      { hour: 8,  tile: { x: 143, y: 50 } },  // audience chamber
+      { hour: 13, tile: { x: 145, y: 49 } },  // private office
+      { hour: 19, tile: { x: 144, y: 54 } },  // Thornmere upper terrace
+      { hour: 22, tile: { x: 142, y: 51 } }   // private quarters
     ],
     dialogueRoot: 'varenne_osel_intro',
     isEssential: false,
@@ -101,12 +101,12 @@ export const NPCS = {
     race: 'cindrak',
     faction: 'iron_compact',
     spriteKey: 'npc_warmaster',
-    spawnTile: { x: 280, y: 140 },             // Iron Compact HQ, south of Thornmere
+    spawnTile: { x: 30, y: 68 },               // Iron Compact HQ, western badlands
     schedule: [
-      { hour: 5,  tile: { x: 280, y: 138 } }, // sparring yard at dawn
-      { hour: 9,  tile: { x: 280, y: 140 } }, // command post
-      { hour: 15, tile: { x: 278, y: 142 } }, // reviewing troop assignments
-      { hour: 20, tile: { x: 282, y: 140 } }  // mess hall
+      { hour: 5,  tile: { x: 30, y: 66 } },   // sparring yard at dawn
+      { hour: 9,  tile: { x: 30, y: 68 } },   // command post
+      { hour: 15, tile: { x: 28, y: 70 } },   // reviewing troop assignments
+      { hour: 20, tile: { x: 32, y: 68 } }    // mess hall
     ],
     dialogueRoot: 'warmaster_kash_intro',
     isEssential: false,
@@ -130,13 +130,13 @@ export const NPCS = {
     race: 'varesh',
     faction: 'grey_penitents',
     spriteKey: 'npc_abbess',
-    spawnTile: { x: 160, y: 55 },              // Grey Penitents Monastery, north of Greyhollow
+    spawnTile: { x: 78, y: 32 },               // Grey Penitents Monastery, north highlands
     schedule: [
-      { hour: 4,  tile: { x: 160, y: 52 } },  // bell tower prayers
-      { hour: 7,  tile: { x: 160, y: 55 } },  // abbot's hall
-      { hour: 12, tile: { x: 162, y: 57 } },  // scriptorium
-      { hour: 18, tile: { x: 160, y: 55 } },  // evening service
-      { hour: 21, tile: { x: 160, y: 60 } }   // private quarters
+      { hour: 4,  tile: { x: 78, y: 30 } },   // bell tower prayers
+      { hour: 7,  tile: { x: 78, y: 32 } },   // abbot's hall
+      { hour: 12, tile: { x: 80, y: 33 } },   // scriptorium
+      { hour: 18, tile: { x: 78, y: 32 } },   // evening service
+      { hour: 21, tile: { x: 79, y: 35 } }    // private quarters
     ],
     dialogueRoot: 'abbess_vonn_intro',
     isEssential: false,
@@ -162,13 +162,13 @@ export const NPCS = {
     race: 'cindrak',
     faction: null,
     spriteKey: 'npc_blacksmith',
-    spawnTile: { x: 98, y: 106 },              // smithy, southern Greyhollow
+    spawnTile: { x: 85, y: 102 },              // smithy, southern Greyhollow
     schedule: [
-      { hour: 6,  tile: { x: 98, y: 106 } },  // at the forge
-      { hour: 12, tile: { x: 99, y: 107 } },  // lunch outside forge
-      { hour: 13, tile: { x: 98, y: 106 } },  // back to forge
-      { hour: 19, tile: { x: 97, y: 108 } },  // home
-      { hour: 21, tile: { x: 97, y: 109 } }   // sleeping
+      { hour: 6,  tile: { x: 85, y: 102 } },  // at the forge
+      { hour: 12, tile: { x: 86, y: 103 } },  // lunch outside forge
+      { hour: 13, tile: { x: 85, y: 102 } },  // back to forge
+      { hour: 19, tile: { x: 84, y: 104 } },  // home
+      { hour: 21, tile: { x: 84, y: 105 } }   // sleeping
     ],
     dialogueRoot: 'greyhollow_blacksmith',
     isEssential: false,
@@ -204,13 +204,13 @@ export const NPCS = {
     race: 'varesh',
     faction: null,
     spriteKey: 'npc_innkeeper',
-    spawnTile: { x: 100, y: 105 },             // The Hollow Hearth Inn
+    spawnTile: { x: 83, y: 100 },              // The Hollow Hearth Inn
     schedule: [
-      { hour: 6,  tile: { x: 100, y: 104 } }, // wiping down bar
-      { hour: 9,  tile: { x: 100, y: 105 } }, // behind bar
-      { hour: 14, tile: { x: 101, y: 105 } }, // restocking shelves
-      { hour: 18, tile: { x: 100, y: 105 } }, // evening rush
-      { hour: 23, tile: { x: 100, y: 108 } }  // sleeping quarters above inn
+      { hour: 6,  tile: { x: 83, y: 99 } },   // wiping down bar
+      { hour: 9,  tile: { x: 83, y: 100 } },  // behind bar
+      { hour: 14, tile: { x: 84, y: 100 } },  // restocking shelves
+      { hour: 18, tile: { x: 83, y: 100 } },  // evening rush
+      { hour: 23, tile: { x: 83, y: 102 } }   // sleeping quarters above inn
     ],
     dialogueRoot: 'greyhollow_innkeeper',
     isEssential: false,
@@ -244,13 +244,13 @@ export const NPCS = {
     race: 'varesh',
     faction: 'iron_compact',
     spriteKey: 'npc_guard_captain',
-    spawnTile: { x: 96, y: 100 },              // gate post, north entrance
+    spawnTile: { x: 82, y: 94 },               // gate post, north entrance
     schedule: [
-      { hour: 6,  tile: { x: 96, y: 100 } },  // gate inspection
-      { hour: 10, tile: { x: 97, y: 101 } },  // patrol route
-      { hour: 14, tile: { x: 96, y: 100 } },  // gate again
-      { hour: 18, tile: { x: 95, y: 102 } },  // guard house
-      { hour: 22, tile: { x: 95, y: 103 } }   // sleeping — relief guard on gate
+      { hour: 6,  tile: { x: 82, y: 94 } },   // gate inspection
+      { hour: 10, tile: { x: 83, y: 95 } },   // patrol route
+      { hour: 14, tile: { x: 82, y: 94 } },   // gate again
+      { hour: 18, tile: { x: 81, y: 96 } },   // guard house
+      { hour: 22, tile: { x: 81, y: 97 } }    // sleeping — relief guard on gate
     ],
     dialogueRoot: 'greyhollow_guard_captain',
     isEssential: false,
@@ -272,13 +272,13 @@ export const NPCS = {
     race: 'varesh',
     faction: null,
     spriteKey: 'npc_farmer',
-    spawnTile: { x: 94, y: 108 },              // farm plot, west of Greyhollow
+    spawnTile: { x: 75, y: 104 },              // farm plot, west of Greyhollow
     schedule: [
-      { hour: 5,  tile: { x: 94, y: 108 } },  // early field work
-      { hour: 11, tile: { x: 95, y: 109 } },  // water well
-      { hour: 13, tile: { x: 94, y: 110 } },  // farmhouse lunch
-      { hour: 14, tile: { x: 94, y: 108 } },  // afternoon field work
-      { hour: 19, tile: { x: 94, y: 110 } }   // farmhouse — done for day
+      { hour: 5,  tile: { x: 75, y: 104 } },  // early field work
+      { hour: 11, tile: { x: 76, y: 105 } },  // water well
+      { hour: 13, tile: { x: 75, y: 106 } },  // farmhouse lunch
+      { hour: 14, tile: { x: 75, y: 104 } },  // afternoon field work
+      { hour: 19, tile: { x: 75, y: 106 } }   // farmhouse — done for day
     ],
     dialogueRoot: 'greyhollow_farmer',
     isEssential: false,
@@ -302,13 +302,13 @@ export const NPCS = {
     race: 'sylveni',
     faction: null,
     spriteKey: 'npc_alchemist',
-    spawnTile: { x: 340, y: 75 },              // Vaar's Alchemy, Thornmere market
+    spawnTile: { x: 138, y: 53 },              // Vaar's Alchemy, Thornmere market
     schedule: [
-      { hour: 7,  tile: { x: 340, y: 75 } },  // shop opening
-      { hour: 12, tile: { x: 341, y: 76 } },  // back room brewing
-      { hour: 15, tile: { x: 340, y: 75 } },  // shop floor
-      { hour: 19, tile: { x: 340, y: 78 } },  // living quarters above shop
-      { hour: 22, tile: { x: 340, y: 79 } }   // sleeping
+      { hour: 7,  tile: { x: 138, y: 53 } },  // shop opening
+      { hour: 12, tile: { x: 139, y: 54 } },  // back room brewing
+      { hour: 15, tile: { x: 138, y: 53 } },  // shop floor
+      { hour: 19, tile: { x: 138, y: 55 } },  // living quarters above shop
+      { hour: 22, tile: { x: 138, y: 56 } }   // sleeping
     ],
     dialogueRoot: 'thornmere_alchemist',
     isEssential: false,
@@ -343,13 +343,13 @@ export const NPCS = {
     race: 'varesh',
     faction: 'auric_concordat',
     spriteKey: 'npc_merchant_travel',
-    spawnTile: { x: 150, y: 102 },             // road between Greyhollow and Thornmere
+    spawnTile: { x: 108, y: 80 },              // road between Greyhollow and Thornmere
     schedule: [
-      { hour: 8,  tile: { x: 150, y: 102 } }, // roadside camp
-      { hour: 10, tile: { x: 140, y: 102 } }, // traveling toward Greyhollow
-      { hour: 14, tile: { x: 100, y: 102 } }, // Greyhollow market plaza
-      { hour: 17, tile: { x: 120, y: 102 } }, // heading back
-      { hour: 20, tile: { x: 150, y: 102 } }  // roadside camp again
+      { hour: 8,  tile: { x: 120, y: 72 } },  // roadside camp (Thornmere side)
+      { hour: 10, tile: { x: 100, y: 84 } },  // traveling toward Greyhollow
+      { hour: 14, tile: { x: 84, y: 98 } },   // Greyhollow market plaza
+      { hour: 17, tile: { x: 100, y: 84 } },  // heading back
+      { hour: 20, tile: { x: 120, y: 72 } }   // roadside camp again
     ],
     dialogueRoot: 'concordat_merchant',
     isEssential: false,
@@ -383,10 +383,10 @@ export const NPCS = {
     race: 'vorrkai',
     faction: null,
     spriteKey: 'npc_vorrkai_elder',
-    spawnTile: { x: 420, y: 200 },             // hidden Vorrkai settlement, Underlurk cavern
+    spawnTile: { x: 88, y: 150 },              // hidden Vorrkai settlement, Underlurk cavern
     schedule: [
-      { hour: 0,  tile: { x: 420, y: 200 } }, // always here (underground, no day cycle)
-      { hour: 12, tile: { x: 421, y: 201 } }  // walks to settlement map marker
+      { hour: 0,  tile: { x: 88, y: 150 } },  // always here (underground, no day cycle)
+      { hour: 12, tile: { x: 89, y: 151 } }   // walks to settlement map marker
     ],
     dialogueRoot: 'vorrkai_refugee_elder',
     isEssential: false,
@@ -410,12 +410,12 @@ export const NPCS = {
     race: 'sylveni',
     faction: 'rootwarden_circle',
     spriteKey: 'npc_sylveni_druid',
-    spawnTile: { x: 195, y: 70 },              // Aetherwood clearing near tree line
+    spawnTile: { x: 148, y: 82 },              // Aetherwood clearing near tree line
     schedule: [
-      { hour: 5,  tile: { x: 195, y: 68 } },  // dawn communing with trees
-      { hour: 10, tile: { x: 195, y: 70 } },  // clearing — available
-      { hour: 16, tile: { x: 196, y: 72 } },  // walks deeper into Aetherwood
-      { hour: 20, tile: { x: 195, y: 70 } }   // returns to clearing
+      { hour: 5,  tile: { x: 148, y: 80 } },  // dawn communing with trees
+      { hour: 10, tile: { x: 148, y: 82 } },  // clearing — available
+      { hour: 16, tile: { x: 150, y: 84 } },  // walks deeper into Aetherwood
+      { hour: 20, tile: { x: 148, y: 82 } }   // returns to clearing
     ],
     dialogueRoot: 'wandering_sylveni_druid',
     isEssential: false,
@@ -437,11 +437,11 @@ export const NPCS = {
     race: 'varesh',
     faction: null,
     spriteKey: 'npc_deserter',
-    spawnTile: { x: 265, y: 150 },             // abandoned farmstead near Iron Compact HQ
+    spawnTile: { x: 102, y: 115 },             // Abandoned Farmstead, south of Greyhollow
     schedule: [
-      { hour: 0,  tile: { x: 265, y: 150 } }, // hides here all day — frightened
-      { hour: 10, tile: { x: 265, y: 152 } }, // paces anxiously
-      { hour: 18, tile: { x: 265, y: 150 } }  // back to hiding
+      { hour: 0,  tile: { x: 102, y: 115 } }, // hides here all day — frightened
+      { hour: 10, tile: { x: 102, y: 117 } }, // paces anxiously
+      { hour: 18, tile: { x: 102, y: 115 } }  // back to hiding
     ],
     dialogueRoot: 'iron_compact_deserter',
     isEssential: false,
@@ -463,14 +463,14 @@ export const NPCS = {
     race: 'varesh',
     faction: 'grey_penitents',
     spriteKey: 'npc_penitent_monk',
-    spawnTile: { x: 158, y: 57 },              // monastery scriptorium
+    spawnTile: { x: 76, y: 33 },               // monastery scriptorium
     schedule: [
-      { hour: 4,  tile: { x: 158, y: 55 } },  // dawn prayer
-      { hour: 7,  tile: { x: 158, y: 57 } },  // scriptorium
-      { hour: 12, tile: { x: 158, y: 60 } },  // refectory
-      { hour: 13, tile: { x: 158, y: 57 } },  // scriptorium again
-      { hour: 19, tile: { x: 158, y: 55 } },  // evening prayer
-      { hour: 21, tile: { x: 158, y: 62 } }   // monk's cell
+      { hour: 4,  tile: { x: 78, y: 31 } },   // dawn prayer
+      { hour: 7,  tile: { x: 76, y: 33 } },   // scriptorium
+      { hour: 12, tile: { x: 77, y: 35 } },   // refectory
+      { hour: 13, tile: { x: 76, y: 33 } },   // scriptorium again
+      { hour: 19, tile: { x: 78, y: 31 } },   // evening prayer
+      { hour: 21, tile: { x: 75, y: 35 } }    // monk's cell
     ],
     dialogueRoot: 'grey_penitent_monk',
     isEssential: false,

@@ -89,6 +89,10 @@ export class TileMap {
         return isPassable(tileId);
     }
 
+    getTileAt(tileX, tileY) {
+        return getTile(this.tiles, tileX, tileY);
+    }
+
     pixelToTile(px, py) {
         return { x: Math.floor(px / TILE_SIZE), y: Math.floor(py / TILE_SIZE) };
     }
