@@ -247,9 +247,12 @@ export default class DialogueScene extends Phaser.Scene {
     }
 
     closeDialogue() {
+        EventBus.emit('npc_talked_to', this.npcId);
         EventBus.emit('dialogue_end', this.npcId);
         this.scene.stop('Dialogue');
         // Resume game if it was paused
-        if (this.scene.isPaused('Game')) this.scene.resume('Game');
+        if (this.scene.isPaused('Game') && !this.scene.isActive('Story') && !this.scene.isActive('Ending')) {
+            this.scene.resume('Game');
+        }
     }
 }

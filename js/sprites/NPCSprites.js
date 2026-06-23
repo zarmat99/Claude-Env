@@ -17,6 +17,7 @@ export function generateNPCSprites(scene) {
     ];
 
     for (const npc of npcTypes) {
+        if (scene.textures.exists(npc.key)) continue;
         const { canvas, ctx } = SpriteFactory.createCanvas(16 * 5, 16 * 4);
         drawNPCSheet(ctx, npc.palette, npc.clothing, npc.hat);
         SpriteFactory.register(scene, npc.key, canvas);
@@ -116,6 +117,7 @@ function generateEnemySprites(scene) {
     ];
 
     for (const enemy of enemies) {
+        if (scene.textures.exists(enemy.key)) continue;
         const { canvas, ctx } = SpriteFactory.createCanvas(enemy.size * 2, enemy.size);
         enemy.draw(ctx, 0, 0, false);
         enemy.draw(ctx, enemy.size, 0, true);

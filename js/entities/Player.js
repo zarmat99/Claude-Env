@@ -12,7 +12,8 @@ export class Player {
 
         // Use a sprite if the texture exists; otherwise fall back to a rectangle stand-in
         if (scene.textures.exists(raceKey)) {
-            this.sprite = scene.physics.add.sprite(x, y, raceKey, 0);
+            this.sprite = scene.physics.add.sprite(x, y, raceKey);
+            this.sprite.setDisplaySize(24, 28);
         } else {
             // Fallback: physics-enabled rectangle drawn as a graphics object
             this.sprite = scene.physics.add.sprite(x, y, '__DEFAULT');
@@ -36,6 +37,7 @@ export class Player {
     createAnimations(scene, race) {
         const key = `player_${race}`;
         if (!scene.textures.exists(key)) return;
+        if (scene.textures.get(key).frameTotal <= 1) return;
         if (scene.anims.exists(`${key}_walk_down`)) return;
 
         const dirs = ['down', 'up', 'left', 'right'];

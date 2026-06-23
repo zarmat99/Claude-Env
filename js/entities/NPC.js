@@ -1,23 +1,37 @@
 const TILE_SIZE = 16;
 
+const SPRITE_ALIASES = {
+    npc_farmer: 'npc_innkeeper',
+    npc_merchant_travel: 'npc_innkeeper',
+    npc_sylveni_druid: 'npc_alchemist',
+    npc_deserter: 'enemy_bandit',
+    npc_penitent_monk: 'npc_abbess'
+};
+
 export class NPC {
     constructor(scene, x, y, npcData) {
         this.scene = scene;
         this.data  = npcData;
 
-        // Sprite or fallback rectangle
-        if (scene.textures.exists(npcData.spriteKey)) {
-            this.sprite = scene.add.sprite(x, y, npcData.spriteKey, 0);
+        const spriteKey = scene.textures.exists(npcData.spriteKey)
+            ? npcData.spriteKey
+            : SPRITE_ALIASES[npcData.spriteKey];
 
-            const animKey = `${npcData.spriteKey}_idle`;
-            if (!scene.anims.exists(animKey)) {
+        // Generated static sprite or procedural fallback sheet.
+        if (spriteKey && scene.textures.exists(spriteKey)) {
+            this.sprite = scene.add.sprite(x, y, spriteKey);
+            this.sprite.setDisplaySize(24, 28);
+
+            const animKey = `${spriteKey}_idle`;
+            const texture = scene.textures.get(spriteKey);
+            if (texture.frameTotal > 1 && !scene.anims.exists(animKey)) {
                 scene.anims.create({
                     key:       animKey,
-                    frames:    [{ key: npcData.spriteKey, frame: 0 }],
+                    frames:    [{ key: spriteKey, frame: 0 }],
                     frameRate: 1
                 });
             }
-            this.sprite.play(animKey);
+            if (scene.anims.exists(animKey)) this.sprite.play(animKey);
         } else {
             // Fallback: coloured rectangle to represent the NPC
             const colors = { varesh: 0xd4a76a, cindrak: 0x9a8a7a, sylveni: 0xc8d4b8, vorrkai: 0x5a6a7a, thornkin: 0x7a6a4a };

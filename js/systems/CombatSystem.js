@@ -211,7 +211,6 @@ export function playerAttack(state, action) {
             result.combatOver  = true;
             result.result      = 'fled';
             result.message     = 'You escaped from combat!';
-            EventBus.emit('combat_end', 'fled', []);
         } else {
             result.message = 'You failed to escape!';
         }
@@ -293,7 +292,6 @@ export function playerAttack(state, action) {
         addXP(player, skillId, killXP);
 
         EventBus.emit('enemy_killed', enemy.id, enemy);
-        EventBus.emit('combat_end', 'victory', loot);
         result.loot = loot;
     }
 
@@ -318,7 +316,6 @@ export function enemyTurn(state) {
         if (!player.kills) player.kills = {};
         player.kills[enemy.id] = (player.kills[enemy.id] || 0) + 1;
         EventBus.emit('enemy_killed', enemy.id, enemy);
-        EventBus.emit('combat_end', 'victory', loot);
         result.loot = loot;
         return result;
     }
@@ -374,7 +371,6 @@ export function enemyTurn(state) {
         result.combatOver     = true;
         result.result         = 'defeat';
         EventBus.emit('player_died');
-        EventBus.emit('combat_end', 'defeat', []);
     }
 
     return result;

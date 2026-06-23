@@ -1,6 +1,7 @@
 import { RACES, createBaseAttributes } from '../data/races.js';
 import { FACTIONS } from '../data/factions.js';
 import { initializeRep } from '../systems/FactionSystem.js';
+import { getItem } from '../data/items.js';
 import EventBus from '../systems/EventBus.js';
 
 export default class CharacterCreateScene extends Phaser.Scene {
@@ -275,12 +276,11 @@ export default class CharacterCreateScene extends Phaser.Scene {
                 herbalism:   { xp: 0, level: 1, perksUnlocked: [] },
                 survival:    { xp: 0, level: 1, perksUnlocked: [] }
             },
-            equipment: { head: null, chest: null, legs: null, hands: null, feet: null, weapon: null, offhand: null, ring: null },
+            equipment: { head: null, chest: null, legs: null, hands: null, feet: null, weapon: getItem('iron_sword'), offhand: null, ring: null },
             worldX: 82, worldY: 98,
             flags: new Set(),
             quests: { active: new Map(), completed: new Set(), failed: new Set() },
             inventory: [
-                { itemId: 'iron_sword',          quantity: 1 },
                 { itemId: 'health_potion_minor', quantity: 3 },
                 { itemId: 'bread',               quantity: 2 }
             ],

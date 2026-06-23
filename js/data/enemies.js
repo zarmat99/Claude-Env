@@ -501,11 +501,11 @@ export const ENEMIES = {
   hollow_prophet_boss: {
     id: 'hollow_prophet_boss',
     name: 'The Hollow Prophet',
-    spriteKey: 'enemy_hollow_prophet',
-    health: 600, maxHealth: 600,
+    spriteKey: 'enemy_hollow_prophet_boss',
+    health: 140, maxHealth: 140,
     mana: 400,
     attributes: { STR: 10, END: 12, AGI: 8, INT: 18, WIL: 20, PER: 12 },
-    damage: [20, 35], armor: 12, speed: 1.0,
+    damage: [7, 12], armor: 8, speed: 1.0,
     xpReward: 1500,
     gold: [50, 100],
     lootTable: [
@@ -605,6 +605,61 @@ export const ENEMIES = {
     resistances: { physical: 0.40, fire: 0.20, void: 0.80 },
     immunities: ['poison', 'bleed', 'sleep', 'frightened', 'stunned'],
     statusEffects: ['void_merged']
+  },
+
+  void_anchor_thornpillar: {
+    id: 'void_anchor_thornpillar', name: 'Thornpillar Void Anchor',
+    spriteKey: 'story_anchor_thorn', health: 80, maxHealth: 80, mana: 0,
+    attributes: { STR: 8, END: 12, AGI: 1, INT: 4, WIL: 10, PER: 2 },
+    damage: [5, 9], armor: 8, speed: 0, xpReward: 180, gold: [0, 0],
+    lootTable: [{ itemId: 'rootstone_fragment', chance: 0.5 }],
+    skills: {}, biomes: ['ROOTSTONE'], level: 6, aggressive: false, aggroRange: 1,
+    fleeHealth: 0, description: 'A cult siphon driven through the roots beneath the Thornpillar.',
+    abilities: [], faction: 'underlurk_cult', resistances: { void: 0.7 }, statusEffects: ['construct']
+  },
+
+  void_anchor_aetherwood: {
+    id: 'void_anchor_aetherwood', name: 'Aetherwood Void Anchor',
+    spriteKey: 'story_anchor_aetherwood', health: 90, maxHealth: 90, mana: 0,
+    attributes: { STR: 9, END: 12, AGI: 1, INT: 4, WIL: 10, PER: 2 },
+    damage: [6, 10], armor: 9, speed: 0, xpReward: 200, gold: [0, 0],
+    lootTable: [{ itemId: 'voidbloom', chance: 1 }],
+    skills: {}, biomes: ['DARK_FOREST'], level: 7, aggressive: false, aggroRange: 1,
+    fleeHealth: 0, description: 'A pulsing anchor strangling the Aetherwood root-nexus.',
+    abilities: [], faction: 'underlurk_cult', resistances: { void: 0.7 }, statusEffects: ['construct']
+  },
+
+  void_anchor_emberpeak: {
+    id: 'void_anchor_emberpeak', name: 'Emberpeak Void Anchor',
+    spriteKey: 'story_anchor_emberpeak', health: 100, maxHealth: 100, mana: 0,
+    attributes: { STR: 10, END: 13, AGI: 1, INT: 4, WIL: 11, PER: 2 },
+    damage: [7, 11], armor: 10, speed: 0, xpReward: 220, gold: [0, 0],
+    lootTable: [{ itemId: 'emberpetal', chance: 1, quantity: [1, 2] }],
+    skills: {}, biomes: ['VOLCANIC'], level: 8, aggressive: false, aggroRange: 1,
+    fleeHealth: 0, description: 'A heat-scarred siphon buried beneath Emberpeak Caldera.',
+    abilities: [], faction: 'underlurk_cult', resistances: { void: 0.7, fire: 1 }, statusEffects: ['construct']
+  },
+
+  corrupted_woven: {
+    id: 'corrupted_woven', name: 'Corrupted Woven',
+    spriteKey: 'enemy_wraith', health: 58, maxHealth: 58, mana: 40,
+    attributes: { STR: 5, END: 6, AGI: 7, INT: 5, WIL: 7, PER: 6 },
+    damage: [7, 12], armor: 4, speed: 1.05, xpReward: 75, gold: [0, 0],
+    lootTable: [{ itemId: 'rootmoss', chance: 0.75 }],
+    skills: {}, biomes: ['DARK_FOREST'], level: 4, aggressive: true, aggroRange: 5,
+    fleeHealth: 0, description: 'A tree-spirit warped by void residue.',
+    abilities: [], faction: null, resistances: { void: 0.3 }, statusEffects: []
+  },
+
+  compact_deserter_hunter: {
+    id: 'compact_deserter_hunter', name: 'Compact Deserter-Hunter',
+    spriteKey: 'enemy_bandit', health: 62, maxHealth: 62, mana: 0,
+    attributes: { STR: 7, END: 6, AGI: 6, INT: 4, WIL: 6, PER: 7 },
+    damage: [7, 13], armor: 7, speed: 1, xpReward: 70, gold: [10, 18],
+    lootTable: [{ itemId: 'health_potion_minor', chance: 0.4 }],
+    skills: { blades: 25 }, biomes: ['GRASSLAND'], level: 4, aggressive: true, aggroRange: 5,
+    fleeHealth: 0.1, description: 'An Iron Compact tracker sent to silence Gerran Solt.',
+    abilities: [], faction: 'iron_compact', resistances: {}, statusEffects: []
   }
 };
 

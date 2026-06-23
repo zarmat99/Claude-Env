@@ -226,6 +226,24 @@ export const ITEMS = Object.freeze({
         description: 'Warden Cael\'s personal notes. They point to an Underlurk chasm accessible through a collapsed mining shaft.',
         lore: '', stackable: false, requirements: {}
     },
+    ledger_evidence: {
+        id: 'ledger_evidence', name: 'Warehouse Ledger Evidence', type: 'quest', subtype: 'document',
+        spriteKey: 'item_scroll', weight: 0.1, value: 0,
+        description: 'Altered Greyhollow consignment records and a letter explaining where the stolen surplus went.',
+        lore: '', stackable: false, requirements: {}
+    },
+    massacre_orders: {
+        id: 'massacre_orders', name: 'Sealed Massacre Orders', type: 'quest', subtype: 'document',
+        spriteKey: 'item_scroll', weight: 0.1, value: 0,
+        description: 'Iron Compact orders bearing Warmaster Kash\'s seal. The contents could fracture an alliance.',
+        lore: '', stackable: false, requirements: {}
+    },
+    voidbloom_weave: {
+        id: 'voidbloom_weave', name: 'Voidbloom Weave', type: 'quest', subtype: 'ritual',
+        spriteKey: 'item_quest', weight: 0.2, value: 0,
+        description: 'Five Voidblooms woven into a Rootwarden ritual lattice.',
+        lore: '', stackable: false, requirements: {}
+    },
 
     // === MISC ===
     gold_coin: {

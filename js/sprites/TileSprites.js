@@ -7,6 +7,7 @@ const TILE_SIZE  = 16;
 const TILE_COUNT = 25; // IDs 0–24
 
 export function generateTileAtlas(scene) {
+    if (scene.textures.exists('tiles')) return;
     const totalW = TILE_SIZE * TILE_COUNT; // 400px wide, 16px tall
     const { canvas, ctx } = SpriteFactory.createCanvas(totalW, TILE_SIZE);
 

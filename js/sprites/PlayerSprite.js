@@ -13,6 +13,7 @@ export function generatePlayerSprites(scene) {
     const races = ['varesh', 'cindrak', 'sylveni', 'vorrkai', 'thornkin'];
 
     for (const race of races) {
+        if (scene.textures.exists(`player_${race}`)) continue;
         const { canvas, ctx } = SpriteFactory.createCanvas(FRAME_W * FRAMES, FRAME_H * DIRS);
         const palette = RACE_PALETTE[race];
 

@@ -1,6 +1,7 @@
 import { WORLD_LOCATIONS, ROOTSTONE_POSITIONS } from '../world/WorldGen.js';
 import { BIOME_DATA } from '../world/Biomes.js';
 import EventBus from '../systems/EventBus.js';
+import { STORY_SITES } from '../systems/StoryWorldSystem.js';
 
 // Numeric biome IDs — must match WorldGen.js BIOME_ID order
 const BIOME_COLORS_BY_ID = [
@@ -170,6 +171,20 @@ export default class MapScene extends Phaser.Scene {
             zone.on('pointerover', () => this.showLocationLabel(
                 `${rsName} — ${rsHealth}%`, mx, my + 8, 0x00ccff
             ));
+            zone.on('pointerout', () => this.hideLocationLabel());
+            this.hoverMarkers.push(zone);
+        }
+
+        // Discovered story sites use a violet diamond so the campaign is navigable.
+        for (const site of STORY_SITES) {
+            if (!explored[site.y * MAP_SIZE + site.x]) continue;
+            const mx = mapOffX + site.x * PIXEL_PER_TILE;
+            const my = mapOffY + site.y * PIXEL_PER_TILE;
+            gfx.fillStyle(0xcc66ff, 0.95);
+            gfx.fillRect(mx - 2, my - 2, 5, 5);
+            const zone = this.add.zone(mx, my, 14, 14)
+                .setScrollFactor(0).setDepth(4).setInteractive();
+            zone.on('pointerover', () => this.showLocationLabel(site.name, mx, my + 8, 0xcc66ff));
             zone.on('pointerout', () => this.hideLocationLabel());
             this.hoverMarkers.push(zone);
         }

@@ -4,10 +4,14 @@ import EventBus from '../systems/EventBus.js';
 const TILE_SIZE = 16;
 
 export class Enemy {
-    constructor(scene, x, y, enemyId) {
+    constructor(scene, x, y, enemyId, options = {}) {
         this.scene    = scene;
         this.enemyId  = enemyId;
-        this.template = ENEMIES[enemyId] || ENEMIES.goblin;
+        this.storyTag = options.storyTag || null;
+        this.template = {
+            ...(ENEMIES[enemyId] || ENEMIES.goblin),
+            ...(options.templateOverrides || {})
+        };
 
         // Clone mutable stats
         this.health    = this.template.health;
@@ -19,9 +23,12 @@ export class Enemy {
         const key = this.template.spriteKey;
 
         if (scene.textures.exists(key)) {
-            this.sprite = scene.add.sprite(x, y, key, 0);
+            this.sprite = scene.add.sprite(x, y, key);
+            const isBoss = enemyId === 'hollow_prophet_boss';
+            this.sprite.setDisplaySize(isBoss ? 38 : 24, isBoss ? 42 : 26);
             const animKey = `${key}_idle`;
-            if (!scene.anims.exists(animKey)) {
+            const texture = scene.textures.get(key);
+            if (texture.frameTotal > 1 && !scene.anims.exists(animKey)) {
                 scene.anims.create({
                     key:       animKey,
                     frames:    scene.anims.generateFrameNumbers(key, { start: 0, end: 1 }),
@@ -29,7 +36,7 @@ export class Enemy {
                     repeat:    -1
                 });
             }
-            this.sprite.play(animKey);
+            if (scene.anims.exists(animKey)) this.sprite.play(animKey);
         } else {
             // Fallback coloured rectangle
             const enemyColors = {
@@ -63,6 +70,7 @@ export class Enemy {
 
     update(playerSprite, playerData, tileMap, delta) {
         if (!this.alive) return;
+        if (this.sprite.visible === false) return;
 
         // Skip expensive wander/healthbar logic for off-screen non-aggro enemies
         if (!this.aggro) {
@@ -152,6 +160,7 @@ export class Enemy {
     }
 
     die() {
+        if (!this.alive) return;
         this.alive = false;
         this.aggro = false;
         this.healthBar.clear();
@@ -159,7 +168,7 @@ export class Enemy {
 
         if (this.sprite.setAlpha) this.sprite.setAlpha(0.3);
 
-        EventBus.emit('enemy_killed', this.enemyId, this.template);
+        if (this.storyTag) EventBus.emit('story_enemy_killed', this.storyTag, this.enemyId);
 
         this.scene.time.delayedCall(2000, () => {
             if (this.sprite)          this.sprite.destroy();
