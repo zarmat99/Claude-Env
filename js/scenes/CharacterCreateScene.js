@@ -89,10 +89,29 @@ export default class CharacterCreateScene extends Phaser.Scene {
             fontSize: '12px', color: '#6688aa', fontFamily: 'Courier New'
         }).setOrigin(0.5);
 
-        this.add.rectangle(W / 2, y + 22, 220, 22, 0x0a0a20).setStrokeStyle(1, 0x3a3a6a);
+        const nameBox = this.add.rectangle(W / 2, y + 22, 220, 22, 0x0a0a20)
+            .setStrokeStyle(1, 0x3a3a6a);
         this.nameDisplay = this.add.text(W / 2, y + 22, this.playerName + '|', {
             fontSize: '13px', color: '#ccccff', fontFamily: 'Courier New'
         }).setOrigin(0.5);
+
+        // Touch devices have no physical keyboard — tap the field to type via
+        // the native on-screen keyboard (window.prompt).
+        const dev = this.sys.game.device.input;
+        const isTouch = !!(dev && dev.touch) || ('ontouchstart' in window) ||
+                        (navigator.maxTouchPoints > 0);
+        if (isTouch) {
+            this.add.text(W / 2, y + 40, '(tocca per scrivere)', {
+                fontSize: '9px', color: '#556688', fontFamily: 'Courier New'
+            }).setOrigin(0.5);
+            nameBox.setInteractive({ useHandCursor: true });
+            nameBox.on('pointerdown', () => {
+                const entered = window.prompt('Nome personaggio:', this.playerName);
+                if (entered !== null) {
+                    this.playerName = entered.slice(0, 20);
+                }
+            });
+        }
 
         // Blinking cursor
         this.time.addEvent({

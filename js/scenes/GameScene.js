@@ -7,6 +7,7 @@ import { Player } from '../entities/Player.js';
 import { NPC } from '../entities/NPC.js';
 import { Enemy } from '../entities/Enemy.js';
 import { HUD } from '../ui/HUD.js';
+import { MobileControls } from '../ui/MobileControls.js';
 import { subscribeToEvents } from '../systems/QuestSystem.js';
 import { save as saveGame } from '../systems/SaveSystem.js';
 import { addItem } from '../systems/InventorySystem.js';
@@ -62,6 +63,9 @@ export default class GameScene extends Phaser.Scene {
         // HUD
         this.hud = new HUD(this, player);
 
+        // On-screen touch controls (only render on touch devices)
+        this.mobileControls = new MobileControls(this, player);
+
         // Input
         this.cursors = this.input.keyboard.createCursorKeys();
         this.wasd    = this.input.keyboard.addKeys({
@@ -107,8 +111,9 @@ export default class GameScene extends Phaser.Scene {
         const player = this.registry.get('player');
         if (!player) return;
 
-        // Update player movement
-        this.playerEntity.update(this.cursors, this.wasd, this.tileMap, player, delta);
+        // Update player movement (merge touch joystick state when present)
+        const touch = this.mobileControls ? this.mobileControls.getMoveState() : null;
+        this.playerEntity.update(this.cursors, this.wasd, this.tileMap, player, delta, touch);
 
         // Redraw tilemap based on camera position
         const cam = this.cameras.main;

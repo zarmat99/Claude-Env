@@ -56,15 +56,16 @@ export class Player {
         });
     }
 
-    update(cursors, wasd, tileMap, playerData, delta) {
+    update(cursors, wasd, tileMap, playerData, delta, touch = null) {
         const speed    = playerData.derived.moveSpeed || 140;
         const canRun   = playerData.derived.stamina > 5;
-        const runMult  = (wasd.run && wasd.run.isDown && canRun) ? 1.7 : 1.0;
+        const runHeld  = (wasd.run && wasd.run.isDown) || (touch && touch.run);
+        const runMult  = (runHeld && canRun) ? 1.7 : 1.0;
 
-        const left  = cursors.left.isDown  || (wasd.left  && wasd.left.isDown);
-        const right = cursors.right.isDown || (wasd.right && wasd.right.isDown);
-        const up    = cursors.up.isDown    || (wasd.up    && wasd.up.isDown);
-        const down  = cursors.down.isDown  || (wasd.down  && wasd.down.isDown);
+        const left  = cursors.left.isDown  || (wasd.left  && wasd.left.isDown)  || (touch && touch.left);
+        const right = cursors.right.isDown || (wasd.right && wasd.right.isDown) || (touch && touch.right);
+        const up    = cursors.up.isDown    || (wasd.up    && wasd.up.isDown)    || (touch && touch.up);
+        const down  = cursors.down.isDown  || (wasd.down  && wasd.down.isDown)  || (touch && touch.down);
 
         let vx = 0, vy = 0;
         if (left)  { vx = -speed * runMult; this.facingDir = 2; }

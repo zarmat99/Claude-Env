@@ -43,10 +43,19 @@ export default class MapScene extends Phaser.Scene {
             fontSize: '16px', color: '#00ccff', fontFamily: 'Courier New'
         }).setOrigin(0.5).setScrollFactor(0).setDepth(2);
 
-        // ── Close hint ─────────────────────────────────────────────────────────
-        this.add.text(W - 20, 16, '[M] or [ESC] Close', {
+        // ── Close hint (tappable) ──────────────────────────────────────────────
+        this.add.text(W - 44, 16, '[M] or [ESC] Close', {
             fontSize: '10px', color: '#445566', fontFamily: 'Courier New'
         }).setOrigin(1, 0).setScrollFactor(0).setDepth(2);
+
+        // ── Close button (touch) ───────────────────────────────────────────────
+        const closeBtn = this.add.text(W - 16, 14, '✕', {
+            fontSize: '18px', color: '#cc6666', fontFamily: 'Courier New'
+        }).setOrigin(1, 0).setScrollFactor(0).setDepth(3)
+          .setInteractive({ useHandCursor: true });
+        closeBtn.on('pointerover', () => closeBtn.setColor('#ff8888'));
+        closeBtn.on('pointerout',  () => closeBtn.setColor('#cc6666'));
+        closeBtn.on('pointerdown', () => this.scene.stop('WorldMap'));
 
         this.input.keyboard.on('keydown-M',   () => this.scene.stop('WorldMap'));
         this.input.keyboard.on('keydown-ESC', () => this.scene.stop('WorldMap'));
