@@ -310,12 +310,15 @@ function placeStoryRegions(tiles) {
     drawLine(tiles, 165, 85, 180, 100);
     for (const [cx, cy, radius, fill] of [
         [174,92,3,TILE.DARK_FOREST], [180,100,4,TILE.GRASS],
-        [173,103,2,TILE.DARK_FOREST], [102,115,3,TILE.DIRT],
+        [173,103,3,TILE.GRASS], [102,115,3,TILE.DIRT],
         [82,82,3,TILE.DIRT], [84,84,2,TILE.DIRT]
     ]) {
         clearArea(tiles, cx, cy, radius, fill);
     }
     tiles[82 * WORLD_WIDTH + 82] = TILE.ROOTSTONE;
+    // Connect Aetherwood void anchor (173,103) to the trail — the surrounding
+    // dark forest has 35% tree density which creates impassable pockets.
+    drawLine(tiles, 173, 93, 173, 103);
 
     // Emberpeak pilgrimage path: volcanic ground remains dramatic but walkable.
     drawLine(tiles, 158, 168, 158, 178);

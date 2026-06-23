@@ -57,6 +57,7 @@ export class StoryWorldSystem {
         this.spawnStoryEnemies();
         EventBus.on('story_enemy_killed', this.onStoryEnemyKilled, this);
         EventBus.on('flag_set', this.refresh, this);
+        EventBus.on('quest_stage_complete', this.refresh, this);
         this.refresh();
     }
 
@@ -211,7 +212,9 @@ export class StoryWorldSystem {
                     removeItem(this.player, 'voidbloom', 5);
                     addItem(this.player, 'voidbloom_weave', 1);
                     this.player.flags.add('voidbloom_weave_created');
-                    EventBus.emit('crafted_at_location', 'rootwarden_altar', 'voidbloom_weave_created');
+                    for (let i = 0; i < 5; i++) {
+                        EventBus.emit('crafted_at_location', 'rootwarden_altar', 'voidbloom_weave_created');
+                    }
                     return this.narrate('Voidbloom Weave', 'The black flowers knot themselves around the altar roots. Darkness becomes a lattice strong enough to carry living resonance.');
                 }
                 return this.narrate('Rootwarden Altar', 'Ancient roots form a living arch around the Sanctuary altar.');
@@ -312,5 +315,6 @@ export class StoryWorldSystem {
     destroy() {
         EventBus.off('story_enemy_killed', this.onStoryEnemyKilled, this);
         EventBus.off('flag_set', this.refresh, this);
+        EventBus.off('quest_stage_complete', this.refresh, this);
     }
 }
