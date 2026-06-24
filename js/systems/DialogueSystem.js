@@ -268,7 +268,7 @@ function applySingleEffect(effect, player, scene) {
             break;
 
         case 'open_shop':
-            if (scene && scene.events) scene.events.emit('open_shop', effect.shopId, _state.npcId);
+            if (scene && scene.events) scene.events.emit('open_shop', effect.shopId || effect.npcId || _state.npcId, _state.npcId);
             break;
 
         case 'open_scene':

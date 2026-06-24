@@ -20,6 +20,8 @@ const config = {
     backgroundColor: '#000000',
     pixelArt: true,
     roundPixels: true,
+    // Keep the simulation alive when the browser window/tab is covered while live-testing.
+    disableVisibilityChange: true,
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH

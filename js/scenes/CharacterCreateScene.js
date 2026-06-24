@@ -224,8 +224,8 @@ export default class CharacterCreateScene extends Phaser.Scene {
             fontSize: '16px', color: '#88ccff', fontFamily: 'Courier New'
         }).setOrigin(0.5);
 
-        btn.on('pointerover', () => { btn.setFillColor(0x0066bb); text.setColor('#cceeff'); });
-        btn.on('pointerout',  () => { btn.setFillColor(0x004488); text.setColor('#88ccff'); });
+        btn.on('pointerover', () => { btn.setFillStyle(0x0066bb); text.setColor('#cceeff'); });
+        btn.on('pointerout',  () => { btn.setFillStyle(0x004488); text.setColor('#88ccff'); });
         btn.on('pointerdown', () => this.startGame());
     }
 

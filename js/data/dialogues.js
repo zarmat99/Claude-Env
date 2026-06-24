@@ -3066,6 +3066,79 @@ export const DIALOGUE_TREES = {
         next: null
       }
     }
+  },
+
+  concordat_merchant: {
+    id: 'concordat_merchant',
+    speaker: 'concordat_merchant',
+    root: 'beren_root',
+    nodes: {
+      beren_root: {
+        id: 'beren_root',
+        speaker: 'Beren Ashvale',
+        portrait: 'portrait_concordat_merchant',
+        text: 'Keep your purse close and your eyes open, traveler. Beren Ashvale of the Auric Concordat, currently trying not to be robbed by bandits, bad roads, or Greyhollow bookkeeping.',
+        choices: [
+          {
+            text: 'Tell me about the warehouse fraud.',
+            conditions: [{ type: 'quest_not_started', questId: 'side_merchant_debt' }],
+            next: 'beren_offer'
+          },
+          {
+            text: 'Where should I look for the records?',
+            conditions: [{ type: 'quest_active', questId: 'side_merchant_debt' }],
+            next: 'beren_hint'
+          },
+          {
+            text: 'About the warehouse affair...',
+            conditions: [{ type: 'quest_complete', questId: 'side_merchant_debt' }],
+            next: 'beren_after'
+          },
+          { text: 'Safe roads, Beren.', next: null }
+        ]
+      },
+      beren_offer: {
+        id: 'beren_offer',
+        speaker: 'Beren Ashvale',
+        portrait: 'portrait_concordat_merchant',
+        text: 'Greyhollow has a warehouse keeper named Oster. Shipments I paid for arrive light, ledgers vanish, and everyone suddenly remembers they have somewhere else to be. I need someone outside my colors to look through the warehouse records. Bring me proof, and I pay in coin instead of gratitude.',
+        choices: [
+          {
+            text: 'I will investigate it.',
+            effects: [{ type: 'start_quest', questId: 'side_merchant_debt' }],
+            next: 'beren_accept'
+          },
+          { text: 'Not right now.', next: 'beren_root' }
+        ]
+      },
+      beren_accept: {
+        id: 'beren_accept',
+        speaker: 'Beren Ashvale',
+        portrait: 'portrait_concordat_merchant',
+        text: 'Good. The warehouse sits on Greyhollow\'s south road. I have a spare key from a less trusting age of my career. Do not let Oster see it unless you want the polite version of a knife fight.',
+        choices: [
+          { text: 'I will return with evidence.', next: null }
+        ]
+      },
+      beren_hint: {
+        id: 'beren_hint',
+        speaker: 'Beren Ashvale',
+        portrait: 'portrait_concordat_merchant',
+        text: 'The records will not be on the front desk. Oster is lazy, not stupid. Look for a false panel, a locked chest, anything near his private shelving. If the numbers do not match the consignments, bring me the ledger.',
+        choices: [
+          { text: 'Understood.', next: null }
+        ]
+      },
+      beren_after: {
+        id: 'beren_after',
+        speaker: 'Beren Ashvale',
+        portrait: 'portrait_concordat_merchant',
+        text: 'Greyhollow bookkeeping is cleaner now, one way or another. Do not mistake me for a saint, traveler, but I prefer fraud to wear a name tag.',
+        choices: [
+          { text: 'Safe roads, Beren.', next: null }
+        ]
+      }
+    }
   }
 };
 

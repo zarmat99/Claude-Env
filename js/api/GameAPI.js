@@ -57,7 +57,8 @@ export function installGameAPI(game) {
             const npcs = (gs.npcs || [])
                 .map(n => ({ id: n.data.id, name: n.data.name, dist: d(n) }))
                 .filter(n => n.dist <= radiusTiles).sort((a, b) => a.dist - b.dist);
-            const enemies = (gs.enemies || []).filter(e => e.alive)
+            const enemies = (gs.enemies || [])
+                .filter(e => e.alive && !e.storyTag?.startsWith('void_anchor_'))
                 .map(e => ({ id: e.enemyId, dist: d(e), aggro: e.aggro }))
                 .filter(e => e.dist <= radiusTiles).sort((a, b) => a.dist - b.dist);
             const story = gs.storyWorld
@@ -123,7 +124,8 @@ export function installGameAPI(game) {
             cs.customAttributes = attrs;
             cs.statPoints = 5 - spent;
             cs.startGame();
-            await sleep(250);
+            // startGame transitions to the Game scene asynchronously; poll instead of a fixed wait.
+            for (let i = 0; i < 40 && !ON('Game'); i++) await sleep(50);
             return !!P() && ON('Game');
         },
 
@@ -255,12 +257,20 @@ export function installGameAPI(game) {
         openJournal() { const gs = GS(); if (gs) gs.openJournal(); return true; },
         closePanels() {
             for (const k of ['Inventory', 'WorldMap', 'Crafting']) if (ON(k)) game.scene.stop(k);
+            // Closing a panel must never leave the Game scene paused (no other modal open).
+            if (game.scene.isPaused('Game') && !ON('Dialogue') && !ON('Story') && !ON('Ending') && !ON('Combat')) {
+                game.scene.resume('Game');
+            }
             return true;
         },
         closeDialogue() {
             const d = S('Dialogue');
             if (!ON('Dialogue') || !d) return false;
             d.closeDialogue();
+            // Belt-and-suspenders: ensure the Game scene resumes even on an abnormal dialogue close.
+            if (game.scene.isPaused('Game') && !ON('Story') && !ON('Ending') && !ON('Combat')) {
+                game.scene.resume('Game');
+            }
             return true;
         },
 

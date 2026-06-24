@@ -212,7 +212,7 @@ export const ITEMS = Object.freeze({
         id: 'resonance_sample', name: 'Resonance Sample', type: 'quest', subtype: 'sample',
         spriteKey: 'item_quest', weight: 0.2, value: 0,
         description: 'A crystal vial containing absorbed Rootstone resonance data. For Elder Sathis.',
-        lore: '', stackable: false, requirements: {}
+        lore: '', stackable: true, maxStack: 99, requirements: {}
     },
     sundering_rite: {
         id: 'sundering_rite', name: 'The Sundering Rite', type: 'quest', subtype: 'document',

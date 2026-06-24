@@ -56,10 +56,10 @@ export default class MapScene extends Phaser.Scene {
           .setInteractive({ useHandCursor: true });
         closeBtn.on('pointerover', () => closeBtn.setColor('#ff8888'));
         closeBtn.on('pointerout',  () => closeBtn.setColor('#cc6666'));
-        closeBtn.on('pointerdown', () => this.scene.stop('WorldMap'));
+        closeBtn.on('pointerdown', () => this.closeMap());
 
-        this.input.keyboard.on('keydown-M',   () => this.scene.stop('WorldMap'));
-        this.input.keyboard.on('keydown-ESC', () => this.scene.stop('WorldMap'));
+        this.input.keyboard.on('keydown-M',   () => this.closeMap());
+        this.input.keyboard.on('keydown-ESC', () => this.closeMap());
 
         // ── Build map canvas ───────────────────────────────────────────────────
         const canvas = document.createElement('canvas');
@@ -229,6 +229,11 @@ export default class MapScene extends Phaser.Scene {
             fontSize: '11px', color: '#ffffff', fontFamily: 'Courier New',
             backgroundColor: '#00000099', padding: { x: 5, y: 3 }
         }).setScrollFactor(0).setDepth(10).setVisible(false);
+    }
+
+    closeMap() {
+        this.scene.stop('WorldMap');
+        if (this.scene.isPaused('Game')) this.scene.resume('Game');
     }
 
     showLocationLabel(text, x, y, hexColor) {

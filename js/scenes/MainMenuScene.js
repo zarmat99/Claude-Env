@@ -71,8 +71,8 @@ export default class MainMenuScene extends Phaser.Scene {
 
         if (!disabled) {
             bg.setInteractive({ useHandCursor: true });
-            bg.on('pointerover', () => { bg.setFillColor(0x2a2a6a); text.setColor('#ccccff'); });
-            bg.on('pointerout',  () => { bg.setFillColor(0x1a1a4a); text.setColor('#8888cc'); });
+            bg.on('pointerover', () => { bg.setFillStyle(0x2a2a6a); text.setColor('#ccccff'); });
+            bg.on('pointerout', () => { bg.setFillStyle(0x1a1a4a); text.setColor('#8888cc'); });
             bg.on('pointerdown', action);
         }
     }

@@ -38,9 +38,9 @@ export default class InventoryScene extends Phaser.Scene {
         const closeBtn = this.add.text(W - 32, 18, '[X]', {
             fontSize: '14px', color: '#cc4444', fontFamily: 'Courier New'
         }).setInteractive({ useHandCursor: true }).setScrollFactor(0).setDepth(101);
-        closeBtn.on('pointerdown', () => this.scene.stop('Inventory'));
-        this.input.keyboard.on('keydown-ESC', () => this.scene.stop('Inventory'));
-        this.input.keyboard.on('keydown-I',   () => this.scene.stop('Inventory'));
+        closeBtn.on('pointerdown', () => this.closeInventory());
+        this.input.keyboard.on('keydown-ESC', () => this.closeInventory());
+        this.input.keyboard.on('keydown-I',   () => this.closeInventory());
 
         // ── Tabs ───────────────────────────────────────────────────────────────
         const tabs = ['inventory', 'quests', 'character'];
@@ -552,6 +552,11 @@ export default class InventoryScene extends Phaser.Scene {
         this.contentObjects = [];
         this.hideTooltip();
         this.drawCurrentTab(player);
+    }
+
+    closeInventory() {
+        this.scene.stop('Inventory');
+        if (this.scene.isPaused('Game')) this.scene.resume('Game');
     }
 
     shutdown() {
