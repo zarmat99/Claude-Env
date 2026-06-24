@@ -422,7 +422,16 @@ function biomeColor(id) {
     dark_swamp: "#2e4735",
     bandit_camp: "#674839",
     road: "#8f785c",
-    boss_area: "#54436f"
+    boss_area: "#54436f",
+    // Static-map terrain families (tiles carry their familyId as biomeId)
+    static: "#3b5236",
+    moss_mud_tile: "#3b5236",
+    road_path_tile: "#8f785c",
+    rock_mountain_tile: "#6d7478",
+    terrain_black_loam: "#2b2620",
+    dungeon_floor: "#2d3034",
+    water_tile: "#3f6f86",
+    snow_ice_tile: "#cfe2e6"
   };
   return colors[id] || "#384641";
 }
