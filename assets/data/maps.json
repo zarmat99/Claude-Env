@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "maps": [
+    {
+      "id": "map_overworld_northreach",
+      "zoneId": "overworld_northreach",
+      "file": "assets/data/maps/overworld_northreach.json"
+    },
+    {
+      "id": "map_city_blackstone",
+      "zoneId": "city_blackstone",
+      "file": "assets/data/maps/city_blackstone.json"
+    },
+    {
+      "id": "map_interior_blackstone_tavern",
+      "zoneId": "interior_blackstone_tavern",
+      "file": "assets/data/maps/interior_blackstone_tavern.json"
+    },
+    {
+      "id": "map_dungeon_frozen_depths_01",
+      "zoneId": "dungeon_frozen_depths_01",
+      "file": "assets/data/maps/dungeon_frozen_depths_01.json"
+    }
+  ]
+}

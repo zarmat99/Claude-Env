@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "mapId": "map_city_blackstone",
+  "zoneId": "city_blackstone",
+  "name": "Blackstone Hold",
+  "type": "city",
+  "width": 64,
+  "height": 60,
+  "tileSize": 48,
+  "defaultTerrain": "moss_mud_tile",
+  "spawnPoints": {
+    "south_gate": { "tile": [31, 53], "facing": "north" },
+    "tavern_door": { "tile": [23, 30], "facing": "south" }
+  },
+  "terrain": [
+    { "shape": "rect", "family": "road_path_tile", "x": 29, "y": 4, "w": 5, "h": 52 },
+    { "shape": "rect", "family": "road_path_tile", "x": 8, "y": 31, "w": 48, "h": 5 },
+    { "shape": "rect", "family": "dungeon_floor", "x": 23, "y": 26, "w": 18, "h": 14 },
+    { "shape": "rect", "family": "road_path_tile", "x": 20, "y": 24, "w": 8, "h": 9 },
+    { "shape": "rect", "family": "road_path_tile", "x": 40, "y": 30, "w": 8, "h": 9 }
+  ],
+  "blockingTerrain": [
+    { "shape": "rect", "family": "rock_mountain_tile", "x": 0, "y": 0, "w": 64, "h": 3 },
+    { "shape": "rect", "family": "rock_mountain_tile", "x": 0, "y": 0, "w": 3, "h": 60 },
+    { "shape": "rect", "family": "rock_mountain_tile", "x": 61, "y": 0, "w": 3, "h": 60 },
+    { "shape": "rect", "family": "rock_mountain_tile", "x": 0, "y": 57, "w": 29, "h": 3 },
+    { "shape": "rect", "family": "rock_mountain_tile", "x": 35, "y": 57, "w": 29, "h": 3 }
+  ],
+  "modularObjects": [
+    { "family": "palisade_gate", "tiles": [[8, 4], [14, 4], [20, 4], [26, 4], [38, 4], [44, 4], [50, 4], [56, 4], [8, 56], [14, 56], [20, 56], [44, 56], [50, 56], [56, 56], [4, 10], [4, 18], [4, 26], [4, 42], [4, 50], [59, 10], [59, 18], [59, 26], [59, 42], [59, 50]] },
+    { "family": "village_exterior_decor", "tiles": [[27, 36], [35, 36], [31, 25], [46, 37], [17, 37]] },
+    { "family": "storage_prop", "tiles": [[41, 34], [45, 35], [20, 29], [26, 29]] }
+  ],
+  "npcs": [
+    { "id": "blackstone_guard", "family": "npc_human_base", "tile": [31, 51], "role": "guard" },
+    { "id": "blackstone_smith", "family": "npc_human_base", "tile": [43, 36], "role": "smith" },
+    { "id": "blackstone_priest", "family": "npc_rune_shaman", "tile": [31, 21], "role": "temple_keeper" }
+  ],
+  "notes": "Static city map. Interiors are separate cells reached through explicit transitions."
+}

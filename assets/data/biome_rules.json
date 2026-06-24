@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "northreach_forest",
+      "terrainFamilies": ["moss_mud_tile", "terrain_black_loam"],
+      "modularAssets": ["frost_pine_tree", "heath_bush", "fallen_silver_log", "blackroot_cluster"],
+      "notes": "Static forest composition rule used by hand-authored overworld cells."
+    },
+    {
+      "id": "northreach_mountain",
+      "terrainFamilies": ["rock_mountain_tile", "snow_ice_tile"],
+      "modularAssets": ["cliff_wall", "giant_tor", "jawstone_large", "ice_spire"],
+      "notes": "Static mountain and cave approach rule."
+    },
+    {
+      "id": "blackstone_city",
+      "terrainFamilies": ["road_path_tile", "moss_mud_tile", "dungeon_floor"],
+      "modularAssets": ["longhouse_module", "tradehall_special", "hunter_hut", "watch_tower", "palisade_gate", "village_exterior_decor"],
+      "notes": "Static settlement construction kit."
+    },
+    {
+      "id": "frozen_depths_dungeon",
+      "terrainFamilies": ["dungeon_tile", "dungeon_floor", "snow_ice_tile"],
+      "modularAssets": ["dungeon_wall", "dungeon_door_gate", "dungeon_trap", "sacred_ruin", "dungeon_prop", "loot_container"],
+      "notes": "Static dungeon construction kit."
+    }
+  ]
+}

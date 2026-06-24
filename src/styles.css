@@ -1,0 +1,58 @@
+:root {
+  color-scheme: dark;
+  --panel: rgba(9, 13, 18, 0.78);
+  --line: rgba(185, 220, 255, 0.2);
+  --text: #edf5f7;
+  --muted: #91a8ae;
+  --blood: #b6424d;
+  --mana: #4a8dc5;
+  --stamina: #a4b45f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #05080b;
+  color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+#app {
+  position: relative;
+}
+
+#game {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background: #05080b;
+  image-rendering: pixelated;
+  touch-action: none;
+}
+
+#boot-status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 240px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0;
+}
+
+#boot-status.is-hidden {
+  display: none;
+}

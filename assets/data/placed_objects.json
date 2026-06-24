@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "zones": {
+    "overworld_northreach": [
+      { "id": "ow_camp_hut", "family": "hunter_hut", "tile": [36, 42], "variant": 3 },
+      { "id": "ow_camp_crates", "family": "storage_prop", "tile": [39, 44], "variant": 2, "interaction": "inspect" },
+      { "id": "ow_ruin_column_01", "family": "ruin_column", "tile": [58, 23], "variant": 1 },
+      { "id": "ow_ruin_column_02", "family": "ruin_column", "tile": [63, 25], "variant": 2 },
+      { "id": "ow_bridge_west", "family": "timber_bridge", "tile": [44, 34], "variant": 1, "solid": false },
+      { "id": "ow_hidden_cache", "family": "loot_container", "tile": [18, 48], "variant": 5, "loot": true }
+    ],
+    "city_blackstone": [
+      { "id": "city_tavern", "family": "tradehall_special", "tile": [23, 25], "variant": 1 },
+      { "id": "city_forge", "family": "tradehall_special", "tile": [43, 31], "variant": 2 },
+      { "id": "city_temple", "family": "longhouse_module", "tile": [31, 17], "variant": 4 },
+      { "id": "city_house_west", "family": "longhouse_module", "tile": [13, 34], "variant": 8 },
+      { "id": "city_house_east", "family": "hunter_hut", "tile": [52, 39], "variant": 4 },
+      { "id": "city_market_props", "family": "village_exterior_decor", "tile": [31, 35], "variant": 6, "interaction": "inspect" },
+      { "id": "city_forge_anvil", "family": "smith_miner_prop", "tile": [42, 35], "variant": 1, "interaction": "inspect" }
+    ],
+    "interior_blackstone_tavern": [
+      { "id": "tavern_bar", "family": "kitchen_tavern_prop", "tile": [15, 7], "variant": 1 },
+      { "id": "tavern_table_01", "family": "interior_furniture", "tile": [9, 12], "variant": 3 },
+      { "id": "tavern_table_02", "family": "interior_furniture", "tile": [21, 12], "variant": 4 },
+      { "id": "tavern_barrel_01", "family": "storage_prop", "tile": [5, 7], "variant": 5, "loot": true },
+      { "id": "tavern_chest_01", "family": "loot_container", "tile": [25, 7], "variant": 2, "loot": true }
+    ],
+    "dungeon_frozen_depths_01": [
+      { "id": "fd_trap_01", "family": "dungeon_trap", "tile": [19, 22], "variant": 3, "solid": false, "interaction": "trap" },
+      { "id": "fd_altar", "family": "sacred_ruin", "tile": [35, 8], "variant": 2 },
+      { "id": "fd_boss_cache", "family": "loot_container", "tile": [35, 12], "variant": 9, "loot": true },
+      { "id": "fd_bones", "family": "bone_debris_prop", "tile": [28, 18], "variant": 5, "solid": false }
+    ]
+  }
+}
