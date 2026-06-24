@@ -36,7 +36,8 @@ node verify/do.mjs "__quit__"        # stop the session
 
 ## Notes
 - `GameAPI` methods: `state()`, `nearby(r)`, `newGame(opts)`, `navigateTo(x,y)`,
-  `talkTo(id)`, `choose(i)`, `interact()`, `combatAction(k)`, `combatContinue()`,
-  `heal()`, `teleport(x,y)`, `count(id)`, `give(id,n)`. Run `GameAPI.help()`.
+  `await talkTo(id)` (walks to the NPC step-by-step, no teleport), `choose(i)`,
+  `interact()`, `combatAction(k)`, `combatContinue()`, `heal()`, `teleport(x,y)`
+  (debug only), `count(id)`, `give(id,n)`. Run `GameAPI.help()`.
 - The driver also exposes `press(key)` for real key presses (e.g. dismissing the
   Story/Ending overlays with `Space`).

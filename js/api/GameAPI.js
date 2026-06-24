@@ -244,12 +244,18 @@ export function installGameAPI(game) {
         },
 
         // Open a conversation with an NPC by id (must exist in the loaded scene).
-        talkTo(npcId) {
+        // Walks to the NPC step-by-step through the real movement loop (no teleport),
+        // then opens the dialogue. Pass { walk: false } to skip navigation (debug).
+        async talkTo(npcId, { walk = true, timeoutMs = 90000 } = {}) {
             const gs = GS(); if (!gs) return false;
             const npc = (gs.npcs || []).find(n => n.data.id === npcId);
             const data = npc ? npc.data : NPCS[npcId];
             if (!data) return false;
-            if (npc) this.teleport(Math.round(npc.sprite.x / TILE), Math.round(npc.sprite.y / TILE));
+            if (npc && walk) {
+                const tx = Math.round(npc.sprite.x / TILE), ty = Math.round(npc.sprite.y / TILE);
+                await this.navigateTo(tx, ty, { timeoutMs });   // step-by-step, no teleport
+                if (ON('Combat')) return false;                 // pulled into a fight en route
+            }
             if (npc && gs.storyWorld?.tryNpcChoice(data.id)) return true;
             gs.scene.launch('Dialogue', {
                 npcId: data.id,
@@ -311,7 +317,7 @@ export function installGameAPI(game) {
             const groups = {
                 inspect: ['state()', 'player()', 'nearby(r)', 'dialogue()', 'combat()', 'inventory()'],
                 move:    ['setMove({up,down,left,right,run})', 'stop()', 'teleport(x,y)', 'await walkTo(x,y)', 'await navigateTo(x,y)'],
-                act:     ['interact()', 'talkTo(id)', 'choose(i)', 'closeDialogue()', 'openInventory()', 'openMap()', 'openJournal()', 'closePanels()'],
+                act:     ['interact()', 'await talkTo(id)', 'choose(i)', 'closeDialogue()', 'openInventory()', 'openMap()', 'openJournal()', 'closePanels()'],
                 combat:  ['combatAction(key)', 'combatUse(id)', 'combatContinue()', 'await autoFight()'],
                 items:   ['equip(id)', 'use(id)', 'give(id,qty)', 'count(id)'],
                 meta:    ['await newGame(opts)', 'save()', 'load()', 'setTime(h)', 'heal()', 'seed()']
