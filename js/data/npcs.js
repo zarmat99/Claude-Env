@@ -483,6 +483,196 @@ export const NPCS = {
     level: 4,
     disposition: { default: 45, grey_penitents: 75 },
     attributes: { STR: 3, END: 4, AGI: 3, INT: 13, WIL: 11, PER: 7 }
+  },
+
+  // ─── EXPANSION NPCs ───────────────────────────────────────────────────────
+
+  zeth_mirrak: {
+    id: 'zeth_mirrak',
+    name: 'Elder Zeth Mirrak',
+    title: 'Vorrkai Community Elder',
+    race: 'vorrkai',
+    faction: 'vorrkai',
+    spriteKey: 'npc_vorrkai_elder',
+    spawnTile: { x: 96, y: 156 },
+    schedule: [
+      { hour: 0,  tile: { x: 96, y: 156 } },
+      { hour: 8,  tile: { x: 97, y: 156 } },
+      { hour: 14, tile: { x: 95, y: 157 } },
+      { hour: 20, tile: { x: 96, y: 156 } }
+    ],
+    dialogueRoot: 'zeth_mirrak_intro',
+    dialogueOngoing: 'zeth_mirrak_ongoing',
+    spawnCondition: { flag: 'found_vorrkai_settlement' },
+    isEssential: false,
+    merchant: false,
+    description: 'The elected elder of the Vorrkai Outpost, a man who has spent his life managing the tension between exile and identity. Speaks carefully, as though each word costs something.',
+    portrait: 'portrait_vorrkai_elder',
+    questGiver: [],
+    voiceType: 'male_measured',
+    level: 8,
+    disposition: { default: 30, vorrkai: 80, grey_penitents: 55 },
+    attributes: { STR: 5, END: 7, AGI: 5, INT: 11, WIL: 12, PER: 9 }
+  },
+
+  lira_vorrkai: {
+    id: 'lira_vorrkai',
+    name: 'Lira',
+    title: 'Elder Zeth\'s daughter',
+    race: 'vorrkai',
+    faction: 'vorrkai',
+    spriteKey: 'npc_vorrkai_youth',
+    spawnTile: { x: 97, y: 156 },
+    schedule: [
+      { hour: 0,  tile: { x: 97, y: 156 } },
+      { hour: 10, tile: { x: 95, y: 157 } },
+      { hour: 16, tile: { x: 97, y: 156 } },
+      { hour: 22, tile: { x: 96, y: 157 } }
+    ],
+    dialogueRoot: 'lira_vorrkai_intro',
+    spawnCondition: { flag: 'found_vorrkai_settlement' },
+    isEssential: false,
+    merchant: false,
+    description: 'A Vorrkai teenager with an overwhelming curiosity about the surface world. She has never seen the sky.',
+    portrait: 'portrait_vorrkai_youth',
+    questGiver: [],
+    voiceType: 'female_curious',
+    level: 2,
+    disposition: { default: 60 },
+    attributes: { STR: 3, END: 4, AGI: 7, INT: 8, WIL: 5, PER: 10 }
+  },
+
+  oren_echo: {
+    id: 'oren_echo',
+    name: 'Oren Osel',
+    title: 'Echo of the Hollow Prophet',
+    race: 'varesh',
+    faction: null,
+    spriteKey: 'npc_ghost',
+    spawnTile: { x: 101, y: 162 },
+    schedule: [
+      { hour: 0, tile: { x: 101, y: 162 } }
+    ],
+    dialogueRoot: 'oren_echo_intro',
+    spawnCondition: { flag: 'hollow_prophet_boss_defeated' },
+    isEssential: false,
+    merchant: false,
+    description: 'A vision — or perhaps an echo — of Oren Osel, remaining in the Void Sanctum after his defeat. He appears confused as much as resolved.',
+    portrait: 'portrait_oren_echo',
+    questGiver: [],
+    voiceType: 'male_distant',
+    level: 1,
+    disposition: { default: 50 },
+    attributes: { STR: 1, END: 1, AGI: 1, INT: 14, WIL: 14, PER: 12 }
+  },
+
+  maren_ashveil: {
+    id: 'maren_ashveil',
+    name: 'Elder Maren Ashveil',
+    title: 'Outpost Administrator',
+    race: 'varesh',
+    faction: null,
+    spriteKey: 'npc_elder',
+    spawnTile: { x: 12, y: 112 },
+    schedule: [
+      { hour: 6,  tile: { x: 12, y: 112 } },
+      { hour: 12, tile: { x: 13, y: 112 } },
+      { hour: 18, tile: { x: 12, y: 113 } },
+      { hour: 22, tile: { x: 12, y: 112 } }
+    ],
+    dialogueRoot: 'maren_ashveil_intro',
+    dialogueActiveQuest: 'maren_ashveil_quest',
+    isEssential: false,
+    merchant: false,
+    description: 'The last administrator of Ashveil Outpost. Tired but not broken. She has accepted that the stone is dying; she has not accepted that acceptance is defeat.',
+    portrait: 'portrait_maren',
+    questGiver: ['side_last_ashveil'],
+    voiceType: 'female_elderly',
+    level: 3,
+    disposition: { default: 55 },
+    attributes: { STR: 2, END: 5, AGI: 3, INT: 9, WIL: 13, PER: 10 }
+  },
+
+  syllis_vaar: {
+    id: 'syllis_vaar',
+    name: 'Master Syllis Vaar',
+    title: 'Thornmere Master Alchemist',
+    race: 'varesh',
+    faction: 'auric_concordat',
+    spriteKey: 'npc_scholar',
+    spawnTile: { x: 145, y: 54 },
+    schedule: [
+      { hour: 0,  tile: { x: 145, y: 54 } },
+      { hour: 8,  tile: { x: 143, y: 55 } },
+      { hour: 14, tile: { x: 145, y: 54 } },
+      { hour: 20, tile: { x: 145, y: 54 } }
+    ],
+    dialogueRoot: 'syllis_vaar_intro',
+    dialogueActiveQuest: 'syllis_vaar_quest',
+    isEssential: false,
+    merchant: false,
+    description: 'Thornmere\'s greatest alchemist, now bedridden. Her mind remains meticulous even as her body fails. She is determined to complete one more piece of significant work before the end.',
+    portrait: 'portrait_syllis',
+    questGiver: ['side_alchemist_garden'],
+    voiceType: 'female_precise',
+    level: 5,
+    disposition: { default: 45, auric_concordat: 70 },
+    attributes: { STR: 2, END: 3, AGI: 3, INT: 15, WIL: 10, PER: 8 }
+  },
+
+  gerran_solt: {
+    id: 'gerran_solt',
+    name: 'Gerran Solt',
+    title: 'Iron Compact Deserter',
+    race: 'varesh',
+    faction: null,
+    spriteKey: 'npc_soldier',
+    spawnTile: { x: 102, y: 116 },
+    schedule: [
+      { hour: 0,  tile: { x: 102, y: 116 } },
+      { hour: 6,  tile: { x: 103, y: 115 } },
+      { hour: 10, tile: { x: 102, y: 116 } },
+      { hour: 20, tile: { x: 102, y: 116 } }
+    ],
+    dialogueRoot: 'gerran_solt_intro',
+    dialogueActiveQuest: 'gerran_solt_quest',
+    isEssential: false,
+    merchant: false,
+    description: 'A former Iron Compact sergeant hiding at the Abandoned Farmstead. He witnessed the Vorrkai massacre and kept the orders as insurance. The Compact sent hunters. He is running out of time.',
+    portrait: 'portrait_gerran',
+    questGiver: ['side_iron_blood'],
+    voiceType: 'male_haunted',
+    level: 5,
+    disposition: { default: 35, iron_compact: 10 },
+    attributes: { STR: 8, END: 7, AGI: 7, INT: 5, WIL: 6, PER: 6 }
+  },
+
+  aelindra: {
+    id: 'aelindra',
+    name: 'Druid Aelindra',
+    title: 'Sylveni Druid of the Aetherwood',
+    race: 'sylveni',
+    faction: 'sylveni_conclave',
+    spriteKey: 'npc_druid',
+    spawnTile: { x: 172, y: 90 },
+    schedule: [
+      { hour: 0,  tile: { x: 172, y: 90 } },
+      { hour: 5,  tile: { x: 173, y: 91 } },
+      { hour: 11, tile: { x: 172, y: 90 } },
+      { hour: 17, tile: { x: 171, y: 91 } },
+      { hour: 22, tile: { x: 172, y: 90 } }
+    ],
+    dialogueRoot: 'aelindra_intro',
+    dialogueActiveQuest: 'aelindra_quest',
+    isEssential: false,
+    merchant: false,
+    description: 'A Sylveni druid whose connection to the Aetherwood\'s Woven gives her knowledge no library could match. She chooses her words with care. What she does not say is often more important.',
+    portrait: 'portrait_aelindra',
+    questGiver: ['side_woven_lament'],
+    voiceType: 'female_measured',
+    level: 8,
+    disposition: { default: 40, sylveni_conclave: 80, rootwardens: 60 },
+    attributes: { STR: 3, END: 5, AGI: 6, INT: 13, WIL: 12, PER: 11 }
   }
 };
 

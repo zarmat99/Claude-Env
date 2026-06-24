@@ -2684,6 +2684,388 @@ export const DIALOGUE_TREES = {
         ]
       }
     }
+  },
+
+  // ─── EXPANSION DIALOGUE TREES ─────────────────────────────────────────────
+
+  zeth_mirrak_intro: {
+    id: 'zeth_mirrak_intro',
+    speaker: 'zeth_mirrak',
+    root: 'zeth_root',
+    nodes: {
+      zeth_root: {
+        id: 'zeth_root',
+        text: 'A surface-dweller. Here, in the Outpost. I was told you came through the Chasm; I did not quite believe it.',
+        choices: [
+          { text: 'Who are you?', next: 'zeth_introduce' },
+          { text: 'Tell me about your people.', next: 'zeth_history' },
+          { text: 'What do you know about the entity below?', next: 'zeth_entity' }
+        ]
+      },
+      zeth_introduce: {
+        id: 'zeth_introduce',
+        text: 'Zeth Mirrak. Elder — which here means the one who argues least badly and carries the most apologies. The Vorrkai have been underground for three hundred years. We have had time to refine our governance.',
+        choices: [
+          { text: 'Tell me about your exile.', next: 'zeth_exile' },
+          { text: 'What do you know about the entity below?', next: 'zeth_entity' }
+        ]
+      },
+      zeth_history: {
+        id: 'zeth_history',
+        text: 'We were scholars. We gave the Arcanate the mathematics for their engines. We did not know what they intended. We believed — naively, catastrophically — that someone in charge would read our footnotes about the consequences.',
+        choices: [
+          { text: 'You were blamed for the Shattering.', next: 'zeth_exile' },
+          { text: 'What is life like down here?', next: 'zeth_underground' }
+        ]
+      },
+      zeth_exile: {
+        id: 'zeth_exile',
+        text: 'We were given one month to move underground. "Relocation," they called it. They put a word to it so they would not have to use another. Three hundred years is a long time to carry someone else\'s guilt. We have done our best not to become it.',
+        choices: [
+          { text: 'Do you want to return to the surface?', next: 'zeth_surface' }
+        ]
+      },
+      zeth_underground: {
+        id: 'zeth_underground',
+        text: 'Difficult. Beautiful in ways your eyes cannot yet see. The bioluminescence, the root-networks, the silence that is actually very full. We have made something real here. We have not forgotten it was not our first choice.',
+        choices: [
+          { text: 'What do you know about the entity below?', next: 'zeth_entity' }
+        ]
+      },
+      zeth_surface: {
+        id: 'zeth_surface',
+        text: 'My daughter does. I am not sure I do. I have lived here longer than I lived above. I am not sure which exile is permanent anymore. What I want is for it to have been a choice. It was not.',
+        choices: [],
+        effects: [{ type: 'set_flag', flag: 'talked_to_zeth_mirrak' }],
+        next: null
+      },
+      zeth_entity: {
+        id: 'zeth_entity',
+        text: 'It is beneath us. At the bottom of everything. My grandmother\'s oral record says it is not malicious — it is hungry. The distinction matters. A malicious thing can be reasoned with or destroyed. A hungry thing can only be fed or starved. The Cult is feeding it. The Rootwardens are trying to starve it. I am not sure either strategy accounts for what happens when it notices the difference.',
+        choices: [],
+        effects: [{ type: 'set_flag', flag: 'zeth_entity_lore_heard' }],
+        next: null
+      }
+    }
+  },
+
+  zeth_mirrak_ongoing: {
+    id: 'zeth_mirrak_ongoing',
+    speaker: 'zeth_mirrak',
+    root: 'zeth_ongoing_root',
+    nodes: {
+      zeth_ongoing_root: {
+        id: 'zeth_ongoing_root',
+        text: 'You\'re still here. I find I am glad of that, though I try not to say it too often. It might raise expectations.',
+        choices: [
+          { text: 'What can you tell me about the Cult in the Sanctum?', next: 'zeth_cult' },
+          { text: 'What happens if the Rootstones fall?', next: 'zeth_rootstones' }
+        ]
+      },
+      zeth_cult: {
+        id: 'zeth_cult',
+        text: 'Oren Osel is a man who looked at a problem too long and stopped seeing the people inside it. He is not wrong that the world has been taking without giving. He is wrong that the solution involves feeding others to the thing below.',
+        choices: [],
+        next: null
+      },
+      zeth_rootstones: {
+        id: 'zeth_rootstones',
+        text: 'The Shards fall. Everything that lives on them dies. We have three hundred years of knowing this was possible and very little to show for it except the knowledge itself. I hope your generation does something with that. We could not.',
+        choices: [],
+        next: null
+      }
+    }
+  },
+
+  lira_vorrkai_intro: {
+    id: 'lira_vorrkai_intro',
+    speaker: 'lira_vorrkai',
+    root: 'lira_root',
+    nodes: {
+      lira_root: {
+        id: 'lira_root',
+        text: 'Oh! You\'re the surface person. Father said I shouldn\'t bother you. I\'m definitely not bothering you. What does the sky look like? I\'ve only heard words for it.',
+        choices: [
+          { text: 'It\'s blue during the day, black at night, with stars.', next: 'lira_stars' },
+          { text: 'Like the roof of a very large cave, but farther.', next: 'lira_cave_comparison' }
+        ]
+      },
+      lira_stars: {
+        id: 'lira_stars',
+        text: 'Stars. I know what stars are — we have the old charts. But they\'re described as "points of light" and that doesn\'t explain anything. Is the sky cold? Is it always moving? Can you feel it pressing on you?',
+        choices: [
+          { text: 'It can be cold. The wind moves through it constantly.', next: 'lira_wind' },
+          { text: 'You should see it yourself someday.', next: 'lira_someday' }
+        ]
+      },
+      lira_cave_comparison: {
+        id: 'lira_cave_comparison',
+        text: 'I can understand that. But then — what makes it not a cave? Is it the colour? The lights?',
+        choices: [
+          { text: 'It goes on forever. No walls.', next: 'lira_forever' }
+        ]
+      },
+      lira_wind: {
+        id: 'lira_wind',
+        text: 'Moving air. We have that here, in the ventilation passages. But not always. Not everywhere. Just — everywhere, all the time, the sky moves? That sounds exhausting. And very large.',
+        choices: [],
+        effects: [{ type: 'set_flag', flag: 'talked_to_lira' }],
+        next: null
+      },
+      lira_someday: {
+        id: 'lira_someday',
+        text: 'Father says the same thing. He says it the way people say things they do not believe will happen. I say it the way people say things they intend to make happen. We will see who is right.',
+        choices: [],
+        effects: [{ type: 'set_flag', flag: 'talked_to_lira' }],
+        next: null
+      },
+      lira_forever: {
+        id: 'lira_forever',
+        text: '...Oh. That does sound different from a cave.',
+        choices: [],
+        effects: [{ type: 'set_flag', flag: 'talked_to_lira' }],
+        next: null
+      }
+    }
+  },
+
+  oren_echo_intro: {
+    id: 'oren_echo_intro',
+    speaker: 'oren_echo',
+    root: 'echo_root',
+    nodes: {
+      echo_root: {
+        id: 'echo_root',
+        text: 'You\'re still here. I thought defeating me would mean you\'d leave. Most people leave when they\'ve won. [He looks at the empty Sanctum.] I was wrong about almost everything. I was right about one thing. I am not sure that makes it better.',
+        choices: [
+          { text: 'What were you right about?', next: 'echo_right' },
+          { text: 'You killed people. The research doesn\'t change that.', next: 'echo_condemn' },
+          { text: 'Tell me how this started.', next: 'echo_start' }
+        ]
+      },
+      echo_right: {
+        id: 'echo_right',
+        text: 'That the Dimming is not decay. That it is a response. The entity below is not our enemy — it is what happens when the world runs out of patience. I chose the wrong way to be right about it. I see that now. Then, I could only see the thing I was right about.',
+        choices: [
+          { text: 'Could there have been another way?', next: 'echo_other_way' },
+          { text: 'Tell me how this started.', next: 'echo_start' }
+        ]
+      },
+      echo_condemn: {
+        id: 'echo_condemn',
+        text: 'No. It doesn\'t. I know that. I told myself for seven years that the scale of what I was preventing justified the scale of what I was causing. That is the thing I was wrong about. I have had a great deal of time to think in this place.',
+        choices: [],
+        effects: [
+          { type: 'set_flag', flag: 'oren_condemned' },
+          { type: 'faction_rep', faction: 'rootwardens', amount: 15 }
+        ],
+        next: null
+      },
+      echo_other_way: {
+        id: 'echo_other_way',
+        text: 'Probably. But I\'d run out of channels. The Concordat classified my research. My sister — the High Consul — chose her position over her brother. I went where I was heard. I should have found a louder voice instead of a more desperate one.',
+        choices: [
+          { text: 'I understand why you made the choices you made.', next: 'echo_understand' },
+          { text: 'You\'re still responsible for what happened.', next: 'echo_condemn' }
+        ]
+      },
+      echo_start: {
+        id: 'echo_start',
+        text: 'Year 3. I watched the Thornpillar\'s resonance decline and wrote a report. Year 5, the report was classified. Year 7, I went underground — literally. I followed the thing below because it was the only entity in Varethos that couldn\'t ignore what I was saying.',
+        choices: [
+          { text: 'I understand why you made the choices you made.', next: 'echo_understand' },
+          { text: 'You killed people.', next: 'echo_condemn' }
+        ]
+      },
+      echo_understand: {
+        id: 'echo_understand',
+        text: 'That is more than I deserve and I will take it. [Pause.] If there is a future — and there may not be — the answer is not to feed the world to the void. The answer is to give the void something it can metabolise without consuming us. I never found out what that was. Maybe you will.',
+        choices: [],
+        effects: [
+          { type: 'set_flag', flag: 'oren_understood' },
+          { type: 'faction_rep', faction: 'grey_penitents', amount: 15 }
+        ],
+        next: null
+      }
+    }
+  },
+
+  maren_ashveil_intro: {
+    id: 'maren_ashveil_intro',
+    speaker: 'maren_ashveil',
+    root: 'maren_root',
+    nodes: {
+      maren_root: {
+        id: 'maren_root',
+        text: 'A traveller. We don\'t see many. The road from Greyhollow takes most people north or east, not here. Can\'t imagine why you\'d come to the end of the world on purpose.',
+        choices: [
+          { text: 'Tell me about Ashveil Outpost.', next: 'maren_town' },
+          { text: 'I\'m here about the Rootstone.', next: 'maren_rootstone' }
+        ]
+      },
+      maren_town: {
+        id: 'maren_town',
+        text: 'Used to be eight hundred people. Farms, a market, a reputation for the best salt on the Shards. Now it\'s ninety-four, mostly old, holding on because letting go seems like defeat and we\'re too stubborn for that.',
+        choices: [
+          { text: 'What happened?', next: 'maren_rootstone' }
+        ]
+      },
+      maren_rootstone: {
+        id: 'maren_rootstone',
+        text: 'The Ashveil Stone is dying. Three hundred years we\'ve lived in its light. Now we\'re watching it go out, stone by stone. I\'ve sent letters. The Concordat sends sympathies. The Rootwardens send pamphlets. No one sends help.',
+        choices: [
+          { text: 'Maybe I can help.', next: 'maren_quest_offer' },
+          { text: 'What would help look like?', next: 'maren_quest_offer' }
+        ]
+      },
+      maren_quest_offer: {
+        id: 'maren_quest_offer',
+        text: 'What would help look like? [She pauses.] I stopped knowing that a few years ago. But if someone could measure what\'s left — really measure it, not estimate it from a pamphlet — maybe I could decide how to say goodbye. Or if there\'s a reason not to yet.',
+        choices: [],
+        effects: [{ type: 'start_quest', questId: 'side_last_ashveil' }],
+        next: null
+      }
+    }
+  },
+
+  maren_ashveil_quest: {
+    id: 'maren_ashveil_quest',
+    speaker: 'maren_ashveil',
+    root: 'maren_report_root',
+    nodes: {
+      maren_report_root: {
+        id: 'maren_report_root',
+        text: 'You found the shrine. You have the reading. [She does not reach for it immediately.] How much time?',
+        choices: [
+          { text: 'Three to four months.', next: 'maren_three_months' }
+        ]
+      },
+      maren_three_months: {
+        id: 'maren_three_months',
+        text: 'Three months. [She is quiet for a moment.] Longer than some of us thought. Not long enough for any of us to pretend. I appreciate that you told me plainly. Most people soften these things and I\'ve never understood why.',
+        choices: [
+          { text: 'There are some options.', next: 'maren_choice_launch' }
+        ]
+      },
+      maren_choice_launch: {
+        id: 'maren_choice_launch',
+        text: 'Then let\'s talk about them. I\'d rather make a choice than have one made for me. Whatever we decide, we decide it here, in full light, while the stone still shines.',
+        choices: [],
+        effects: [{ type: 'launch_choice', questId: 'side_last_ashveil' }],
+        next: null
+      }
+    }
+  },
+
+  syllis_vaar_intro: {
+    id: 'syllis_vaar_intro',
+    speaker: 'syllis_vaar',
+    root: 'syllis_root',
+    nodes: {
+      syllis_root: {
+        id: 'syllis_root',
+        text: 'Come in, come in. Shut the door. Light bothers my eyes now. Ironic, given I spent forty years working with bioluminescent compounds. [She gestures with precision despite the bed.] I assume you\'re here because someone sent you, or because you heard I was dying and hoped to collect something.',
+        choices: [
+          { text: 'I\'ve heard you need help with your research.', next: 'syllis_research' },
+          { text: 'What are you working on?', next: 'syllis_work' }
+        ]
+      },
+      syllis_research: {
+        id: 'syllis_research',
+        text: 'The Alchemist\'s Garden. A theoretical compendium of every compound I\'ve worked with, cross-referenced by resonance signature, application, and what happens when you combine them incorrectly. The latter section is longer than I would like.',
+        choices: [
+          { text: 'I can help you complete it.', next: 'syllis_accept' }
+        ]
+      },
+      syllis_work: {
+        id: 'syllis_work',
+        text: 'Something that will survive me, which this body has made very clear it will not. I need someone to gather specific specimens from the Emberpeak caldera and the deep Aetherwood. I can no longer go myself.',
+        choices: [
+          { text: 'I can do that.', next: 'syllis_accept' }
+        ]
+      },
+      syllis_accept: {
+        id: 'syllis_accept',
+        text: 'Good. I\'ll need emberpetal — the variety that grows within ten metres of lava, not the outer ones, they have different resonance — and rootmoss from the deep Aetherwood. And I will need them promptly. I have, apparently, limited time.',
+        choices: [],
+        effects: [{ type: 'start_quest', questId: 'side_alchemist_garden' }],
+        next: null
+      }
+    }
+  },
+
+  gerran_solt_intro: {
+    id: 'gerran_solt_intro',
+    speaker: 'gerran_solt',
+    root: 'gerran_root',
+    nodes: {
+      gerran_root: {
+        id: 'gerran_root',
+        text: '[He has his hand on his sword before you\'re through the door.] Easy. Easy. I\'ve seen Iron Compact colours on the road for two days. If you\'re one of them, I\'d rather you just say so.',
+        choices: [
+          { text: 'I\'m not with the Compact.', next: 'gerran_trust' },
+          { text: 'What did you do?', next: 'gerran_truth' }
+        ]
+      },
+      gerran_trust: {
+        id: 'gerran_trust',
+        text: '[He does not relax.] No one not with the Compact wanders this far off the road. But your gear isn\'t Compact standard. Fine. I\'ll talk. But if I\'m wrong about you, know that I\'ve already buried two hunters this week.',
+        choices: [
+          { text: 'Tell me why they\'re hunting you.', next: 'gerran_truth' }
+        ]
+      },
+      gerran_truth: {
+        id: 'gerran_truth',
+        text: 'I was sergeant on the Vorrkai resettlement. Warmaster Kash called it resettlement. We burned two settlements and killed forty-three people. I kept the orders. Signed by the Warmaster, countersigned by the High Command. The Compact has been very keen to get those back.',
+        choices: [
+          { text: 'I\'ll help you. Give me the orders.', next: 'gerran_give_orders' }
+        ]
+      },
+      gerran_give_orders: {
+        id: 'gerran_give_orders',
+        text: 'They\'re in the floorboard. Take them. I don\'t care what you do with them — expose the Compact, destroy them, bury them. Just do something. Forty-three graves with no names. Someone should know they had names.',
+        choices: [],
+        effects: [{ type: 'start_quest', questId: 'side_iron_blood' }],
+        next: null
+      }
+    }
+  },
+
+  aelindra_intro: {
+    id: 'aelindra_intro',
+    speaker: 'aelindra',
+    root: 'aelindra_root',
+    nodes: {
+      aelindra_root: {
+        id: 'aelindra_root',
+        text: 'You have come very far into the Aetherwood. Most surface-walkers turn back at the dark line where the canopy closes. Either you are brave or you do not know what you are walking into. Both have worked in my favour before.',
+        choices: [
+          { text: 'Tell me about the Woven.', next: 'aelindra_woven' },
+          { text: 'I\'m looking for a missing apprentice.', next: 'aelindra_quest' }
+        ]
+      },
+      aelindra_woven: {
+        id: 'aelindra_woven',
+        text: 'They are the memory of the forest, given form. When a Woven is corrupted by void-energy, it does not become hostile — it becomes confused. It acts on the last strong emotion it holds, which in this case is grief. That is what you will find further in.',
+        choices: [
+          { text: 'I\'m looking for a missing apprentice.', next: 'aelindra_quest' }
+        ]
+      },
+      aelindra_quest: {
+        id: 'aelindra_quest',
+        text: 'Vel. Yes. He went to speak with the corrupted Woven and has not returned. I believe he is alive — the Woven would not kill him deliberately, only hold him. I need someone who can reach him without destroying what holds him.',
+        choices: [
+          { text: 'I\'ll find him.', next: 'aelindra_accept' }
+        ]
+      },
+      aelindra_accept: {
+        id: 'aelindra_accept',
+        text: 'Then take care in how you move. Aggression reads as threat to the corrupted Woven. If you must fight, fight only what attacks you first. The rest — speak to. I know that sounds strange. Try it anyway.',
+        choices: [],
+        effects: [{ type: 'start_quest', questId: 'side_woven_lament' }],
+        next: null
+      }
+    }
   }
 };
 
