@@ -9,9 +9,10 @@ Current authored content is intentionally limited to one development test cell, 
 1. Open `assets/data/asset_manifest.json`.
 2. Add a new object to `families`.
 3. Give it a unique `id`, a `kind`, a `count`, a `renderLayer`, a `collisionProfile`, tags, palette and `baseVisualSize`.
-4. Run `python -B scripts/validate_content.py`.
+4. Generate its art: write a prompt (see `docs/STYLE_GUIDE.md` + `docs/ASSET_PROMPTS.md`), generate the image in ChatGPT, save it as `assets/source/<id>.png`, then run `python scripts/process_asset.py <id>`.
+5. Run `npm run validate`.
 
-The loader expands one family into concrete assets named `family_id_01`, `family_id_02`, and so on.
+`process_asset.py` expands one source image into concrete variants named `id_01`, `id_02`, and so on under `assets/generated/<id>/`.
 
 ## Add a biome
 
@@ -19,7 +20,7 @@ The loader expands one family into concrete assets named `family_id_01`, `family
 2. Add a biome with `terrainTiles`, `props`, `spawnTable`, densities, structure rules, enemies, loot, overlap rules and seed.
 3. Add its spawn table in `assets/data/spawn-tables.json`.
 4. Add or update the static map/zone files listed below.
-5. Run `python -B scripts/validate_content.py`.
+5. Run `npm run validate`.
 
 ## Add a static zone
 
