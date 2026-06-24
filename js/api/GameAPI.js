@@ -149,14 +149,30 @@ export function installGameAPI(game) {
             const gs = GS(); if (!gs || !gs.playerEntity) return false;
             const targetX = tileX * TILE + TILE / 2, targetY = tileY * TILE + TILE / 2;
             const start = Date.now();
+            let stallMs = 0, lastX = gs.playerEntity.sprite.x, lastY = gs.playerEntity.sprite.y;
             while (Date.now() - start < timeoutMs) {
                 const sx = gs.playerEntity.sprite.x, sy = gs.playerEntity.sprite.y;
                 const dx = targetX - sx, dy = targetY - sy;
                 if (Math.hypot(dx, dy) < TILE * 0.6) { this.stop(); return true; }
-                this.setMove({
-                    left:  dx < -2, right: dx > 2,
-                    up:    dy < -2, down:  dy > 2
-                });
+                if (Math.hypot(sx - lastX, sy - lastY) < 0.5) {
+                    stallMs += 60;
+                    if (stallMs >= 300) {
+                        const jiV = Math.abs(dx) >= Math.abs(dy);
+                        for (let i = 0; i < 6; i++) {
+                            this.setMove(jiV
+                                ? (i % 2 === 0 ? { up: true } : { down: true })
+                                : (i % 2 === 0 ? { left: true } : { right: true }));
+                            await sleep(80);
+                        }
+                        const nx = gs.playerEntity.sprite.x, ny = gs.playerEntity.sprite.y;
+                        if (Math.hypot(nx - sx, ny - sy) < 0.5) { this.stop(); return false; }
+                        stallMs = 0;
+                    }
+                } else {
+                    stallMs = 0;
+                }
+                lastX = sx; lastY = sy;
+                this.setMove({ left: dx < -2, right: dx > 2, up: dy < -2, down: dy > 2 });
                 await sleep(60);
             }
             this.stop();
@@ -167,62 +183,67 @@ export function installGameAPI(game) {
         async navigateTo(tileX, tileY, { timeoutMs = 90000 } = {}) {
             const gs = GS();
             if (!gs || !gs.playerEntity || !gs.tileMap) return false;
-            const width = 200, height = 200;
+            const W = 200, H = 200;
+            const tx = Math.max(0, Math.min(W - 1, Math.floor(tileX)));
+            const ty = Math.max(0, Math.min(H - 1, Math.floor(tileY)));
+
+            const bfs = (sx, sy) => {
+                const startId = sy * W + sx, targetId = ty * W + tx;
+                const cameFrom = new Int32Array(W * H).fill(-1);
+                const seen = new Uint8Array(W * H);
+                const queue = new Int32Array(W * H);
+                let head = 0, tail = 0;
+                queue[tail++] = startId; seen[startId] = 1;
+                const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+                while (head < tail && !seen[targetId]) {
+                    const id = queue[head++];
+                    const x = id % W, y = Math.floor(id / W);
+                    for (const [dx, dy] of dirs) {
+                        const nx = x+dx, ny = y+dy;
+                        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+                        const nid = ny*W+nx;
+                        if (seen[nid] || !gs.tileMap.isWalkable(nx, ny)) continue;
+                        seen[nid] = 1; cameFrom[nid] = id; queue[tail++] = nid;
+                    }
+                }
+                if (!seen[targetId]) return null;
+                const rev = [];
+                for (let id = targetId; id !== startId; id = cameFrom[id])
+                    rev.push({ x: id % W, y: Math.floor(id / W) });
+                rev.reverse();
+                const wpts = [];
+                let ldx = null, ldy = null, prev = { x: sx, y: sy };
+                for (const s of rev) {
+                    const sdx = s.x - prev.x, sdy = s.y - prev.y;
+                    if (ldx !== null && (sdx !== ldx || sdy !== ldy)) wpts.push(prev);
+                    ldx = sdx; ldy = sdy; prev = s;
+                }
+                if (rev.length) wpts.push(rev[rev.length - 1]);
+                return wpts;
+            };
+
             const startX = Math.floor(gs.playerEntity.sprite.x / TILE);
             const startY = Math.floor(gs.playerEntity.sprite.y / TILE);
-            const targetX = Math.max(0, Math.min(width - 1, Math.floor(tileX)));
-            const targetY = Math.max(0, Math.min(height - 1, Math.floor(tileY)));
-            const startId = startY * width + startX;
-            const targetId = targetY * width + targetX;
-            const cameFrom = new Int32Array(width * height);
-            cameFrom.fill(-1);
-            const seen = new Uint8Array(width * height);
-            const queue = new Int32Array(width * height);
-            let head = 0, tail = 0;
-            queue[tail++] = startId;
-            seen[startId] = 1;
-
-            const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-            while (head < tail && !seen[targetId]) {
-                const id = queue[head++];
-                const x = id % width, y = Math.floor(id / width);
-                for (const [dx, dy] of dirs) {
-                    const nx = x + dx, ny = y + dy;
-                    if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
-                    const nextId = ny * width + nx;
-                    if (seen[nextId] || !gs.tileMap.isWalkable(nx, ny)) continue;
-                    seen[nextId] = 1;
-                    cameFrom[nextId] = id;
-                    queue[tail++] = nextId;
-                }
-            }
-            if (!seen[targetId]) return false;
-
-            const reversed = [];
-            for (let id = targetId; id !== startId; id = cameFrom[id]) {
-                reversed.push({ x: id % width, y: Math.floor(id / width) });
-            }
-            reversed.reverse();
-
-            // Keep only corners, reducing hundreds of tile steps to a few straight walks.
-            const waypoints = [];
-            let lastDx = null, lastDy = null;
-            let previous = { x: startX, y: startY };
-            for (const step of reversed) {
-                const dx = step.x - previous.x, dy = step.y - previous.y;
-                if (lastDx !== null && (dx !== lastDx || dy !== lastDy)) {
-                    waypoints.push(previous);
-                }
-                lastDx = dx; lastDy = dy; previous = step;
-            }
-            if (reversed.length) waypoints.push(reversed[reversed.length - 1]);
+            let waypoints = bfs(startX, startY);
+            if (!waypoints) return false;
 
             const deadline = Date.now() + timeoutMs;
-            for (const point of waypoints) {
+            let rerouteCount = 0, wi = 0;
+            while (wi < waypoints.length) {
                 const remaining = deadline - Date.now();
                 if (remaining <= 0) return false;
-                const ok = await this.walkTo(point.x, point.y, { timeoutMs: Math.min(remaining, 15000) });
-                if (!ok || ON('Combat')) return ON('Combat');
+                const ok = await this.walkTo(waypoints[wi].x, waypoints[wi].y, { timeoutMs: Math.min(remaining, 15000) });
+                if (ON('Combat')) return true;
+                if (!ok) {
+                    if (++rerouteCount > 3) return false;
+                    const cx = Math.floor(gs.playerEntity.sprite.x / TILE);
+                    const cy = Math.floor(gs.playerEntity.sprite.y / TILE);
+                    const newPath = bfs(cx, cy);
+                    if (!newPath) return false;
+                    waypoints = newPath; wi = 0;
+                } else {
+                    wi++;
+                }
             }
             return true;
         },
