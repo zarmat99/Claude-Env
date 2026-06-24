@@ -89,9 +89,14 @@ def main():
     out_family_dir = OUT_DIR / family_id
     out_family_dir.mkdir(parents=True, exist_ok=True)
 
+    # Terrain: pre-compute distinct sub-region crops from the large source so
+    # every variant is a genuinely different patch (no visible tile repetition).
+    terrain_crops = terrain_region_crops(sprite, count, target_w, target_h) if is_terrain else None
+
     for i in range(1, count + 1):
         rng = random.Random(f"{family_id}:{i}")
-        variant = make_variant(sprite, rng, i, target_w, target_h, is_terrain, allow_flip)
+        base = terrain_crops[i - 1] if is_terrain else sprite
+        variant = make_variant(base, rng, i, target_w, target_h, is_terrain, allow_flip)
         out_path = out_family_dir / f"{family_id}_{i:02d}.png"
         variant.save(out_path, optimize=True)
 
@@ -134,6 +139,30 @@ def trim_alpha(image, padding=8):
     right = min(image.width, bbox[2] + padding)
     bottom = min(image.height, bbox[3] + padding)
     return image.crop((left, top, right, bottom))
+
+
+def terrain_region_crops(source, count, target_w, target_h):
+    """Slice the large terrain source into `count` distinct sub-region crops.
+
+    Each crop is a different patch of the continuous texture, kept at high
+    resolution (downscaled to the tile size only at the end). Because the map
+    mixes these patches via noise, the visible tile-repetition grid disappears
+    and surface detail is preserved instead of blurred into a single tile.
+    """
+    sw, sh = source.size
+    cols = math.ceil(math.sqrt(count))
+    rows = math.ceil(count / cols)
+    # Crop window: as large as the grid allows, so we sample the whole texture.
+    crop_w = sw // cols
+    crop_h = sh // rows
+    crops = []
+    for idx in range(count):
+        r = idx // cols
+        c = idx % cols
+        x0 = c * crop_w
+        y0 = r * crop_h
+        crops.append(source.crop((x0, y0, x0 + crop_w, y0 + crop_h)))
+    return crops
 
 
 def make_variant(sprite, rng, index, target_w, target_h, is_terrain, allow_flip):
