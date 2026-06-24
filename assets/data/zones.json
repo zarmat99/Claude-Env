@@ -1,49 +1,16 @@
 {
   "schemaVersion": 1,
-  "startZone": "overworld_northreach",
+  "startZone": "test_city_quarter",
   "startSpawn": "player_start",
   "zones": [
     {
-      "zone_id": "overworld_northreach",
-      "name": "Northreach Wilds",
-      "type": "overworld",
-      "mapFile": "assets/data/maps/overworld_northreach.json",
-      "description": "Static exterior overworld cell connecting forests, roads, mountains, city gates, camps, ruins and dungeon entrances.",
+      "zone_id": "test_city_quarter",
+      "name": "Test City Quarter",
+      "type": "test",
+      "mapFile": "assets/data/maps/test_city_quarter.json",
+      "description": "Single development test cell: a small walled city quarter used only to verify movement, collisions, props, NPCs and loot placement.",
       "entrances": [],
-      "exits": ["to_city_blackstone", "to_dungeon_frozen_depths"],
-      "access": { "conditions": [] },
-      "persistent": true
-    },
-    {
-      "zone_id": "city_blackstone",
-      "name": "Blackstone Hold",
-      "type": "city",
-      "mapFile": "assets/data/maps/city_blackstone.json",
-      "description": "Static walled settlement map with streets, plaza, houses, forge, temple, tavern and exits.",
-      "entrances": ["from_overworld_south_gate"],
-      "exits": ["to_overworld_south_gate", "to_blackstone_tavern"],
-      "access": { "conditions": [] },
-      "persistent": true
-    },
-    {
-      "zone_id": "interior_blackstone_tavern",
-      "name": "The Cold Anvil",
-      "type": "interior",
-      "mapFile": "assets/data/maps/interior_blackstone_tavern.json",
-      "description": "Static tavern interior cell with furniture, containers, NPCs and a single exterior door.",
-      "entrances": ["from_blackstone_tavern_door"],
-      "exits": ["to_city_tavern_door"],
-      "access": { "conditions": [] },
-      "persistent": true
-    },
-    {
-      "zone_id": "dungeon_frozen_depths_01",
-      "name": "Frozen Depths",
-      "type": "dungeon",
-      "mapFile": "assets/data/maps/dungeon_frozen_depths_01.json",
-      "description": "Static dungeon level with rooms, corridors, traps, enemies, loot and a boss room.",
-      "entrances": ["from_overworld_cave_mouth"],
-      "exits": ["to_overworld_cave_mouth"],
+      "exits": [],
       "access": { "conditions": [] },
       "persistent": true
     }

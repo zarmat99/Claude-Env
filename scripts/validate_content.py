@@ -237,7 +237,7 @@ def validate_static_world(errors, families, zones_doc, zones, maps_doc, map_data
     for zone_id, zone in zones.items():
         if zone_id not in map_data:
             errors.append(f"zone {zone_id} has no loaded map data")
-        if zone.get("type") not in {"overworld", "city", "village", "interior", "dungeon", "cave", "ruin"}:
+        if zone.get("type") not in {"test", "overworld", "city", "village", "interior", "dungeon", "cave", "ruin"}:
             errors.append(f"zone {zone_id} has unsupported type {zone.get('type')}")
 
     for entry in maps_doc.get("maps", []):

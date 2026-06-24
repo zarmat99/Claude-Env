@@ -33,6 +33,10 @@ Open the URL printed by the dev server. The default is `http://127.0.0.1:4173`.
 - `src/world` contains static zone loading, map construction and collision-aware world state.
 - `scripts/validate_content.py` validates the data contract before runtime.
 
+## Current Content
+
+The project currently ships with one development-only map: `test_city_quarter`. It is a small test cell for movement, collisions, props, NPC markers and loot. No final overworld, city, house interior or dungeon has been authored yet.
+
 No protected names, locations, assets or lore from other games are used.
 
 ## Generate Image Assets

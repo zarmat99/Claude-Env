@@ -187,7 +187,7 @@ function validateStaticZones(content, errors) {
 
   for (const zone of Object.values(zones)) {
     if (!mapsByZone[zone.zone_id]) errors.push(`Zone ${zone.zone_id} has no loaded map data`);
-    if (!["overworld", "city", "village", "interior", "dungeon", "cave", "ruin"].includes(zone.type)) {
+    if (!["test", "overworld", "city", "village", "interior", "dungeon", "cave", "ruin"].includes(zone.type)) {
       errors.push(`Zone ${zone.zone_id} has unsupported type ${zone.type}`);
     }
   }

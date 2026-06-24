@@ -2,6 +2,8 @@
 
 Grimward is data-first. New content should usually be added by editing JSON, not game code.
 
+Current authored content is intentionally limited to one development test cell, `test_city_quarter`. Treat it as a playground for mechanics, not as final world content.
+
 ## Add an asset family
 
 1. Open `assets/data/asset_manifest.json`.

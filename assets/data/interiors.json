@@ -1,15 +1,4 @@
 {
   "schemaVersion": 1,
-  "interiors": [
-    {
-      "zoneId": "interior_blackstone_tavern",
-      "parentZoneId": "city_blackstone",
-      "buildingId": "blackstone_tavern",
-      "name": "The Cold Anvil",
-      "type": "tavern",
-      "entryTransition": "to_blackstone_tavern",
-      "exitTransition": "to_city_tavern_door",
-      "persistentContainers": ["tavern_barrel_01", "tavern_chest_01"]
-    }
-  ]
+  "interiors": []
 }

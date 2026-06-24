@@ -1,16 +1,4 @@
 {
   "schemaVersion": 1,
-  "dungeons": [
-    {
-      "zoneId": "dungeon_frozen_depths_01",
-      "name": "Frozen Depths",
-      "type": "cave_dungeon",
-      "levels": ["dungeon_frozen_depths_01"],
-      "entryTransition": "to_dungeon_frozen_depths",
-      "exitTransition": "to_overworld_cave_mouth",
-      "bossRoomId": "frozen_depths_boss_room",
-      "persistentLoot": true,
-      "persistentEnemies": true
-    }
-  ]
+  "dungeons": []
 }
