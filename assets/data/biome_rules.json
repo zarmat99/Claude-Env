@@ -3,9 +3,9 @@
   "rules": [
     {
       "id": "test_city_quarter",
-      "terrainFamilies": ["road_path_tile", "moss_mud_tile", "rock_mountain_tile"],
-      "modularAssets": ["palisade_gate", "watch_tower", "frost_pine_tree", "heath_bush", "grey_boulder", "longhouse_module", "tradehall_special", "hunter_hut", "village_exterior_decor", "storage_prop", "smith_miner_prop", "loot_container", "common_prop"],
-      "notes": "Development-only construction kit for the single test courtyard map."
+      "terrainFamilies": ["moss_mud_tile", "road_path_tile", "rock_mountain_tile"],
+      "modularAssets": ["frost_pine_tree", "heath_bush", "cliff_wall", "ice_spire", "interactive_prop", "storage_prop", "loot_container", "npc_human_base"],
+      "notes": "Development-only construction kit for the single Wolfpine Hollow test map. Limited to asset families that render clearly."
     }
   ]
 }

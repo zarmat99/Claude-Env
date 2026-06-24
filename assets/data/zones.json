@@ -5,10 +5,10 @@
   "zones": [
     {
       "zone_id": "test_city_quarter",
-      "name": "Hearthgate Courtyard",
+      "name": "Wolfpine Hollow",
       "type": "test",
-      "mapFile": "assets/data/maps/test_courtyard.json",
-      "description": "Single development test cell: a small walled courtyard with a south gate, an entry road, a central paved plaza ringed by buildings, and props/NPCs/loot used to verify movement, collisions and placement.",
+      "mapFile": "assets/data/maps/wolfpine_hollow.json",
+      "description": "Single development test cell: a forest hollow hunters' camp — a dirt clearing with a central firepit in a wooded, rock-walled hollow reached by a southern path, with props/NPCs/loot used to verify movement, collisions and placement.",
       "entrances": [],
       "exits": [],
       "access": { "conditions": [] },

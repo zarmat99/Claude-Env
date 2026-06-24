@@ -70,4 +70,4 @@ Workflow:
   terrain `familyId` (or `"static"`) as `biomeId`, so any terrain family used on
   a map should have an entry in `biomeColor` or the minimap shows a flat block.
 
-The single dev/test map is `test_courtyard.json` (zone `test_city_quarter`).
+The single dev/test map is `wolfpine_hollow.json` (zone `test_city_quarter`).
