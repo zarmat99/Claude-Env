@@ -19,6 +19,19 @@ export class Input {
       this.keys.clear();
       this.pressed.clear();
     });
+
+    // Touch D-pad: wire every [data-key] button
+    document.querySelectorAll("[data-key]").forEach(el => {
+      const key = el.dataset.key;
+      el.addEventListener("touchstart", e => {
+        e.preventDefault();
+        if (!this.keys.has(key)) this.pressed.add(key);
+        this.keys.add(key);
+      }, { passive: false });
+      const release = () => this.keys.delete(key);
+      el.addEventListener("touchend",    release, { passive: true });
+      el.addEventListener("touchcancel", release, { passive: true });
+    });
   }
 
   down(key) {

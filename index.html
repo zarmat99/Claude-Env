@@ -10,6 +10,15 @@
   <main id="app">
     <canvas id="game" aria-label="Grimward game canvas"></canvas>
     <div id="boot-status">Loading Grimward...</div>
+    <div id="touch-controls" aria-hidden="true">
+      <div id="dpad">
+        <button class="dpad-btn" id="btn-up"    data-key="w">↑</button>
+        <button class="dpad-btn" id="btn-left"  data-key="a">←</button>
+        <button class="dpad-btn" id="btn-right" data-key="d">→</button>
+        <button class="dpad-btn" id="btn-down"  data-key="s">↓</button>
+      </div>
+      <button class="action-btn" id="btn-interact" data-key="e">E</button>
+    </div>
   </main>
   <script type="module" src="src/main.js"></script>
 </body>
