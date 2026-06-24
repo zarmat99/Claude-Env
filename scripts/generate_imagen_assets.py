@@ -57,9 +57,13 @@ def main():
         family_dir = OUT_DIR / family["id"]
         family_dir.mkdir(parents=True, exist_ok=True)
 
+        source = sources[source_name]
+        # Allow explicit atlas placement; default is sequential cursor.
+        if "startCell" in family:
+            source["cursor"] = int(family["startCell"])
+
         for variant_index in range(1, int(family["count"]) + 1):
             asset_id = f"{family['id']}_{variant_index:02d}"
-            source = sources[source_name]
             cell = next_cell(source)
             canvas_size = asset_canvas_size(family)
             image = make_asset_image(cell, family, canvas_size, variant_index)

@@ -4,7 +4,7 @@
   "source": "OpenAI imagegen atlas sheets copied into assets/imagen/source",
   "grid": 12,
   "families": 93,
-  "assets": 1535,
+  "assets": 1467,
   "entries": {
     "terrain_black_loam_01": {
       "familyId": "terrain_black_loam",
@@ -126,291 +126,11 @@
         48
       ]
     },
-    "terrain_black_loam_13": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_13.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 12,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_14": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_14.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 13,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_15": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_15.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 14,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_16": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_16.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 15,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_17": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_17.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 16,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_18": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_18.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 17,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_19": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_19.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 18,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_20": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_20.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 19,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_21": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_21.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 20,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_22": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_22.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 21,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_23": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_23.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 22,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_24": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_24.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 23,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_25": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_25.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 24,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_26": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_26.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 25,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_27": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_27.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 26,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_28": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_28.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 27,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_29": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_29.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 28,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_30": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_30.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 29,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_31": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_31.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 30,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_32": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_32.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 31,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_33": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_33.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 32,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_34": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_34.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 33,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_35": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_35.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 34,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_36": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_36.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 35,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_37": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_37.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 36,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_38": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_38.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 37,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_39": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_39.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 38,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_black_loam_40": {
-      "familyId": "terrain_black_loam",
-      "path": "assets/generated/terrain_black_loam/terrain_black_loam_40.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 39,
-      "size": [
-        48,
-        48
-      ]
-    },
     "snow_ice_tile_01": {
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_01.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 40,
+      "sourceCell": 12,
       "size": [
         48,
         48
@@ -420,7 +140,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_02.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 41,
+      "sourceCell": 13,
       "size": [
         48,
         48
@@ -430,7 +150,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_03.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 42,
+      "sourceCell": 14,
       "size": [
         48,
         48
@@ -440,7 +160,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_04.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 43,
+      "sourceCell": 15,
       "size": [
         48,
         48
@@ -450,7 +170,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_05.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 44,
+      "sourceCell": 16,
       "size": [
         48,
         48
@@ -460,7 +180,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_06.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 45,
+      "sourceCell": 17,
       "size": [
         48,
         48
@@ -470,7 +190,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_07.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 46,
+      "sourceCell": 18,
       "size": [
         48,
         48
@@ -480,7 +200,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_08.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 47,
+      "sourceCell": 19,
       "size": [
         48,
         48
@@ -490,7 +210,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_09.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 48,
+      "sourceCell": 20,
       "size": [
         48,
         48
@@ -500,7 +220,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_10.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 49,
+      "sourceCell": 21,
       "size": [
         48,
         48
@@ -510,7 +230,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_11.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 50,
+      "sourceCell": 22,
       "size": [
         48,
         48
@@ -520,87 +240,7 @@
       "familyId": "snow_ice_tile",
       "path": "assets/generated/snow_ice_tile/snow_ice_tile_12.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 51,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_13": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_13.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 52,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_14": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_14.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 53,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_15": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_15.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 54,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_16": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_16.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 55,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_17": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_17.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 56,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_18": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_18.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 57,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_19": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_19.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 58,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "snow_ice_tile_20": {
-      "familyId": "snow_ice_tile",
-      "path": "assets/generated/snow_ice_tile/snow_ice_tile_20.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 59,
+      "sourceCell": 23,
       "size": [
         48,
         48
@@ -610,7 +250,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_01.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 60,
+      "sourceCell": 24,
       "size": [
         48,
         48
@@ -620,7 +260,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_02.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 61,
+      "sourceCell": 25,
       "size": [
         48,
         48
@@ -630,7 +270,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_03.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 62,
+      "sourceCell": 26,
       "size": [
         48,
         48
@@ -640,7 +280,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_04.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 63,
+      "sourceCell": 27,
       "size": [
         48,
         48
@@ -650,7 +290,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_05.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 64,
+      "sourceCell": 28,
       "size": [
         48,
         48
@@ -660,7 +300,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_06.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 65,
+      "sourceCell": 29,
       "size": [
         48,
         48
@@ -670,7 +310,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_07.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 66,
+      "sourceCell": 30,
       "size": [
         48,
         48
@@ -680,7 +320,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_08.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 67,
+      "sourceCell": 31,
       "size": [
         48,
         48
@@ -690,7 +330,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_09.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 68,
+      "sourceCell": 32,
       "size": [
         48,
         48
@@ -700,7 +340,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_10.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 69,
+      "sourceCell": 33,
       "size": [
         48,
         48
@@ -710,7 +350,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_11.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 70,
+      "sourceCell": 34,
       "size": [
         48,
         48
@@ -720,87 +360,7 @@
       "familyId": "rock_mountain_tile",
       "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_12.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 71,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_13": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_13.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 72,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_14": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_14.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 73,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_15": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_15.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 74,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_16": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_16.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 75,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_17": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_17.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 76,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_18": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_18.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 77,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_19": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_19.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 78,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "rock_mountain_tile_20": {
-      "familyId": "rock_mountain_tile",
-      "path": "assets/generated/rock_mountain_tile/rock_mountain_tile_20.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 79,
+      "sourceCell": 35,
       "size": [
         48,
         48
@@ -810,7 +370,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_01.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 80,
+      "sourceCell": 48,
       "size": [
         48,
         48
@@ -820,7 +380,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_02.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 81,
+      "sourceCell": 49,
       "size": [
         48,
         48
@@ -830,7 +390,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_03.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 82,
+      "sourceCell": 50,
       "size": [
         48,
         48
@@ -840,7 +400,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_04.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 83,
+      "sourceCell": 51,
       "size": [
         48,
         48
@@ -850,7 +410,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_05.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 84,
+      "sourceCell": 52,
       "size": [
         48,
         48
@@ -860,7 +420,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_06.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 85,
+      "sourceCell": 53,
       "size": [
         48,
         48
@@ -870,7 +430,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_07.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 86,
+      "sourceCell": 54,
       "size": [
         48,
         48
@@ -880,7 +440,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_08.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 87,
+      "sourceCell": 55,
       "size": [
         48,
         48
@@ -890,7 +450,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_09.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 88,
+      "sourceCell": 56,
       "size": [
         48,
         48
@@ -900,7 +460,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_10.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 89,
+      "sourceCell": 57,
       "size": [
         48,
         48
@@ -910,7 +470,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_11.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 90,
+      "sourceCell": 58,
       "size": [
         48,
         48
@@ -920,87 +480,7 @@
       "familyId": "moss_mud_tile",
       "path": "assets/generated/moss_mud_tile/moss_mud_tile_12.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 91,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_13": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_13.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 92,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_14": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_14.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 93,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_15": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_15.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 94,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_16": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_16.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 95,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_17": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_17.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 96,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_18": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_18.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 97,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_19": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_19.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 98,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "moss_mud_tile_20": {
-      "familyId": "moss_mud_tile",
-      "path": "assets/generated/moss_mud_tile/moss_mud_tile_20.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 99,
+      "sourceCell": 59,
       "size": [
         48,
         48
@@ -1010,7 +490,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_01.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 100,
+      "sourceCell": 60,
       "size": [
         48,
         48
@@ -1020,7 +500,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_02.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 101,
+      "sourceCell": 61,
       "size": [
         48,
         48
@@ -1030,7 +510,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_03.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 102,
+      "sourceCell": 62,
       "size": [
         48,
         48
@@ -1040,7 +520,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_04.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 103,
+      "sourceCell": 63,
       "size": [
         48,
         48
@@ -1050,7 +530,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_05.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 104,
+      "sourceCell": 64,
       "size": [
         48,
         48
@@ -1060,7 +540,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_06.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 105,
+      "sourceCell": 65,
       "size": [
         48,
         48
@@ -1070,7 +550,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_07.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 106,
+      "sourceCell": 66,
       "size": [
         48,
         48
@@ -1080,7 +560,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_08.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 107,
+      "sourceCell": 67,
       "size": [
         48,
         48
@@ -1090,7 +570,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_09.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 108,
+      "sourceCell": 68,
       "size": [
         48,
         48
@@ -1100,7 +580,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_10.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 109,
+      "sourceCell": 69,
       "size": [
         48,
         48
@@ -1110,7 +590,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_11.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 110,
+      "sourceCell": 70,
       "size": [
         48,
         48
@@ -1120,37 +600,7 @@
       "familyId": "road_path_tile",
       "path": "assets/generated/road_path_tile/road_path_tile_12.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 111,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "road_path_tile_13": {
-      "familyId": "road_path_tile",
-      "path": "assets/generated/road_path_tile/road_path_tile_13.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 112,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "road_path_tile_14": {
-      "familyId": "road_path_tile",
-      "path": "assets/generated/road_path_tile/road_path_tile_14.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 113,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "road_path_tile_15": {
-      "familyId": "road_path_tile",
-      "path": "assets/generated/road_path_tile/road_path_tile_15.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 114,
+      "sourceCell": 71,
       "size": [
         48,
         48
@@ -1160,7 +610,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_01.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 115,
+      "sourceCell": 96,
       "size": [
         48,
         48
@@ -1170,7 +620,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_02.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 116,
+      "sourceCell": 97,
       "size": [
         48,
         48
@@ -1180,7 +630,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_03.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 117,
+      "sourceCell": 98,
       "size": [
         48,
         48
@@ -1190,7 +640,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_04.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 118,
+      "sourceCell": 99,
       "size": [
         48,
         48
@@ -1200,7 +650,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_05.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 119,
+      "sourceCell": 100,
       "size": [
         48,
         48
@@ -1210,7 +660,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_06.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 120,
+      "sourceCell": 101,
       "size": [
         48,
         48
@@ -1220,7 +670,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_07.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 121,
+      "sourceCell": 102,
       "size": [
         48,
         48
@@ -1230,7 +680,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_08.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 122,
+      "sourceCell": 103,
       "size": [
         48,
         48
@@ -1240,7 +690,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_09.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 123,
+      "sourceCell": 104,
       "size": [
         48,
         48
@@ -1250,7 +700,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_10.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 124,
+      "sourceCell": 105,
       "size": [
         48,
         48
@@ -1260,7 +710,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_11.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 125,
+      "sourceCell": 106,
       "size": [
         48,
         48
@@ -1270,37 +720,7 @@
       "familyId": "water_tile",
       "path": "assets/generated/water_tile/water_tile_12.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 126,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "water_tile_13": {
-      "familyId": "water_tile",
-      "path": "assets/generated/water_tile/water_tile_13.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 127,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "water_tile_14": {
-      "familyId": "water_tile",
-      "path": "assets/generated/water_tile/water_tile_14.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 128,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "water_tile_15": {
-      "familyId": "water_tile",
-      "path": "assets/generated/water_tile/water_tile_15.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 129,
+      "sourceCell": 107,
       "size": [
         48,
         48
@@ -1310,7 +730,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_01.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 130,
+      "sourceCell": 36,
       "size": [
         48,
         48
@@ -1320,7 +740,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_02.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 131,
+      "sourceCell": 37,
       "size": [
         48,
         48
@@ -1330,7 +750,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_03.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 132,
+      "sourceCell": 38,
       "size": [
         48,
         48
@@ -1340,7 +760,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_04.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 133,
+      "sourceCell": 39,
       "size": [
         48,
         48
@@ -1350,7 +770,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_05.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 134,
+      "sourceCell": 40,
       "size": [
         48,
         48
@@ -1360,7 +780,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_06.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 135,
+      "sourceCell": 41,
       "size": [
         48,
         48
@@ -1370,7 +790,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_07.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 136,
+      "sourceCell": 42,
       "size": [
         48,
         48
@@ -1380,7 +800,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_08.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 137,
+      "sourceCell": 43,
       "size": [
         48,
         48
@@ -1390,7 +810,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_09.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 138,
+      "sourceCell": 44,
       "size": [
         48,
         48
@@ -1400,7 +820,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_10.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 139,
+      "sourceCell": 45,
       "size": [
         48,
         48
@@ -1410,7 +830,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_11.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 140,
+      "sourceCell": 46,
       "size": [
         48,
         48
@@ -1420,87 +840,7 @@
       "familyId": "terrain_transition",
       "path": "assets/generated/terrain_transition/terrain_transition_12.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 141,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_13": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_13.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 142,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_14": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_14.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 143,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_15": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_15.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 144,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_16": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_16.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 145,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_17": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_17.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 146,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_18": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_18.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 147,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_19": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_19.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 148,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_transition_20": {
-      "familyId": "terrain_transition",
-      "path": "assets/generated/terrain_transition/terrain_transition_20.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 149,
+      "sourceCell": 47,
       "size": [
         48,
         48
@@ -1510,7 +850,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_01.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 150,
+      "sourceCell": 132,
       "size": [
         48,
         48
@@ -1520,7 +860,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_02.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 151,
+      "sourceCell": 133,
       "size": [
         48,
         48
@@ -1530,7 +870,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_03.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 152,
+      "sourceCell": 134,
       "size": [
         48,
         48
@@ -1540,7 +880,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_04.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 153,
+      "sourceCell": 135,
       "size": [
         48,
         48
@@ -1550,7 +890,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_05.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 154,
+      "sourceCell": 136,
       "size": [
         48,
         48
@@ -1560,7 +900,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_06.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 155,
+      "sourceCell": 137,
       "size": [
         48,
         48
@@ -1570,7 +910,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_07.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 156,
+      "sourceCell": 138,
       "size": [
         48,
         48
@@ -1580,27 +920,7 @@
       "familyId": "terrain_decal",
       "path": "assets/generated/terrain_decal/terrain_decal_08.png",
       "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 157,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_decal_09": {
-      "familyId": "terrain_decal",
-      "path": "assets/generated/terrain_decal/terrain_decal_09.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 158,
-      "size": [
-        48,
-        48
-      ]
-    },
-    "terrain_decal_10": {
-      "familyId": "terrain_decal",
-      "path": "assets/generated/terrain_decal/terrain_decal_10.png",
-      "sourceAtlas": "assets/imagen/source/terrain_tileset.png",
-      "sourceCell": 159,
+      "sourceCell": 139,
       "size": [
         48,
         48
