@@ -1,4 +1,5 @@
 import { WorldState } from "./WorldState.js";
+import { noise2 } from "./SeededRandom.js";
 
 export class StaticMapBuilder {
   constructor(content) {
@@ -88,16 +89,24 @@ export class StaticMapBuilder {
 }
 
 function fillTiles(content, tiles, width, height, familyId, fallbackFamily) {
-  const asset = resolveAsset(content, familyId, 1) || resolveAsset(content, fallbackFamily, 1);
+  const fid = content.assetsByFamily[familyId]?.length ? familyId : fallbackFamily;
+  // Use first 3 variants only (safer range — later AI variants often diverge visually)
+  // and group tile lookups into 4×4 blocks so neighbours share a variant naturally.
+  const assets = content.assetsByFamily[fid] || [];
+  const pool = assets.slice(0, Math.min(3, assets.length));
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      tiles[y * width + x] = makeTile(asset, x, y, "static");
+      const asset = pool.length > 0
+        ? pool[Math.floor(noise2(Math.floor(x / 4), Math.floor(y / 4)) * pool.length) % pool.length]
+        : null;
+      tiles[y * width + x] = makeTile(asset, x, y, fid || "static");
     }
   }
 }
 
 function applyShapes(content, tiles, width, height, shapes) {
   for (const shape of shapes) {
+    // Shapes (road, walls) always use variant 1 — only the first AI variant is reliable.
     const asset = resolveAsset(content, shape.family, shape.variant) || resolveAsset(content, shape.fallbackFamily, shape.variant);
     if (!asset) continue;
     if (shape.shape === "rect") {
@@ -108,8 +117,7 @@ function applyShapes(content, tiles, width, height, shapes) {
     if (shape.shape === "circle") {
       for (let y = shape.y - shape.r; y <= shape.y + shape.r; y++) {
         for (let x = shape.x - shape.r; x <= shape.x + shape.r; x++) {
-          const dx = x - shape.x;
-          const dy = y - shape.y;
+          const dx = x - shape.x, dy = y - shape.y;
           if (dx * dx + dy * dy <= shape.r * shape.r) setTile(tiles, width, height, x, y, asset, shape.family);
         }
       }
