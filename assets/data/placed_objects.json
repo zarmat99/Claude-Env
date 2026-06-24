@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "zones": {
     "test_city_quarter": [
-      { "id": "test_north_house", "family": "longhouse_module", "tile": [12, 9], "variant": 4 },
-      { "id": "test_workshop", "family": "tradehall_special", "tile": [30, 12], "variant": 2 },
-      { "id": "test_small_house", "family": "hunter_hut", "tile": [10, 20], "variant": 3 },
-      { "id": "test_market_table", "family": "village_exterior_decor", "tile": [21, 16], "variant": 6, "interaction": "inspect" },
-      { "id": "test_crates", "family": "storage_prop", "tile": [25, 18], "variant": 2, "interaction": "inspect" },
-      { "id": "test_anvil", "family": "smith_miner_prop", "tile": [31, 16], "variant": 1, "interaction": "inspect" },
-      { "id": "test_loot_chest", "family": "loot_container", "tile": [16, 18], "variant": 5, "loot": true },
-      { "id": "test_bench", "family": "common_prop", "tile": [22, 22], "variant": 8, "solid": false, "interaction": "inspect" }
+      { "id": "test_longhouse", "family": "longhouse_module", "tile": [9, 6], "variant": 4 },
+      { "id": "test_tradehall", "family": "tradehall_special", "tile": [30, 7], "variant": 2 },
+      { "id": "test_hut", "family": "hunter_hut", "tile": [9, 19], "variant": 3 },
+      { "id": "test_market_stall_a", "family": "village_exterior_decor", "tile": [16, 11], "variant": 6, "interaction": "inspect" },
+      { "id": "test_market_stall_b", "family": "village_exterior_decor", "tile": [23, 13], "variant": 3, "interaction": "inspect" },
+      { "id": "test_crates", "family": "storage_prop", "tile": [25, 14], "variant": 2, "interaction": "inspect" },
+      { "id": "test_anvil", "family": "smith_miner_prop", "tile": [14, 14], "variant": 1, "interaction": "inspect" },
+      { "id": "test_loot_chest", "family": "loot_container", "tile": [17, 15], "variant": 5, "loot": true },
+      { "id": "test_bench", "family": "common_prop", "tile": [21, 14], "variant": 8, "solid": false, "interaction": "inspect" }
     ]
   }
 }

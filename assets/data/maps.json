@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "maps": [
     {
-      "id": "map_test_city_quarter",
+      "id": "map_test_courtyard",
       "zoneId": "test_city_quarter",
-      "file": "assets/data/maps/test_city_quarter.json"
+      "file": "assets/data/maps/test_courtyard.json"
     }
   ]
 }

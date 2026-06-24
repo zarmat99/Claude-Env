@@ -5,10 +5,10 @@
   "zones": [
     {
       "zone_id": "test_city_quarter",
-      "name": "Test City Quarter",
+      "name": "Hearthgate Courtyard",
       "type": "test",
-      "mapFile": "assets/data/maps/test_city_quarter.json",
-      "description": "Single development test cell: a small walled city quarter used only to verify movement, collisions, props, NPCs and loot placement.",
+      "mapFile": "assets/data/maps/test_courtyard.json",
+      "description": "Single development test cell: a small walled courtyard with a south gate, an entry road, a central paved plaza ringed by buildings, and props/NPCs/loot used to verify movement, collisions and placement.",
       "entrances": [],
       "exits": [],
       "access": { "conditions": [] },

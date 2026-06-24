@@ -3,9 +3,9 @@
   "rules": [
     {
       "id": "test_city_quarter",
-      "terrainFamilies": ["road_path_tile", "moss_mud_tile", "dungeon_floor"],
-      "modularAssets": ["longhouse_module", "tradehall_special", "hunter_hut", "watch_tower", "palisade_gate", "village_exterior_decor", "storage_prop", "smith_miner_prop"],
-      "notes": "Development-only construction kit for the single test map."
+      "terrainFamilies": ["road_path_tile", "moss_mud_tile", "rock_mountain_tile"],
+      "modularAssets": ["palisade_gate", "watch_tower", "frost_pine_tree", "heath_bush", "grey_boulder", "longhouse_module", "tradehall_special", "hunter_hut", "village_exterior_decor", "storage_prop", "smith_miner_prop", "loot_container", "common_prop"],
+      "notes": "Development-only construction kit for the single test courtyard map."
     }
   ]
 }
