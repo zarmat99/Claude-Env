@@ -1192,6 +1192,149 @@ export const QUESTS = {
       }
     },
     failConditions: []
+  },
+
+  side_arcanate_engine: {
+    id: 'side_arcanate_engine',
+    name: 'The 48th Engine',
+    type: 'side',
+    description: 'The Arcanate activated 47 Resonance Engines. The historical record lists 48. The last one was sealed, not destroyed. The Grey Penitents have found it.',
+    giver: 'abbess_vonn',
+    location: 'arcanate_ruins',
+    stages: [
+      {
+        id: 'learn_of_engine',
+        label: 'Speak with Abbess Vonn about the 48th Engine',
+        objectives: [
+          { type: 'npc_talked_to', target: 'abbess_vonn', label: 'Speak with Abbess Vonn' }
+        ],
+        onComplete: []
+      },
+      {
+        id: 'find_engine_core',
+        label: 'Find the Resonance Engine Core in the Arcanate Ruins',
+        objectives: [
+          { type: 'item_collected', target: 'engine_core_data', quantity: 1, label: 'Retrieve Engine Core data (Arcanate Ruins)' }
+        ],
+        onComplete: []
+      },
+      {
+        id: 'choose_engine_fate',
+        label: 'Decide what to do with the 48th Engine',
+        objectives: [],
+        choices: [
+          {
+            id: 'activate_engine',
+            label: 'Activate the engine',
+            description: 'Restore partial Rootstone resonance — but release unstable energy into the region.',
+            effect: { setFlag: 'engine_activated', factionRep: { rootwardens: 15, grey_penitents: -10 } },
+            note: 'If engine_activated: Act 5 Kindling costs less — Sathis dissolution may be partially reversible'
+          },
+          {
+            id: 'sabotage_engine',
+            label: 'Sabotage the engine',
+            description: 'Safe choice. The knowledge is lost but no one gets hurt.',
+            effect: { setFlag: 'engine_sabotaged', factionRep: { grey_penitents: 5 } }
+          },
+          {
+            id: 'give_data_to_penitents',
+            label: 'Deliver the core data to the Grey Penitents',
+            description: 'The knowledge is preserved for future study. No immediate effect.',
+            effect: { setFlag: 'engine_data_preserved', factionRep: { grey_penitents: 20 } }
+          }
+        ],
+        onComplete: []
+      },
+      {
+        id: 'side_arcanate_engine_complete',
+        label: 'Quest complete',
+        objectives: [],
+        onComplete: []
+      }
+    ],
+    rewards: {
+      gold: 90,
+      xp: 350,
+      items: ['arcanate_crystal'],
+      factionRep: { grey_penitents: 15 }
+    },
+    failConditions: []
+  },
+
+  side_last_ashveil: {
+    id: 'side_last_ashveil',
+    name: 'The Last Light of Ashveil',
+    type: 'side',
+    description: 'The Ashveil Stone is dying. The people of Ashveil Outpost have lived in its light for generations. Maren Ashveil, the outpost elder, asks you to help her decide how to face the end.',
+    giver: 'maren_ashveil',
+    location: 'ashveil_outpost',
+    stages: [
+      {
+        id: 'meet_maren',
+        label: 'Speak with Maren Ashveil at the Ashveil Outpost',
+        objectives: [
+          { type: 'npc_talked_to', target: 'maren_ashveil', label: 'Find Maren Ashveil' }
+        ],
+        onComplete: []
+      },
+      {
+        id: 'find_shrine',
+        label: 'Find the Ashveil Stone shrine',
+        objectives: [
+          { type: 'location_reached', target: 'ashveil_outpost', label: 'Reach the Ashveil Stone shrine' }
+        ],
+        onComplete: []
+      },
+      {
+        id: 'study_stone',
+        label: 'Study the Ashveil Stone (requires a resonance sample)',
+        objectives: [
+          { type: 'item_collected', target: 'ashveil_reading', quantity: 1, label: 'Take resonance readings of the Ashveil Stone' }
+        ],
+        onComplete: []
+      },
+      {
+        id: 'decide_stone_fate',
+        label: 'Return to Maren with your findings and decide the stone\'s fate',
+        objectives: [
+          { type: 'npc_talked_to', target: 'maren_ashveil', label: 'Report to Maren Ashveil' }
+        ],
+        choices: [
+          {
+            id: 'accelerate_end',
+            label: 'Accelerate the end — let the people relocate',
+            description: 'A mercy. The stone ends cleanly; the community moves on with time to plan.',
+            effect: { setFlag: 'ashveil_mercy_end', factionRep: { rootwardens: 10 } }
+          },
+          {
+            id: 'slow_decline',
+            label: 'Apply Voidbloom Weave — buy more years',
+            description: 'Slows the decay significantly. The town survives another generation. But the problem remains.',
+            effect: { setFlag: 'ashveil_delayed', requireItem: 'voidbloom_weave', factionRep: { grey_penitents: 15 } }
+          },
+          {
+            id: 'let_it_be',
+            label: 'Leave it be — let the town wait',
+            description: 'Honour the community\'s wish to remain until the last light.',
+            effect: { setFlag: 'ashveil_unchanged' }
+          }
+        ],
+        onComplete: []
+      },
+      {
+        id: 'side_last_ashveil_complete',
+        label: 'Quest complete',
+        objectives: [],
+        onComplete: []
+      }
+    ],
+    rewards: {
+      gold: 75,
+      xp: 280,
+      items: ['ashveil_salt', 'ashveil_coat'],
+      factionRep: { rootwardens: 10 }
+    },
+    failConditions: []
   }
 };
 

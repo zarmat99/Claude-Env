@@ -59,6 +59,10 @@ export const WORLD_LOCATIONS = {
     emberpeak:                { x: 158, y: 168, name: 'Emberpeak Caldera',        type: 'city',    size: 24 },
     underlurk_entrance:       { x:  88, y: 148, name: 'Underlurk Entrance',       type: 'special', size:  7 },
     abandoned_farmstead:      { x: 102, y: 115, name: 'Abandoned Farmstead',      type: 'special', size:  8 },
+    arcanate_ruins:           { x: 120, y:  68, name: 'Arcanate Ruins',           type: 'special', size: 14 },
+    ashveil_outpost:          { x:  12, y: 112, name: 'Ashveil Outpost',          type: 'town',    size: 16 },
+    collapsed_observatory:    { x: 158, y:  32, name: 'Collapsed Observatory',    type: 'special', size: 10 },
+    vorrkai_outpost:          { x:  96, y: 156, name: 'Vorrkai Outpost',          type: 'special', size: 12 },
 };
 
 // Rootstones: world-pillar crystals that keep the Shards of Varethos aloft.
@@ -119,6 +123,12 @@ const ZONES = [
     { biome: 'SWAMP',       cx:  90, cy: 148, rx:  20, ry: 18 },
     // Emberpeak volcanic (far SE)
     { biome: 'VOLCANIC',    cx: 162, cy: 172, rx:  42, ry: 34 },
+    // Arcanate Ruins — cold desolate ruins between Greyhollow and Thornmere
+    { biome: 'TUNDRA',      cx: 120, cy:  68, rx:  25, ry: 20 },
+    // Ashveil Wasteland — far-west dying Rootstone territory
+    { biome: 'DESERT',      cx:  12, cy: 112, rx:  20, ry: 25 },
+    // Vorrkai Outpost — underground settlement in the deep Underlurk
+    { biome: 'UNDERLURK',   cx:  96, cy: 156, rx:  18, ry: 14 },
     // Global fallback
     { biome: 'GRASSLAND',   cx: 100, cy: 100, rx: 200, ry: 200 },
 ];
@@ -132,6 +142,10 @@ const ROADS = [
     { from: [142,  52], to: [158, 168] }, // Thornmere → Emberpeak
     { from: [ 82,  98], to: [148,  82] }, // Greyhollow → Aetherwood edge
     { from: [148,  82], to: [165,  85] }, // Aetherwood edge → Rootwarden Sanctuary
+    { from: [ 82,  98], to: [120,  68] }, // Greyhollow → Arcanate Ruins
+    { from: [142,  52], to: [158,  32] }, // Thornmere → Collapsed Observatory
+    { from: [ 82,  98], to: [ 12, 112] }, // Greyhollow → Ashveil Outpost
+    { from: [ 88, 148], to: [ 96, 156] }, // Underlurk Entrance → Vorrkai Outpost
 ];
 
 // ── Biome assignment ─────────────────────────────────────────────────────────
@@ -204,7 +218,12 @@ export function generateWorld(seed = 12345) {
     const civicPoints = [
         [85,80], [165,85], [143,50], [30,68], [78,32],
         [85,102], [83,100], [82,94], [75,104], [138,53],
-        [108,80], [88,150], [148,82], [102,115], [76,33]
+        [108,80], [88,150], [148,82], [102,115], [76,33],
+        // New locations
+        [120,68], [121,68], [119,68],  // Arcanate Ruins
+        [12,112], [13,112], [12,113],  // Ashveil Outpost
+        [158,32], [158,33], [159,32],  // Collapsed Observatory
+        [96,156], [97,156], [96,155], [95,158], [101,162] // Vorrkai Outpost + Oren Echo
     ];
     for (const [x, y] of civicPoints) clearRing(tiles, x, y, 1, TILE.STONE_FLOOR);
     for (const [x, y] of civicPoints) tiles[y * WORLD_WIDTH + x] = TILE.STONE_FLOOR;
@@ -228,9 +247,12 @@ function placeSettlement(tiles, loc, locationId) {
     const { x, y, size } = loc;
     const half = Math.floor(size / 2);
 
-    if (locationId === 'rootwarden_sanctuary') { placeSanctuary(tiles, x, y, half); return; }
-    if (locationId === 'abandoned_farmstead')  { placeFarmstead(tiles, x, y, half); return; }
-    if (locationId === 'underlurk_entrance')   { placeUnderlurk(tiles, x, y, half); return; }
+    if (locationId === 'rootwarden_sanctuary')  { placeSanctuary(tiles, x, y, half);      return; }
+    if (locationId === 'abandoned_farmstead')   { placeFarmstead(tiles, x, y, half);      return; }
+    if (locationId === 'underlurk_entrance')    { placeUnderlurk(tiles, x, y, half);      return; }
+    if (locationId === 'arcanate_ruins')        { placeArcanateRuins(tiles, x, y, half);  return; }
+    if (locationId === 'collapsed_observatory') { placeObservatory(tiles, x, y, half);    return; }
+    if (locationId === 'vorrkai_outpost')       { placeVorrkaiOutpost(tiles, x, y, half); return; }
 
     // General walled settlement with broad avenues, districts and enterable buildings.
     for (let dy = -half; dy <= half; dy++) {
@@ -310,12 +332,15 @@ function placeStoryRegions(tiles) {
     drawLine(tiles, 165, 85, 180, 100);
     for (const [cx, cy, radius, fill] of [
         [174,92,3,TILE.DARK_FOREST], [180,100,4,TILE.GRASS],
-        [173,103,2,TILE.DARK_FOREST], [102,115,3,TILE.DIRT],
+        [173,103,3,TILE.GRASS], [102,115,3,TILE.DIRT],
         [82,82,3,TILE.DIRT], [84,84,2,TILE.DIRT]
     ]) {
         clearArea(tiles, cx, cy, radius, fill);
     }
     tiles[82 * WORLD_WIDTH + 82] = TILE.ROOTSTONE;
+    // Connect Aetherwood void anchor (173,103) to the trail — the surrounding
+    // dark forest has 35% tree density which creates impassable pockets.
+    drawLine(tiles, 173, 93, 173, 103);
 
     // Emberpeak pilgrimage path: volcanic ground remains dramatic but walkable.
     drawLine(tiles, 158, 168, 158, 178);
@@ -358,6 +383,7 @@ function isGate(dx, dy, half, locationId) {
     const onEW = (adx === half && ady <= 1);
     if (locationId === 'grey_penitents_monastery') return dy === half && adx <= 1; // S gate only
     if (locationId === 'iron_compact_hq')          return onEW;                    // E and W only
+    if (locationId === 'ashveil_outpost')          return onEW;                    // E/W desert gates
     return onNS || onEW;
 }
 
@@ -447,6 +473,96 @@ function placeUnderlurk(tiles, x, y, half) {
     }
     if (y >= 0 && y < WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH)
         tiles[y * WORLD_WIDTH + x] = TILE.CAVE_ENTRANCE;
+}
+
+function placeArcanateRuins(tiles, x, y, half) {
+    // Shattered grandeur: broken outer walls, bone-crystal floors, collapsed dome center
+    for (let dy = -half; dy <= half; dy++) {
+        for (let dx = -half; dx <= half; dx++) {
+            const tx = x + dx, ty = y + dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            const adx = Math.abs(dx), ady = Math.abs(dy);
+            const r = Math.sqrt(dx * dx + dy * dy);
+            const idx = ty * WORLD_WIDTH + tx;
+            // Broken outer walls — missing sections every ~3 tiles
+            if ((adx === half || ady === half) && (dx + dy) % 3 !== 0) {
+                tiles[idx] = TILE.STONE_WALL;
+            } else if (r <= 3) {
+                // Collapsed dome center — rubble
+                tiles[idx] = TILE.STONE_FLOOR;
+            } else if (adx <= 1 || ady <= 1) {
+                // Cross avenues between ruins
+                tiles[idx] = TILE.ROAD;
+            } else {
+                tiles[idx] = TILE.STONE_FLOOR;
+            }
+        }
+    }
+    // Place collapsed dome marker at center
+    tiles[y * WORLD_WIDTH + x] = TILE.ROOTSTONE;
+    // Scatter a few ruin gaps (impassable chunks to look broken)
+    for (const [ox, oy] of [[-4,-4],[4,-3],[-3,5],[5,4],[-5,2],[2,-5]]) {
+        const tx = x + ox, ty = y + oy;
+        if (tx >= 0 && tx < WORLD_WIDTH && ty >= 0 && ty < WORLD_HEIGHT)
+            tiles[ty * WORLD_WIDTH + tx] = TILE.STONE_WALL;
+    }
+}
+
+function placeObservatory(tiles, x, y, half) {
+    // Collapsed tower: stone spiral staircase, one intact spire, rubble around base
+    for (let dy = -half; dy <= half; dy++) {
+        for (let dx = -half; dx <= half; dx++) {
+            const tx = x + dx, ty = y + dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            const r = Math.sqrt(dx * dx + dy * dy);
+            const idx = ty * WORLD_WIDTH + tx;
+            if (r <= 2) {
+                tiles[idx] = TILE.STONE_FLOOR; // intact spire base
+            } else if (r <= 4) {
+                // Spiral pattern: alternate wall/floor
+                const angle = Math.atan2(dy, dx);
+                tiles[idx] = ((angle + r * 0.8) % 1.2 > 0.5) ? TILE.STONE_WALL : TILE.STONE_FLOOR;
+            } else if (r <= half) {
+                tiles[idx] = TILE.DIRT; // rubble field
+            }
+        }
+    }
+    // Southern access path
+    for (let i = 1; i <= 3; i++) {
+        const ty = y + half + i;
+        if (ty < WORLD_HEIGHT) tiles[ty * WORLD_WIDTH + x] = TILE.ROAD;
+    }
+    tiles[y * WORLD_WIDTH + x] = TILE.CHEST; // telescope / discovery point
+}
+
+function placeVorrkaiOutpost(tiles, x, y, half) {
+    // Organic radial structure: bioluminescent cave layout, no right angles
+    for (let dy = -half; dy <= half; dy++) {
+        for (let dx = -half; dx <= half; dx++) {
+            const tx = x + dx, ty = y + dy;
+            if (tx < 0 || tx >= WORLD_WIDTH || ty < 0 || ty >= WORLD_HEIGHT) continue;
+            const r = Math.sqrt(dx * dx + dy * dy);
+            const idx = ty * WORLD_WIDTH + tx;
+            if (r > half) continue;
+            if (Math.abs(r - half) < 1.2) {
+                tiles[idx] = TILE.CAVE_WALL; // organic outer ring
+            } else if (r <= 2) {
+                tiles[idx] = TILE.ROOTSTONE; // bioluminescent central chamber
+            } else {
+                // Radial spokes: 6 directions walkable, rest cave floor
+                const angle = Math.atan2(dy, dx);
+                const spoke = Math.round(angle / (Math.PI / 3)) * (Math.PI / 3);
+                const diff = Math.abs(((angle - spoke) + Math.PI * 3) % (Math.PI * 2) - Math.PI);
+                tiles[idx] = diff < 0.3 ? TILE.ROAD : TILE.CAVE_FLOOR;
+            }
+        }
+    }
+    // Small side chamber to the south for Oren echo site
+    for (const [ox, oy] of [[0,half+1],[0,half+2],[0,half+3],[1,half+2],[-1,half+2]]) {
+        const tx = x + ox, ty = y + oy;
+        if (tx >= 0 && tx < WORLD_WIDTH && ty >= 0 && ty < WORLD_HEIGHT)
+            tiles[ty * WORLD_WIDTH + tx] = TILE.CAVE_FLOOR;
+    }
 }
 
 function placeStation(tiles, x, y) {

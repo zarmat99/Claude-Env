@@ -660,6 +660,112 @@ export const ENEMIES = {
     skills: { blades: 25 }, biomes: ['GRASSLAND'], level: 4, aggressive: true, aggroRange: 5,
     fleeHealth: 0.1, description: 'An Iron Compact tracker sent to silence Gerran Solt.',
     abilities: [], faction: 'iron_compact', resistances: {}, statusEffects: []
+  },
+
+  arcanate_guardian: {
+    id: 'arcanate_guardian', name: 'Arcanate Guardian',
+    spriteKey: 'enemy_stone_golem', health: 120, maxHealth: 120, mana: 20,
+    attributes: { STR: 12, END: 14, AGI: 2, INT: 6, WIL: 8, PER: 4 },
+    damage: [9, 16], armor: 14, speed: 0.6, xpReward: 190, gold: [5, 12],
+    lootTable: [
+      { itemId: 'arcanate_crystal', chance: 0.45 },
+      { itemId: 'void_shard',       chance: 0.25 }
+    ],
+    skills: { heavyArmor: 30 }, biomes: ['TUNDRA'], level: 11, aggressive: true, aggroRange: 4,
+    fleeHealth: 0, description: 'A golem of ancient Arcanate construction. Its purpose is defence; it has been waiting twelve generations for an intruder.',
+    abilities: [
+      { id: 'slam', name: 'Stone Slam', manaCost: 0, damage: [12, 20], effect: { type: 'stun', duration: 1 }, cooldown: 3 }
+    ],
+    faction: null, resistances: { physical: 0.35, fire: 0.20 }, immunities: ['poison', 'bleed', 'sleep'],
+    statusEffects: ['construct']
+  },
+
+  void_specter: {
+    id: 'void_specter', name: 'Void Specter',
+    spriteKey: 'enemy_wraith', health: 95, maxHealth: 95, mana: 60,
+    attributes: { STR: 6, END: 8, AGI: 10, INT: 10, WIL: 12, PER: 8 },
+    damage: [10, 18], armor: 3, speed: 1.2, xpReward: 210, gold: [0, 8],
+    lootTable: [
+      { itemId: 'void_shard',   chance: 0.60 },
+      { itemId: 'void_essence', chance: 0.30 }
+    ],
+    skills: { destruction: 35 }, biomes: ['GRASSLAND', 'TUNDRA', 'DARK_FOREST', 'SWAMP'], level: 15, aggressive: true, aggroRange: 7,
+    fleeHealth: 0, description: 'A fragment of void-energy released by the Thornpillar\'s fall. It hungers for resonance.',
+    abilities: [
+      { id: 'void_drain', name: 'Resonance Drain', manaCost: 15, effect: { type: 'drain_mana', amount: 25 }, cooldown: 4 }
+    ],
+    faction: null, resistances: { physical: 0.50, void: 0.90 }, immunities: ['poison', 'bleed', 'sleep', 'stunned'],
+    statusEffects: ['incorporeal'],
+    spawnCondition: 'flag:thornpillar_fallen'
+  },
+
+  vorrkai_exile_hunter: {
+    id: 'vorrkai_exile_hunter', name: 'Vorrkai Exile Hunter',
+    spriteKey: 'enemy_cave_spider', health: 72, maxHealth: 72, mana: 25,
+    attributes: { STR: 7, END: 7, AGI: 11, INT: 5, WIL: 6, PER: 9 },
+    damage: [6, 12], armor: 5, speed: 1.3, xpReward: 115, gold: [8, 15],
+    lootTable: [
+      { itemId: 'vorrkai_silk', chance: 0.35 },
+      { itemId: 'health_potion_minor', chance: 0.30 }
+    ],
+    skills: { sneak: 30, blades: 20 }, biomes: ['SWAMP', 'UNDERLURK', 'CAVE_FLOOR'], level: 8, aggressive: true, aggroRange: 6,
+    fleeHealth: 0.12, description: 'Vorrkai warriors sent to recapture those who fled the underground society. Faster and quieter than they look.',
+    abilities: [
+      { id: 'poison_blade', name: 'Poison Strike', manaCost: 10, effect: { type: 'poison', duration: 3, damage: 5 }, cooldown: 3 }
+    ],
+    faction: 'vorrkai', resistances: { poison: 0.50 }, statusEffects: []
+  },
+
+  razorwing_bat: {
+    id: 'razorwing_bat', name: 'Razorwing Bat',
+    spriteKey: 'enemy_cave_spider', health: 28, maxHealth: 28, mana: 0,
+    attributes: { STR: 4, END: 3, AGI: 12, INT: 2, WIL: 3, PER: 10 },
+    damage: [3, 7], armor: 1, speed: 1.6, xpReward: 40, gold: [0, 3],
+    lootTable: [{ itemId: 'cave_mushroom', chance: 0.20 }],
+    skills: {}, biomes: ['CAVE_FLOOR', 'DARK_FOREST', 'UNDERLURK'], level: 5, aggressive: true, aggroRange: 5,
+    fleeHealth: 0.05, description: 'A cave bat with membrane wings edged like obsidian. Attacks twice in quick succession.',
+    abilities: [
+      { id: 'flurry', name: 'Wing Flurry', manaCost: 0, hits: 2, damage: [2, 5], cooldown: 2 }
+    ],
+    faction: null, resistances: {}, statusEffects: ['flying']
+  },
+
+  ashveil_wraith: {
+    id: 'ashveil_wraith', name: 'Ashveil Wraith',
+    spriteKey: 'enemy_wraith', health: 88, maxHealth: 88, mana: 50,
+    attributes: { STR: 5, END: 7, AGI: 8, INT: 9, WIL: 11, PER: 7 },
+    damage: [8, 15], armor: 4, speed: 1.0, xpReward: 160, gold: [0, 6],
+    lootTable: [
+      { itemId: 'ashveil_salt',  chance: 0.50 },
+      { itemId: 'void_essence',  chance: 0.25 }
+    ],
+    skills: { destruction: 25 }, biomes: ['DESERT', 'TUNDRA'], level: 12, aggressive: true, aggroRange: 6,
+    fleeHealth: 0, description: 'The guardian-spirit of a dying Rootstone, its light twisted by the stone\'s despair into something hungry.',
+    abilities: [
+      { id: 'mana_drain', name: 'Aetheric Drain', manaCost: 15, effect: { type: 'drain_mana', amount: 30 }, cooldown: 3 }
+    ],
+    faction: null, resistances: { physical: 0.40, void: 0.70 }, immunities: ['poison', 'sleep'],
+    statusEffects: ['incorporeal']
+  },
+
+  cult_commander: {
+    id: 'cult_commander', name: 'Cult Commander',
+    spriteKey: 'enemy_bandit', health: 110, maxHealth: 110, mana: 40,
+    attributes: { STR: 9, END: 9, AGI: 7, INT: 6, WIL: 8, PER: 7 },
+    damage: [9, 16], armor: 9, speed: 0.95, xpReward: 175, gold: [18, 32],
+    lootTable: [
+      { itemId: 'cult_sigil',           chance: 0.60 },
+      { itemId: 'health_potion',         chance: 0.35 },
+      { itemId: 'compact_warblade',      chance: 0.08 }
+    ],
+    skills: { blades: 35, heavyArmor: 20 }, biomes: ['UNDERLURK', 'CAVE_FLOOR'], level: 13, aggressive: true, aggroRange: 5,
+    fleeHealth: 0, behavior: 'tactical',
+    description: 'An Iron Compact veteran who broke faith and joined Oren\'s cause. Commands the Underlurk Cult\'s enforcement squads.',
+    abilities: [
+      { id: 'rally_cry', name: 'Rally Cry', manaCost: 20, effect: { type: 'buff_nearby', stat: 'damage', amount: 0.2, duration: 2 }, cooldown: 5 },
+      { id: 'defensive_stance', name: 'Defensive Stance', manaCost: 15, effect: { type: 'buff_self', stat: 'armor', amount: 5, duration: 2 }, cooldown: 3, triggerHp: 0.5 }
+    ],
+    faction: 'underlurk_cult', resistances: { physical: 0.15 }, statusEffects: []
   }
 };
 

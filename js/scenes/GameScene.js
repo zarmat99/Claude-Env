@@ -177,8 +177,8 @@ export default class GameScene extends Phaser.Scene {
 
     spawnNPCs(worldData) {
         // The world is now coherent and hand-placed, so every NPC lives at its
-        // story location. Spawn all of them except those gated behind an unlock
-        // flag that has not yet been set (e.g. hidden Vorrkai settlement).
+        // story location. Spawn all of them; those with spawnCondition start hidden
+        // and are revealed when the required flag is set.
         const player = this.registry.get('player');
         const flags  = (player && player.flags) || new Set();
         for (const npcData of Object.values(NPCS)) {
@@ -186,7 +186,21 @@ export default class GameScene extends Phaser.Scene {
             const px = npcData.spawnTile.x * TILE_SIZE + TILE_SIZE / 2;
             const py = npcData.spawnTile.y * TILE_SIZE + TILE_SIZE / 2;
             const npc = new NPC(this, px, py, npcData);
+            // NPCs with spawnCondition start hidden until the flag is set
+            if (npcData.spawnCondition?.flag && !flags.has(npcData.spawnCondition.flag)) {
+                npc.sprite.setVisible(false);
+                npc._spawnFlag = npcData.spawnCondition.flag;
+            }
             this.npcs.push(npc);
+        }
+    }
+
+    revealFlagNPCs(flag) {
+        for (const npc of this.npcs) {
+            if (npc._spawnFlag === flag) {
+                npc.sprite.setVisible(true);
+                npc._spawnFlag = null;
+            }
         }
     }
 
@@ -393,6 +407,8 @@ export default class GameScene extends Phaser.Scene {
     onFlagSet(flag) {
         if (flag === 'cael_dead') this.setNpcVisible('cael', false);
         if (flag === 'elder_sathis_dead') this.setNpcVisible('elder_sathis', false);
+        // Reveal flag-gated NPCs when their unlock condition is met
+        this.revealFlagNPCs(flag);
     }
 
     setNpcVisible(npcId, visible) {
@@ -413,30 +429,86 @@ export default class GameScene extends Phaser.Scene {
     }
 
     onQuestStageComplete(questId, stageId, nextStageId) {
+        // Act 1 → 2: Night after the samples are collected
+        if (questId === 'main_act1' && stageId === 'act1_complete') {
+            this.scene.launch('Story', {
+                mode: 'narrative',
+                title: 'Night, Greyhollow',
+                body: 'Elder Sathis does not sleep. You find him on the Sanctuary roof that night, watching the Thornpillar\'s light. It pulses now — irregular, like a slowing heartbeat.\n\n"Three stations," he says. "Three samples. Enough to know the frequency of what is taking it." He does not thank you. He does not need to. The weight he carries is acknowledgement enough.'
+            });
+            this.scene.pause('Game');
+        }
+        // Act 2 → Cael's death
         if (questId === 'main_act2' && nextStageId === 'cael_assassination') {
             this.setNpcVisible('cael', false);
             this.scene.launch('Story', {
                 mode: 'narrative',
                 title: 'A Light Extinguished',
-                body: 'A Greyhollow bell sounds before dawn. Warden Cael has been murdered at Station Verath. The wound is precise; the arcane residue is not. Whatever he discovered frightened someone enough to silence him.'
+                body: 'A Greyhollow bell sounds before dawn. Warden Cael has been murdered at Station Verath. The wound is precise; the arcane residue is not. Whatever he discovered frightened someone enough to silence him.\n\nYou knew him for less than a season. He trusted you faster than anyone should. You think about that as they wrap his body in Rootwarden grey — how quickly trust travels when there is not much time left for it.'
             });
             this.scene.pause('Game');
         }
+        // Act 3 escape
         if (questId === 'main_act3' && nextStageId === 'escape_underlurk') {
             EventBus.emit('show_notification', 'Cult bells sound through the Chasm. Reach the northern exit!', '#ff7777');
+        }
+        // Act 4 → Thornpillar falls (expanded scene)
+        if (questId === 'main_act4' && nextStageId === 'thornpillar_falls') {
+            this.scene.launch('Story', {
+                mode: 'narrative',
+                title: 'The Thornpillar Falls',
+                body: 'The Void Anchor ruptures — not with violence but with a sound like held breath released.\n\nThe Thornpillar shudders. You have time to look up before it goes: a column of teal crystal the size of a city, alive for twelve generations, made of something the world grew to hold itself together. Then it leans. Then it descends.\n\nThe impact is felt in Thornmere as an earthquake. In Greyhollow as a colour in the sky. In the Underlurk as a sound that the Vorrkai will not speak of afterwards. Three Rootwardens die in the collapse. None of them ran.\n\nYou did what was necessary. You are not sure that is the same as doing what was right.'
+            });
+            this.scene.pause('Game');
+        }
+        // Act 4 → 5: Return to surface
+        if (questId === 'main_act4' && stageId === 'act4_complete') {
+            this.scene.launch('Story', {
+                mode: 'narrative',
+                title: 'Greyhollow, After',
+                body: 'You have been gone long enough that the inn has changed its menu. The Thornpillar gap in the northern sky is a wound that Greyhollow cannot look away from. People have started calling it the Window.\n\nSathis meets you at the Sanctuary gate. He is older. Not in years — in decisions.\n\n"I know what must happen next," he says. "I have known for two hundred years. I have simply been waiting for someone who could make it possible." He looks at the sky through the Window. "And for the courage to ask."'
+            });
+            this.scene.pause('Game');
+        }
+        // Act 5 → Sathis reveals the Kindling
+        if (questId === 'main_act5' && nextStageId === 'final_choice') {
+            this.scene.launch('Story', {
+                mode: 'narrative',
+                title: 'The Kindling',
+                body: 'Sathis speaks in the Sanctuary at dusk, the light coming in green and cold through the root-ceiling.\n\n"The Type-48 engine requires a living catalyst," he says. "A being with Rootstone-attuned biology who is willing to become part of the lattice. Not a sacrifice — a transition. I would not cease to be. I would become something the Rootstones can hear."\n\nHe has clearly thought about how to say this for a very long time. He has clearly also decided that there is no way to say it that does not sound like what it is.\n\n"I am asking you to help me choose this. I am not asking you to choose it for me."'
+            });
+            this.scene.pause('Game');
         }
     }
 
     resolveDialogueTree(npcData) {
         const player = this.registry.get('player');
         if (!player) return npcData.dialogueRoot;
-        if (npcData.id === 'cael' && player.quests.active.has('main_act1')) {
+        const flags    = player.flags;
+        const active   = player.quests.active;
+        const completed = player.quests.completed;
+
+        if (npcData.id === 'cael' && active.has('main_act1')) {
             return npcData.dialogueActiveQuest || npcData.dialogueRoot;
         }
         if (npcData.id === 'elder_sathis') {
-            return player.flags.has('sathis_met') || player.quests.completed.has('main_act1')
+            return flags.has('sathis_met') || completed.has('main_act1')
                 ? (npcData.dialogueOngoing || npcData.dialogueRoot)
                 : npcData.dialogueRoot;
+        }
+        // NPCs whose dialogueActiveQuest fires when their linked quest is active
+        const activeQuestNpcs = ['maren_ashveil', 'syllis_vaar', 'gerran_solt', 'aelindra'];
+        if (activeQuestNpcs.includes(npcData.id) && npcData.questGiver) {
+            const hasActiveQuest = npcData.questGiver.some(qid => active.has(qid));
+            if (hasActiveQuest && npcData.dialogueActiveQuest) return npcData.dialogueActiveQuest;
+        }
+        // Zeth Mirrak uses ongoing tree after first meeting
+        if (npcData.id === 'zeth_mirrak' && flags.has('talked_to_zeth_mirrak')) {
+            return npcData.dialogueOngoing || npcData.dialogueRoot;
+        }
+        // Varenne Osel — conflict tree when Oren's journal is found
+        if (npcData.id === 'varenne_osel' && flags.has('oren_journal_found') && npcData.dialogueConflict) {
+            return npcData.dialogueConflict;
         }
         return npcData.dialogueRoot;
     }
