@@ -6,7 +6,7 @@ export default class PreloadScene extends Phaser.Scene {
     constructor() { super({ key: 'Preload' }); }
 
     preload() {
-        this.load.image('tiles', 'assets/textures/tiles.png');
+        this.load.image('tiles', 'assets/textures/tiles.png?v=generated-32px-tiles');
 
         const spriteKeys = [
             'player_varesh', 'player_cindrak', 'player_sylveni', 'player_vorrkai', 'player_thornkin',

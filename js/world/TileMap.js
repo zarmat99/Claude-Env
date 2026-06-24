@@ -4,7 +4,7 @@ import { TILE } from './Biomes.js';
 import { getTile, isPassable, WORLD_SIZE } from './WorldGen.js';
 
 const TILE_SIZE = 16;
-const ATLAS_TILE_SIZE = 32;
+const ATLAS_TILE_COUNT = 25;
 
 export class TileMap {
     constructor(scene, tiles, biomeMap) {
@@ -39,7 +39,8 @@ export class TileMap {
 
         this.lastCamTileX = -9999;
         this.lastCamTileY = -9999;
-        this.tilesAtlas   = null; // lazy-loaded on first redraw
+        this.tilesAtlas       = null; // lazy-loaded on first redraw
+        this.atlasTileSize    = TILE_SIZE;
     }
 
     /**
@@ -56,6 +57,7 @@ export class TileMap {
 
         if (!this.tilesAtlas) {
             this.tilesAtlas = this.scene.textures.get('tiles').getSourceImage();
+            this.atlasTileSize = this.detectAtlasTileSize(this.tilesAtlas);
         }
 
         // Sub-tile pixel offset keeps rendering perfectly aligned between tile boundaries
@@ -72,10 +74,11 @@ export class TileMap {
                 const screenX    = (col - 1) * TILE_SIZE - subX;
                 const screenY    = (row - 1) * TILE_SIZE - subY;
 
-                // Generated atlas: 25 detailed 32px tiles rendered at the 16px world scale.
+                // Works with both generated 16px fallback atlas and the new detailed 32px atlas.
+                const atlasTileSize = this.atlasTileSize;
                 this.ctx.drawImage(
                     this.tilesAtlas,
-                    tileId * ATLAS_TILE_SIZE, 0, ATLAS_TILE_SIZE, ATLAS_TILE_SIZE,
+                    tileId * atlasTileSize, 0, atlasTileSize, atlasTileSize,
                     screenX, screenY, TILE_SIZE, TILE_SIZE
                 );
             }
@@ -110,6 +113,20 @@ export class TileMap {
         this.tiles = tiles;
         this.lastCamTileX = -9999;
         this.lastCamTileY = -9999;
+    }
+
+    detectAtlasTileSize(sourceImage) {
+        const width = Number(sourceImage?.naturalWidth || sourceImage?.width || 0);
+        const height = Number(sourceImage?.naturalHeight || sourceImage?.height || 0);
+        if (!width || !height) return TILE_SIZE;
+
+        // The atlas is a single horizontal strip of 25 tiles. The local art pass uses
+        // 800x32; the procedural fallback uses 400x16. Detect this instead of hardcoding,
+        // otherwise a cached/fallback atlas is sampled at the wrong offsets and the world
+        // turns into the green/black checkerboard mess.
+        const sizeFromWidth = Math.floor(width / ATLAS_TILE_COUNT);
+        if (sizeFromWidth > 0) return Math.min(sizeFromWidth, height);
+        return Math.min(width, height, TILE_SIZE);
     }
 
     destroy() {
