@@ -108,24 +108,34 @@ def main():
 
 
 def key_background(image):
-    """Remove magenta (#FF00FF) background pixels, returning RGBA image."""
+    """Remove a magenta background by HUE, not by distance to pure #FF00FF.
+
+    The naive Euclidean key fails on anti-aliased edges where the magenta blends
+    with the subject into dark/half magenta (e.g. (156,3,154) between a character's
+    legs) — those survive as a pink halo. Magenta is uniquely identifiable by its
+    chroma: red and blue both well above green, and red ~ blue. We test that hue at
+    any brightness, then despill remaining edge pixels (clamp r,b toward g) so no
+    pink fringe is left on the subject's outline.
+    """
     rgba = image.convert("RGBA")
     pixels = rgba.load()
     w, h = rgba.size
-    kr, kg, kb = KEY_COLOR
 
     for y in range(h):
         for x in range(w):
             r, g, b, a = pixels[x, y]
-            dist = math.sqrt((r - kr) ** 2 + (g - kg) ** 2 + (b - kb) ** 2)
-            edge_bias = min(x, y, w - 1 - x, h - 1 - y)
-            # Looser tolerance at edges (anti-aliasing fringe)
-            threshold = KEY_TOLERANCE if edge_bias > 6 else KEY_TOLERANCE + 24
-            if dist < threshold:
+            mg = min(r, b)  # magenta strength is limited by the weaker of red/blue
+            # Strong magenta hue → fully transparent.
+            if (g + 35 < mg) and (abs(r - b) < 70) and (mg > 45):
                 pixels[x, y] = (r, g, b, 0)
-            elif dist < threshold + 30:
-                alpha = int(a * (dist - threshold) / 30)
-                pixels[x, y] = (r, g, b, alpha)
+                continue
+            # Weak magenta-leaning edge → despill + partial alpha.
+            if (g + 15 < mg) and (abs(r - b) < 95) and (mg > 28):
+                nr = min(r, g + 20)
+                nb = min(b, g + 20)
+                strength = (mg - g) / max(1, mg)
+                na = int(a * (1 - min(1.0, strength)))
+                pixels[x, y] = (nr, g, nb, na)
     return rgba
 
 

@@ -4,7 +4,7 @@
     {
       "id": "test_city_quarter",
       "terrainFamilies": ["moss_mud_tile", "road_path_tile", "rock_mountain_tile"],
-      "modularAssets": ["frost_pine_tree", "heath_bush", "cliff_wall", "ice_spire", "interactive_prop", "storage_prop", "loot_container", "npc_human_base"],
+      "modularAssets": ["frost_pine_tree", "heath_bush", "cliff_wall", "grey_boulder", "interactive_prop", "storage_prop", "loot_container", "npc_human_base"],
       "notes": "Development-only construction kit for the single Wolfpine Hollow test map. Limited to asset families that render clearly."
     }
   ]

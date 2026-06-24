@@ -33,7 +33,7 @@
       [9, 7], [26, 7], [12, 18], [27, 18], [8, 14], [30, 14], [14, 20], [25, 20]
     ], "solid": false },
     { "family": "cliff_wall", "tiles": [[4, 16], [33, 21]] },
-    { "family": "ice_spire", "tiles": [[16, 8], [24, 17]] },
+    { "family": "grey_boulder", "tiles": [[16, 8], [24, 17], [7, 12], [31, 9]] },
     { "family": "interactive_prop", "variant": 1, "tiles": [[20, 12]], "solid": true },
     { "family": "storage_prop", "variant": 2, "tiles": [[17, 11]], "solid": true }
   ],
