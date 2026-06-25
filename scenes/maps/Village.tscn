@@ -1,12 +1,31 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/Village.gd" id="1_village"]
 [ext_resource type="PackedScene" path="res://scenes/npcs/Blacksmith.tscn" id="2_smith"]
 [ext_resource type="PackedScene" path="res://scenes/items/PickupItem.tscn" id="3_pick"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/Slime.tscn" id="4_slime"]
+[ext_resource type="Script" path="res://scripts/world/SpawnPoint.gd" id="5_sp"]
+[ext_resource type="Script" path="res://scripts/world/AreaTransition.gd" id="6_tr"]
 
 [node name="Village" type="Node2D"]
 script = ExtResource("1_village")
+
+[node name="SpawnDefault" type="Marker2D" parent="."]
+position = Vector2(480, 270)
+script = ExtResource("5_sp")
+spawn_id = "spawn_default"
+
+[node name="SpawnFromForest" type="Marker2D" parent="."]
+position = Vector2(820, 270)
+script = ExtResource("5_sp")
+spawn_id = "spawn_from_forest"
+
+[node name="ToForest" type="Area2D" parent="."]
+position = Vector2(870, 270)
+script = ExtResource("6_tr")
+target_map_id = "map_forest"
+target_spawn_point_id = "spawn_from_village"
+size = Vector2(28, 100)
 
 [node name="Blacksmith" parent="." instance=ExtResource("2_smith")]
 position = Vector2(400, 240)
@@ -22,4 +41,4 @@ item_id = "item_health_potion"
 persistent_id = "potion_village_002"
 
 [node name="Slime" parent="." instance=ExtResource("4_slime")]
-position = Vector2(560, 200)
+position = Vector2(620, 160)

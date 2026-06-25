@@ -10,42 +10,42 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 5 — COMPLETE and verified in Godot 4.3** (M0–M4 done before it).
-- Playable: move (WASD/arrows); talk to the **Blacksmith** (E/Space) → branching dialogue → accept
-  **`quest_first_dungeon`** → **journal (J)**. Walk over **pickups** → **inventory (I)**.
-  **Left-click** to melee the green **Slime**: it chases + touch-damages you (HUD HP drops), you kill
-  it → it counts toward `killed_enemy` and drops loot.
+- **Milestone 6 — COMPLETE and verified in Godot 4.3** (M0–M5 done before it).
+- **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
+  Talk to the Blacksmith → accept `quest_first_dungeon` → travel to the cave (quest advances on
+  entering) → kill/dodge the slime, grab the ancient iron fragment → return and talk → quest
+  completes, you get gold + an iron sword. Journal (J), inventory (I), combat (left mouse) all work.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `InventoryManager`, `QuestManager`,
-  `DialogueManager`. Still stubs: `SceneLoader`, `SaveManager`.
+  `DialogueManager`, `SceneLoader`. Still stub: `SaveManager`.
 - On `master`, pushed.
 
 ## Last thing done
-Built Milestone 5 (combat): `HealthComponent`/`StatsComponent`, `Hitbox`/`Hurtbox`, `LootComponent`,
-`EnemyAI` (Slime), `PlayerCombat` (melee + player health → GameState). Verified headless (kill, kills
-counter, killed_enemy condition, touch damage, loot) + screenshot.
+Built Milestone 6 (vertical slice): `SceneLoader` (data-driven map swap + persistent player +
+`map_changed`), `SpawnPoint`, `AreaTransition` (deferred swap), `PlaceholderMap`, Forest + Cave
+maps, Village spawns/transition, Main refactored. Verified the quest end-to-end headless + cave
+screenshot; stderr clean.
 
 ## Next thing to do
-Begin **Milestone 6 — Vertical slice** (on user go-ahead):
-- Build `Forest` + `Cave` maps (placeholder geometry like `Village.gd`), with `AreaTransition` +
-  `SpawnPoint` nodes carrying `target_map_id` / `target_spawn_point_id`.
-- Move map loading out of `Main.gd` into the data-driven `SceneLoader` (use `maps.json`); emit
-  `EventBus.map_changed(map_id)` so `entered_area` quest stages fire.
-- Put the **ancient iron fragment** pickup + a slime in the cave, and verify `quest_first_dungeon`
-  end-to-end: blacksmith → cave (entered_area→10) → fragment (has_item→20) → return (talked_to→done).
-- See `TASKS.md` (M6), `DATA_SCHEMAS.md` (maps/entrances), `SYSTEMS.md` (MapManager/SceneLoader).
+Begin **Milestone 7 — Save/load** (on user go-ahead): implement `SaveManager` to serialize a
+`GameState` snapshot to `user://saves/slot_N.json` and restore it — current map, player
+position/stats/gold, inventory, equipment, quest active/completed, flags, and per-`persistent_id`
+world-object states. `PersistentWorldObject` (or PickupItem's existing check) applies state on map
+load. Give **enemies a `persistent_id`** (+ mark `world_objects` dead on death) so killed enemies
+don't respawn. Schema: `docs/architecture/DATA_SCHEMAS.md` (save file). See `TASKS.md` (M7).
 
 ## Important warnings
 - ⚠️ **Class cache**: after adding/renaming `class_name` scripts, run `--headless --editor --quit`
   once before a headless game run (regenerates `.godot/global_script_class_cache.cfg`).
+- ⚠️ **Physics-flush**: don't change Area2D monitoring / add map Area2Ds from inside a physics
+  callback (body_entered). Use `call_deferred` (AreaTransition does this when swapping maps).
 - ⚠️ **Temp scenes**: after running + deleting a throwaway `_dev_shot.tscn`, also delete `.godot/`
-  (re-import) so the editor doesn't error restoring that tab.
-- ⚠️ **Physics timing in tests**: Area2D detection (pickups, hitbox overlaps) needs a few
-  `get_tree().physics_frame` awaits before asserting.
+  (re-import) so the editor doesn't error restoring that tab. Await several `physics_frame`s before
+  asserting Area2D detection (pickups/transitions/hitboxes) in headless tests.
 - ⚠️ **Collision layers**: 1 = world/bodies, 4 = interaction, 8 = player hurt, 16 = enemy hurt.
-  Keep new combat/interaction areas on the right layer/mask.
-- ⚠️ Don't build beyond the current milestone; don't hardcode content (use `res://data/*.json`);
-  `SceneLoader`/`SaveManager` are still stubs (M6/M7).
-- ⚠️ `Village.gd` map + `Main.gd` map-loading are temporary — M6 moves this into `SceneLoader`.
+- ⚠️ **World layout**: `SceneLoader` keeps the player as a sibling of the current map under
+  `WorldRoot` and moves it to last child (drawn on top). Maps are `PlaceholderMap` rooms (Forest/
+  Cave) or the bespoke `Village.gd`. Keep SpawnPoints away from AreaTransition areas (avoid loops).
+- ⚠️ Don't hardcode content (use `res://data/*.json`); don't build beyond the current milestone.
 - ⚠️ Assign a stable `persistent_id` to every persistent world object (PROJECT_MEMORY §10).
 
 ## Godot & useful commands
@@ -58,12 +58,14 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
 ```
 Controls: move = WASD/arrows · talk = E/Space · journal = J · inventory = I · attack = left mouse.
+Maps connect via walk-on pads (the colored rectangles near map edges).
 
 ## Screenshot trick (visual checks; delete temp files + clear .godot after)
-Throwaway `res://_dev_shot.tscn` (Node loads `Main`, optionally drives state, then
+Throwaway `res://_dev_shot.tscn` (Node loads `Main`, optionally drives state — e.g.
+`SceneLoader.change_map(...)`, `QuestManager.start_quest(...)` — then
 `get_viewport().get_texture().get_image().save_png("user://shot.png")`, `get_tree().quit()`), run
-with the console exe (windowed), read PNG from `%APPDATA%\Godot\app_userdata\Valdombra\`. Then delete
-`_dev_shot.*` AND `.godot/` (re-import). For physics-dependent checks, await several physics frames.
+with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\`. Then delete
+`_dev_shot.*` AND `.godot/` (re-import).
 
 ## Key files to read (in order)
 1. `docs/ai_memory/PROJECT_MEMORY.md` · 2. this file · 3. `docs/architecture/ARCHITECTURE.md` ·
@@ -71,4 +73,5 @@ with the console exe (windowed), read PNG from `%APPDATA%\Godot\app_userdata\Val
 6. `docs/ai_memory/DECISIONS.md` · `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- (none) — M5 done & verified. Data = JSON, title = "Valdombra", docs = English, Godot 4.3 set up.
+- (none blocking) — M6 done & verified. Known follow-ups: player death/game-over (placeholder),
+  enemy persistent_id for stay-dead (M7), input actions for J/I/attack (currently hardcoded keys).

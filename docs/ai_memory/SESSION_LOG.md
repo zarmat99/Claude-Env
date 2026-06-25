@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-06-25 — Session 007 — Milestone 6: vertical slice
+
+- **Goal**: three connected maps + data-driven map loading; the fragment quest completable
+  end-to-end in-world.
+- **Files created**: `scripts/world/{SpawnPoint,AreaTransition,PlaceholderMap}.gd`,
+  `scenes/maps/{Forest,Cave}.tscn`.
+- **Files modified**: `scripts/core/SceneLoader.gd` (real impl: `bind` + `change_map` + map_changed),
+  `data/maps/maps.json` (3 maps), `scenes/maps/Village.tscn` (+spawns + ToForest transition),
+  `scenes/main/Main.gd` (persistent player + SceneLoader-driven start map).
+- **Design**: `WorldRoot` holds [current map] + [persistent player]; `SceneLoader` swaps only the
+  map node and repositions the player at the requested `SpawnPoint`, then emits `map_changed`.
+  `AreaTransition` = walk-on Area2D (builds its own collider + placeholder visual) that calls
+  `change_map` **deferred** (body_entered runs during the physics flush; adding map Area2Ds mid-flush
+  is illegal — "can't change monitoring state while flushing queries"). `PlaceholderMap` = bordered
+  room base for Forest/Cave; Village keeps its bespoke script + adds spawn/transition nodes.
+- **Tests (headless)**: village → (walk-on pad) → forest; forest → cave ⇒ `entered_area` advances
+  quest to 10; fragment pickup ⇒ `has_item` to 20; return + talk to blacksmith ⇒ **completed**, gold
+  20 + iron sword granted. stderr clean after the deferred fix. Screenshot of the cave
+  (player / transition pad / slime / fragment).
+- **Final result**: **Milestone 6 COMPLETE and verified — `quest_first_dungeon` is now fully
+  playable in-world** across three maps.
+- **Note for M7**: enemies don't yet carry a `persistent_id`, so a killed enemy would respawn on map
+  reload; add that when implementing save persistence.
+- **Next**: Milestone 7 — save/load.
+
+---
+
 ## 2026-06-25 — Session 006 — Milestone 5: combat
 
 - **Goal**: reusable combat components, a melee attack, an enemy that chases/damages, death + loot,

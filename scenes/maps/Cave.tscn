@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/PlaceholderMap.gd" id="1_map"]
+[ext_resource type="Script" path="res://scripts/world/SpawnPoint.gd" id="2_sp"]
+[ext_resource type="Script" path="res://scripts/world/AreaTransition.gd" id="3_tr"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Slime.tscn" id="4_slime"]
+[ext_resource type="PackedScene" path="res://scenes/items/PickupItem.tscn" id="5_pick"]
+
+[node name="Cave" type="Node2D"]
+script = ExtResource("1_map")
+map_size = Vector2(480, 320)
+ground_color = Color(0.1, 0.1, 0.12, 1)
+wall_color = Color(0.2, 0.2, 0.24, 1)
+
+[node name="SpawnFromForest" type="Marker2D" parent="."]
+position = Vector2(60, 160)
+script = ExtResource("2_sp")
+spawn_id = "spawn_from_forest"
+
+[node name="ToForest" type="Area2D" parent="."]
+position = Vector2(34, 160)
+script = ExtResource("3_tr")
+target_map_id = "map_forest"
+target_spawn_point_id = "spawn_from_cave"
+size = Vector2(24, 90)
+
+[node name="Slime" parent="." instance=ExtResource("4_slime")]
+position = Vector2(260, 160)
+
+[node name="Fragment" parent="." instance=ExtResource("5_pick")]
+position = Vector2(400, 160)
+item_id = "item_ancient_iron_fragment"
+persistent_id = "fragment_cave_001"

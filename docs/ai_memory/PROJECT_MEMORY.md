@@ -47,15 +47,16 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 5 — COMPLETE and verified in Godot 4.3.** (M0–M4 complete before it.)
-- Combat: reusable `HealthComponent`/`StatsComponent`, `Hitbox`/`Hurtbox`, a melee attack
-  (left mouse), and an enemy `Slime` that chases and deals touch damage. Killing it counts toward
-  `killed_enemy` conditions and drops loot (`LootComponent`); player damage flows to the HUD via
-  GameState.
-- Verified: 2 hits kill the slime; kills counter + killed_enemy condition; touch damage to player;
-  loot spawns; combat screenshot.
-- Note: player death is a placeholder (respawn at full HP); real game-over later.
-- Next: Milestone 6 (vertical slice: 3 maps + transitions + the fragment quest end-to-end).
+- **Milestone 6 — COMPLETE and verified in Godot 4.3.** (M0–M5 complete before it.)
+- Three connected maps (Village / Forest / Cave) with walk-on `AreaTransition`s and `SpawnPoint`s.
+  `SceneLoader` swaps maps data-driven (`maps.json`), keeps a **persistent player**, and emits
+  `map_changed`. **`quest_first_dungeon` is now completable in-world**: blacksmith → forest → cave
+  (entered_area) → grab the fragment (has_item) → return + talk (talked_to) → reward.
+- Verified: full quest flow across maps + walk-on transition + reward; clean (no errors); cave
+  screenshot.
+- Note: player death is still a placeholder (respawn full HP); enemies lack a `persistent_id` so a
+  killed enemy respawns on map reload (address in M7).
+- Next: Milestone 7 (save/load).
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -68,8 +69,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **M5**: `HealthComponent`, `StatsComponent`, `Hitbox`/`Hurtbox`, `LootComponent`, `EnemyAI`
   (Slime), `PlayerCombat` (melee + player health synced to GameState). EventBus actor_damaged/died;
   `GameState.kills` feeds `killed_enemy`.
+- **M6**: `SceneLoader` (data-driven map swap + persistent player + `map_changed`), `SpawnPoint`,
+  `AreaTransition` (walk-on, deferred swap), `PlaceholderMap` (room base); Forest + Cave maps.
 - **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
-  DialogueManager. **Still stubs**: SceneLoader, SaveManager (fleshed out at M6 / M7).
+  DialogueManager, SceneLoader. **Still stub**: SaveManager (M7).
 - **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
@@ -118,13 +121,14 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M5 — Combat: COMPLETE** (health, hit/hurt, enemy AI, death + loot, killed_enemy; verified in
-Godot 4.3). M0–M4 complete before it. M6 not started.
+**M6 — Vertical slice: COMPLETE** (3 maps + SceneLoader + fragment quest end-to-end; verified in
+Godot 4.3). M0–M5 complete before it. M7 not started.
 
 ## 12. Recommended next step
-Begin **Milestone 6** (on the user's go-ahead): build Forest + Cave maps + `AreaTransition` /
-`SpawnPoint`, move map loading into `SceneLoader` (data-driven via `maps.json`), place the fragment
-pickup + a slime in the cave, and wire `quest_first_dungeon` end-to-end (cave → fragment → return).
+Begin **Milestone 7** (on the user's go-ahead): implement `SaveManager` serialize/restore to
+`user://saves/slot_N.json` — current map, player position/stats/gold, inventory, equipment, quest
+state, and per-`persistent_id` world-object states; `PersistentWorldObject` applies state on map
+load (and give enemies a `persistent_id` so the dead stay dead). Schema: `architecture/DATA_SCHEMAS.md`.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

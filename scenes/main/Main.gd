@@ -1,29 +1,27 @@
 extends Node2D
-## Boot scene root (M1). Assembles the test map, player, and HUD.
-## NOTE: instantiating the map here is temporary; map loading moves into the data-driven
-## SceneLoader (maps.json) at M6.
+## Boot scene root (M6). Creates the persistent player, binds SceneLoader, loads the start map, and
+## builds the UI. Map loading now lives in SceneLoader (data-driven via maps.json) — Main no longer
+## instantiates a specific map.
 
-const VillageScene := preload("res://scenes/maps/Village.tscn")
 const PlayerScene := preload("res://scenes/player/Player.tscn")
 const HUDScene := preload("res://scenes/ui/HUD.tscn")
 const DialogueBoxScene := preload("res://scenes/ui/DialogueBox.tscn")
 const QuestJournalScene := preload("res://scenes/ui/QuestJournalUI.tscn")
 const InventoryUIScene := preload("res://scenes/ui/InventoryUI.tscn")
 
+const START_MAP := "map_village"
+const START_SPAWN := "spawn_default"
+
 @onready var _world: Node2D = $WorldRoot
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 5.")
-
-    var map := VillageScene.instantiate()
-    _world.add_child(map)
-
+    print("[Valdombra] Boot OK - Milestone 6.")
     var player := PlayerScene.instantiate()
     _world.add_child(player)
-    if map.has_method("get_spawn_position"):
-        player.global_position = map.get_spawn_position()
-    GameState.current_map = "map_village"
+
+    SceneLoader.bind(_world, player)
+    SceneLoader.change_map(START_MAP, START_SPAWN)
 
     _ui.add_child(HUDScene.instantiate())
     _ui.add_child(DialogueBoxScene.instantiate())

@@ -8,14 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — awaiting user go-ahead for Milestone 6)
+- (none — awaiting user go-ahead for Milestone 7)
 
 ## Backlog
-
-### Milestone 6 — Vertical slice
-- **M6-T1 · Village/Forest/Cave maps + AreaTransition/SpawnPoint** · backlog.
-- **M6-T2 · Move map loading into SceneLoader (data-driven via maps.json)** · backlog.
-- **M6-T3 · "Recover the ancient fragment" quest end-to-end** · backlog.
 
 ### Milestone 7 — Save/load
 - **M7-T1 · SaveManager full serialize/deserialize** · backlog.
@@ -71,6 +66,12 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **M5-T4 · Death → kills + LootComponent + PlayerCombat** (killed_enemy hook; loot drops; melee
   attack; player health synced to GameState) · M5 · **done** (2026-06-25). Verified headless +
   screenshot.
+- **M6-T1 · SpawnPoint / AreaTransition / PlaceholderMap + Forest & Cave maps** · M6 · **done**
+  (2026-06-25).
+- **M6-T2 · SceneLoader (data-driven map swap via maps.json, persistent player, map_changed)** ·
+  M6 · **done** (2026-06-25). AreaTransition swaps deferred (physics-flush safe).
+- **M6-T3 · quest_first_dungeon end-to-end** (village→forest→cave→fragment→return→reward) · M6 ·
+  **done** (2026-06-25). Verified headless + screenshot.
 
 ## Blocked
 - (none)

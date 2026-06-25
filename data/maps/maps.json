@@ -1,1 +1,17 @@
-{}
+{
+  "map_village": {
+    "id": "map_village",
+    "scene": "res://scenes/maps/Village.tscn",
+    "display_name": "Valdombra Village"
+  },
+  "map_forest": {
+    "id": "map_forest",
+    "scene": "res://scenes/maps/Forest.tscn",
+    "display_name": "Whispering Forest"
+  },
+  "map_cave_01": {
+    "id": "map_cave_01",
+    "scene": "res://scenes/maps/Cave.tscn",
+    "display_name": "Old Cave"
+  }
+}
