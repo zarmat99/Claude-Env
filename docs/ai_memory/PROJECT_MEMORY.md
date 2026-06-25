@@ -132,7 +132,11 @@ load (and give enemies a `persistent_id` so the dead stay dead). Schema: `archit
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. The repo was a clean slate; we are in **Milestone 0** (foundations
-+ documentation). Read `HANDOFF.md` for the exact current state and next action, `architecture/
-ARCHITECTURE.md` for structure, `architecture/DATA_SCHEMAS.md` for JSON formats, and
-`DECISIONS.md` for the "why". Do not hardcode content; do not build ahead of the roadmap.
+GDScript, designed to scale. **Milestone 6 is complete and verified**: Village, Forest, and Cave
+are connected by data-driven map transitions, and `quest_first_dungeon` is playable end-to-end.
+The next milestone is **M7 save/load**.
+
+Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
+`SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,
+`architecture/DATA_SCHEMAS.md`, and `architecture/SYSTEMS.md` as technical contracts; they should
+not override the live state files. Do not hardcode content; do not build ahead of the roadmap.

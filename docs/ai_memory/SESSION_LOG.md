@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-06-25 — Session 008 — Documentation cleanup before M7
+
+- **Goal**: remove stale milestone/status language from architecture docs before starting M7.
+- **Files modified**: `docs/architecture/{ROADMAP,SYSTEMS,ARCHITECTURE}.md`,
+  `docs/ai_memory/{PROJECT_MEMORY,HANDOFF,TASKS,SESSION_LOG}.md`.
+- **Design**: `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` are the live progress sources.
+  Architecture docs now stay focused on contracts, sequence, and implementation level rather than
+  claiming a "current" milestone.
+- **Result**: fixed the stale M0 summary in `PROJECT_MEMORY.md`, removed the old "M0 current /
+  pending skeleton" language from `ROADMAP.md`, updated `SYSTEMS.md` to the actual M6/M7 state, and
+  clarified that the `ARCHITECTURE.md` tree includes planned extension points.
+- **Tests/checks**: documentation-only change; no Godot run required for this block. Pre-cleanup
+  smoke test had already passed in Godot 4.3 headless with `[Valdombra] Boot OK - Milestone 6.`.
+- **Next**: Milestone 7 — save/load.
+
+---
+
 ## 2026-06-25 — Session 007 — Milestone 6: vertical slice
 
 - **Goal**: three connected maps + data-driven map loading; the fragment quest completable

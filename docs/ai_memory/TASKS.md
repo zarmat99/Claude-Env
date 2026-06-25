@@ -8,7 +8,7 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — awaiting user go-ahead for Milestone 7)
+- (none — Milestone 7 is ready to start)
 
 ## Backlog
 
@@ -20,6 +20,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **M8-T1 · XP/level/stat growth + rewards** · backlog.
 
 ## Done
+- **DOC-T1 · Remove stale live-status wording from architecture docs** · docs · **done**
+  (2026-06-25): `ROADMAP.md`, `SYSTEMS.md`, `ARCHITECTURE.md`, `PROJECT_MEMORY.md`, and handoff
+  memory aligned before M7.
 - **M0-T1 · Repo analysis + AI memory & architecture docs** · M0 · **done** (2026-06-25).
 - **M0-T2 · Scaffold Godot skeleton** · M0 · **done** (2026-06-25).
 - **M0-T3 · Verify project opens & runs in Godot 4** · M0 · **done** (2026-06-25): Godot 4.3 at

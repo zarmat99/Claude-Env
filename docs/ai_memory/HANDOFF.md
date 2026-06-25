@@ -20,10 +20,10 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, pushed.
 
 ## Last thing done
-Built Milestone 6 (vertical slice): `SceneLoader` (data-driven map swap + persistent player +
-`map_changed`), `SpawnPoint`, `AreaTransition` (deferred swap), `PlaceholderMap`, Forest + Cave
-maps, Village spawns/transition, Main refactored. Verified the quest end-to-end headless + cave
-screenshot; stderr clean.
+Cleaned the docs before M7: `ROADMAP.md` no longer claims M0 is current, `SYSTEMS.md` reflects the
+actual M6 implementation level, `ARCHITECTURE.md` clarifies that its folder tree includes planned
+extension points, and `PROJECT_MEMORY.md` no longer has a stale M0 summary. Milestone 6 remains the
+latest gameplay milestone and is verified.
 
 ## Next thing to do
 Begin **Milestone 7 — Save/load** (on user go-ahead): implement `SaveManager` to serialize a
@@ -34,6 +34,9 @@ load. Give **enemies a `persistent_id`** (+ mark `world_objects` dead on death) 
 don't respawn. Schema: `docs/architecture/DATA_SCHEMAS.md` (save file). See `TASKS.md` (M7).
 
 ## Important warnings
+- ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
+  progress. Architecture docs are contracts/design notes and should not be treated as the live
+  tracker.
 - ⚠️ **Class cache**: after adding/renaming `class_name` scripts, run `--headless --editor --quit`
   once before a headless game run (regenerates `.godot/global_script_class_cache.cfg`).
 - ⚠️ **Physics-flush**: don't change Area2D monitoring / add map Area2Ds from inside a physics

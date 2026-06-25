@@ -3,16 +3,20 @@
 Build systems before content. Each milestone leaves the project runnable. "Exit criteria" =
 how we know the milestone is done. Detailed tasks live in `ai_memory/TASKS.md`.
 
+Status note: this file is the milestone sequence and design intent, not the live tracker.
+Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`, and
+`SESSION_LOG.md`.
+
 ---
 
-## M0 — Foundations & memory  *(current)*
+## M0 — Foundations & memory
 - **Goal**: repo analysis, AI-memory + architecture docs, folder structure, Godot skeleton,
   autoload stubs. No gameplay.
 - **Output**: `docs/ai_memory/*`, `docs/architecture/*`, `project.godot`, folder tree, autoload
   stubs (`EventBus`, `GameState`, `DataRegistry`, `SceneLoader`, `SaveManager`, `IdUtils`),
   empty `Main.tscn`.
 - **Exit criteria**: project opens in Godot 4 with autoloads registered and no errors; docs
-  complete. **Docs phase done; skeleton pending user confirmation.**
+  complete.
 
 ## M1 — Player & test map
 - **Goal**: controllable top-down player, camera follow, one test map with base collisions,

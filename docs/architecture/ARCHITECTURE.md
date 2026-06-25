@@ -16,6 +16,9 @@ detail, `DATA_SCHEMAS.md` for data formats, `ROADMAP.md` for sequencing.
 - **Communication**: `EventBus` (signals) for notifications; autoload managers for queries.
 
 ## 2. Folder structure
+This is the intended architecture layout. Some entries are planned extension points and may not
+exist yet in the current milestone; use `rg --files` for the exact working tree.
+
 ```
 res://
   scenes/
