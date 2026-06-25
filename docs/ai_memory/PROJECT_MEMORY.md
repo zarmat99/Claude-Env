@@ -47,20 +47,22 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 0 — COMPLETE and verified in Godot 4.3.**
-- Done: repo analyzed; AI memory + architecture docs; Godot skeleton — `project.godot` (5
-  autoloads), full folder tree, autoload **stubs** (EventBus / DataRegistry / GameState /
-  SceneLoader / SaveManager) + `IdUtils` static class, placeholder `scenes/main/Main.tscn`,
-  empty `data/*.json`, Godot `.gitignore`.
-- Verified: all `data/*.json` parse OK; Godot 4.3 headless import exits 0 (no script/scene
-  errors); running prints "[Valdombra] Boot OK - Milestone 0 skeleton.". Skeleton commit
-  `302c53d` pushed to `origin/master`.
-- **No gameplay code yet** (only stubs). Next: Milestone 1.
+- **Milestone 1 — COMPLETE and verified in Godot 4.3.** (M0 complete before it.)
+- Playable basics: top-down player (`CharacterBody2D` + `move_and_slide`), `Camera2D` follow,
+  a placeholder test map (`Village`) with border walls + obstacle colliders, a minimal HUD
+  (health), and the `[input]` map (WASD/arrows + E/Space).
+- Boot flow: `Main` assembles map + player + HUD (map loading is temporary there; it moves into
+  `SceneLoader` at M6). Autoloads remain stubs except where used.
+- Verified: headless run exit 0, no errors, boot prints; a screenshot confirms player/camera/map/
+  HUD render correctly.
+- Next: Milestone 2 (interaction + NPC + dialogue).
 
 ## 6. Implemented systems
-- M0 **stubs only**: 5 autoload singletons (EventBus signal contract; GameState state shape;
-  DataRegistry lookups; SceneLoader.change_map; SaveManager save/load) + `IdUtils` helpers + a
-  boot `Main` scene (WorldRoot + UIRoot + boot label). No gameplay behaviour yet.
+- **M1 gameplay**: `PlayerController` (top-down movement via the project input map), `Camera2D`
+  follow, `Village` placeholder map (visuals + colliders built from one geometry list), minimal
+  `HUD` (reads `GameState.player.stats`). `Main` wires them together.
+- **Autoloads**: still M0 **stubs** (EventBus signals declared; GameState holds the state shape;
+  DataRegistry / SceneLoader / SaveManager are stubs) — each fleshed out in its milestone.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M1 Player + test map + camera + HUD.
@@ -108,12 +110,12 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M0 — Foundations & memory: COMPLETE** (docs + skeleton + in-engine verification in Godot 4.3).
-Nothing in M1+ started.
+**M1 — Player & test map: COMPLETE** (player, camera, test map + collisions, HUD; verified in
+Godot 4.3). M0 complete before it. M2 not started.
 
 ## 12. Recommended next step
-Begin **Milestone 1** (on the user's go-ahead): input map (move_up/down/left/right, interact) →
-PlayerController + Player scene → camera follow → test map with collisions → minimal HUD.
+Begin **Milestone 2** (on the user's go-ahead): `InteractionComponent` → NPC base + Blacksmith →
+`DialogueBox` UI → `DialogueManager` + first data-driven dialogue (from `data/dialogues/`).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

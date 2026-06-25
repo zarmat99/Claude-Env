@@ -10,38 +10,41 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 0 — COMPLETE and verified in Godot 4.3.** Headless import exits 0 with no
-  script/scene errors; running the project prints "[Valdombra] Boot OK - Milestone 0 skeleton.".
-- Skeleton: `project.godot` (5 autoloads), autoload **stubs** + `IdUtils`, boot scene, empty
-  `data/*.json`, full folder tree. On `master` (skeleton commit `302c53d`, pushed).
-- **No gameplay code yet** (only stubs).
+- **Milestone 1 — COMPLETE and verified in Godot 4.3** (M0 complete before it).
+- Playable basics: controllable top-down player, camera follow, a placeholder test map
+  (`Village`) with wall/obstacle collisions, a minimal health HUD, and the `[input]` map.
+- `Main` assembles map + player + HUD at boot (temporary; moves to `SceneLoader` at M6).
+- Autoloads are still M0 stubs except where used. On `master`, pushed.
 
 ## Last thing done
-Downloaded Godot 4.3 (Standard) and validated the project headlessly — import + run both clean.
+Built Milestone 1 (input map, `PlayerController`, `Village` test map + colliders, `Camera2D`
+follow, minimal `HUD`, `Main` wiring) and verified it (headless run clean + a screenshot).
 
 ## Next thing to do
-Begin **Milestone 1** (on user go-ahead): M1-T0 input map (move_up/down/left/right, interact) →
-M1-T1 PlayerController + Player scene → M1-T2 camera follow → M1-T3 test map + collisions →
-M1-T4 minimal HUD. See `TASKS.md`.
+Begin **Milestone 2** (on user go-ahead): `InteractionComponent` (+ `PlayerInteraction`) → NPC
+base + a Blacksmith NPC → `DialogueBox` UI → `DialogueManager` running a first data-driven
+dialogue from `data/dialogues/dialogues.json`. See `TASKS.md` (M2-T1..T4) and `DATA_SCHEMAS.md`
+for the dialogue format.
 
 ## Important warnings
 - ⚠️ Do not write gameplay code beyond the current milestone.
-- ⚠️ Do not hardcode RPG content in scripts — everything goes in `res://data/*.json`.
+- ⚠️ Do not hardcode RPG content in scripts — content goes in `res://data/*.json`.
 - ⚠️ Keep autoload stubs minimal until their milestone.
 - ⚠️ Assign a stable `persistent_id` to every persistent world object (PROJECT_MEMORY §10).
-- ⚠️ Do not resurrect the wiped prototypes (Aethermoor / Grimward).
+- ⚠️ `Village.gd` map + `Main.gd` map-loading are temporary M1 scaffolding; the real, data-driven
+  map system (TileMap + maps.json + SceneLoader) arrives at M6 — don't entrench shortcuts.
 
 ## Godot & useful commands
-Godot **4.3 stable** (Standard / GDScript, win64) is installed at:
-- Editor:  `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64.exe`
-- Console (CLI/headless, captures stdout): `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64_console.exe`
+Godot **4.3 stable** (Standard, win64) installed at:
+- Editor:  `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64.exe`  (or double-click `run.bat`)
+- Console (CLI/headless): `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64_console.exe`
 ```powershell
 $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env" -e                          # open in the editor
-& $g --path "C:\Git\Claude-Env" --headless --editor --quit  # validate (import) headlessly
-& $g --path "C:\Git\Claude-Env" --headless --quit-after 30  # run headless, see boot output
+& $g --path "C:\Git\Claude-Env" --headless --quit-after 40  # run headless, see boot output
 git status --short; git log --oneline -5
 ```
+To play: `run.bat` (or open the editor) then press **F5**. Move = WASD/arrows.
 
 ## Key files to read (in order)
 1. `docs/ai_memory/PROJECT_MEMORY.md` — vision, rules, state, conventions, IDs.
@@ -52,5 +55,4 @@ git status --short; git log --oneline -5
 6. `docs/ai_memory/DECISIONS.md` — the "why". · `docs/ai_memory/TASKS.md` — what's next.
 
 ## Open problems / questions
-- (none) — M0 done & verified. Data = JSON (D3), title = "Valdombra", docs = English,
-  Godot 4.3 installed.
+- (none) — M1 done & verified. Data = JSON, title = "Valdombra", docs = English, Godot 4.3 set up.

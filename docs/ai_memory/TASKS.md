@@ -8,22 +8,15 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — awaiting user go-ahead for Milestone 1)
+- (none — awaiting user go-ahead for Milestone 2)
 
 ## Backlog
 
-### Milestone 1 — Player & test map
-- **M1-T0 · Define input map** (move_up/down/left/right, interact) in `project.godot` ·
-  files: project.godot · depends: M0-T2 · backlog.
-- **M1-T1 · PlayerController (top-down movement)** · scripts/player/PlayerController.gd,
-  scenes/player/Player.tscn · depends: M1-T0 · backlog.
-- **M1-T2 · Camera follow** · Player.tscn · depends: M1-T1 · backlog.
-- **M1-T3 · Test map + base collisions** · scenes/maps/Village.tscn · depends: M0-T2 · backlog.
-- **M1-T4 · Minimal HUD** · scenes/ui/HUD.tscn, scripts/ui/HUD.gd · depends: M0-T2 · backlog.
-
 ### Milestone 2 — Interaction & NPC
-- **M2-T1 · InteractionComponent** · scripts/components/InteractionComponent.gd · backlog.
-- **M2-T2 · NPCBase + Blacksmith** · scenes/npcs/*, scripts/npcs/NPC.gd · backlog.
+- **M2-T1 · InteractionComponent** (Area2D-based "interactable" + player interact action) ·
+  scripts/components/InteractionComponent.gd, scripts/player/PlayerInteraction.gd · backlog.
+- **M2-T2 · NPCBase + Blacksmith** · scenes/npcs/*, scripts/npcs/NPC.gd, data/npcs/npcs.json ·
+  backlog.
 - **M2-T3 · DialogueBox UI** · scenes/ui/DialogueBox.tscn, scripts/ui/DialogueBox.gd · backlog.
 - **M2-T4 · DialogueManager + first data-driven dialogue** · scripts/dialogue/*,
   data/dialogues/dialogues.json · backlog.
@@ -48,7 +41,8 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 
 ### Milestone 6 — Vertical slice
 - **M6-T1 · Village/Forest/Cave maps + AreaTransition/SpawnPoint** · backlog.
-- **M6-T2 · "Recover the ancient fragment" quest end-to-end** · backlog.
+- **M6-T2 · Move map loading into SceneLoader (data-driven via maps.json)** · backlog.
+- **M6-T3 · "Recover the ancient fragment" quest end-to-end** · backlog.
 
 ### Milestone 7 — Save/load
 - **M7-T1 · SaveManager full serialize/deserialize** · backlog.
@@ -58,15 +52,19 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **M8-T1 · XP/level/stat growth + rewards** · backlog.
 
 ## Done
-- **M0-T1 · Repo analysis + AI memory & architecture docs** · M0 · files: `docs/ai_memory/*`,
-  `docs/architecture/*` · **done** (2026-06-25).
-- **M0-T2 · Scaffold Godot skeleton** · M0 · files: `project.godot`, `scripts/core/*`,
-  `scenes/main/Main.{tscn,gd}`, `data/*.json`, folder tree + `.gitkeep`, `.gitignore` ·
+- **M0-T1 · Repo analysis + AI memory & architecture docs** · M0 · **done** (2026-06-25).
+- **M0-T2 · Scaffold Godot skeleton** · M0 · **done** (2026-06-25).
+- **M0-T3 · Verify project opens & runs in Godot 4** · M0 · **done** (2026-06-25): Godot 4.3 at
+  `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64.exe`; headless import + run clean.
+- **M1-T0 · Input map** (WASD/arrows + E/Space) · M1 · files: project.godot · **done**
+  (2026-06-25): 5 actions, 2 events each.
+- **M1-T1 · PlayerController + Player.tscn** (top-down `CharacterBody2D` + `move_and_slide`) · M1 ·
   **done** (2026-06-25).
-- **M0-T3 · Verify project opens & runs in Godot 4** · M0 · depends: M0-T2 · **done**
-  (2026-06-25): downloaded Godot 4.3 Standard; headless import exit 0 (no errors); headless run
-  prints the boot message. Godot at
-  `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64.exe`.
+- **M1-T2 · Camera2D follow** (child of Player, position smoothing) · M1 · **done** (2026-06-25).
+- **M1-T3 · Test map (Village) + base collisions** (border walls + obstacles; visuals + colliders
+  from one geometry list) · M1 · **done** (2026-06-25).
+- **M1-T4 · Minimal HUD** (health from GameState) + Main wiring (map+player+HUD) · M1 · **done**
+  (2026-06-25). Verified headless + screenshot.
 
 ## Blocked
 - (none)

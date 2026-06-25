@@ -4,6 +4,34 @@
 
 ---
 
+## 2026-06-25 — Session 002 — Milestone 1: player, camera, test map, HUD
+
+- **Goal**: Make the game playable at a basic level — controllable top-down player on a test map,
+  camera follow, collisions, minimal HUD. No NPC/quest/inventory.
+- **Files created**: `scripts/player/PlayerController.gd`, `scenes/player/Player.tscn`,
+  `scripts/world/Village.gd`, `scenes/maps/Village.tscn`, `scripts/ui/HUD.gd`,
+  `scenes/ui/HUD.tscn`, `run.bat`.
+- **Files modified**: `project.godot` (added `[input]`: move_up/down/left/right = WASD + arrows,
+  interact = E + Space; Godot canonicalized it on open), `scenes/main/Main.{gd,tscn}` (Main now
+  assembles map + player + HUD; boot label removed). Removed `.gitkeep` from the six now-populated
+  dirs.
+- **Decisions**: input map lives in `project.godot` (idiomatic, editor-visible). The M1 map
+  geometry is declared once in `Village.gd` and reused for both visuals (`_draw`) and colliders
+  (no external assets). Map instantiation is temporarily in `Main.gd` (moves into `SceneLoader` at
+  M6). Player = `CharacterBody2D` (motion_mode Floating) + `move_and_slide`.
+- **Problems**: none of substance (one transient tooling hiccup during screenshot capture; retried
+  OK).
+- **Tests run (Godot 4.3)**:
+  - Input map: throwaway script confirmed all 5 actions registered (2 events each).
+  - Headless run: exit 0, prints "[Valdombra] Boot OK - Milestone 1.", no script/scene errors.
+  - Screenshot (windowed, via a temporary throwaway scene, then deleted): player centered (camera
+    follows), ground + both obstacle blocks render, HUD shows "HP 30/30".
+- **Final result**: **Milestone 1 COMPLETE and verified.** Movement/collision are best confirmed
+  by feel (`run.bat` → F5), since headless has no key input.
+- **Next**: Milestone 2 — interaction + NPC + DialogueBox + first data-driven dialogue.
+
+---
+
 ## 2026-06-25 — Session 001 — Milestone 0: foundations, memory, skeleton & verification
 
 - **Goal**: Bootstrap the project. Analyze the repo, propose a scalable structure, create the

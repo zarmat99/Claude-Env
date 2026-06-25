@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="1_hud"]
+
+[node name="HUD" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_hud")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 132.0
+offset_bottom = 26.0
+max_value = 30.0
+value = 30.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="HealthBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "HP 30/30"
+horizontal_alignment = 1
+vertical_alignment = 1
