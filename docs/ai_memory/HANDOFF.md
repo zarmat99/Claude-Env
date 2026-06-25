@@ -10,35 +10,41 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 9 — COMPLETE and verified in Godot 4.3.** M0-M8 and SR1 complete before it.
+- **Milestone 10 - COMPLETE and verified in Godot 4.3.** M0-M9 and SR1 complete before it.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
-  Talk to the Blacksmith → accept `quest_first_dungeon` → travel to the cave (quest advances on
-  entering) → kill/dodge the slime, grab the ancient iron fragment → return and talk → quest
+  Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
+  entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
   completes, you get gold + an iron sword. Journal (J), inventory (I), combat (left mouse) all work.
+- **M10 world-authoring probe**: Forest connects to `map_probe_ruins`, a data-authored sandbox map
+  built by `AuthoredMap.gd` from `maps.json`. It uses the generated normalized proxy atlas
+  `assets/tilesets/proxy_dark_fantasy_atlas.png` (1024x1024, 8x8), validates tile/layer/collision
+  metadata, and spawns chest/door/switch/pickup/enemy objects from data.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `InventoryManager`, `QuestManager`,
   `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
   map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
-  `world_objects`. Pickups stay collected, enemies with `persistent_id` stay dead, and M9 adds the
-  contract for active dynamic pickup drops to respawn from `world_objects`.
+  `world_objects`. Pickups stay collected, enemies stay dead, dynamic drops respawn while active,
+  and M10 chest/door/switch state persists.
 - Progression works: quest rewards and enemy kills grant XP; level-up increases max health and
   damage, refills health, emits `player_level_up`, and appears in the HUD.
 - M9 added `DataRegistry.validate_all()`, runtime unknown-ID guardrails, input actions for journal/
   inventory/attack/save/load, dynamic pickup persistence, and persistent headless regression files
   under `tests/headless/`.
-- Verified with Godot headless import and `.\test.bat`.
+- M10 added `asset_sets.json`, `world_objects.json`, persistent chest/door/switch objects,
+  authored-map validation, and `tests/headless/M10WorldAuthoringRunner`.
+- Verified with Godot headless import and `.\test.bat` (runs M9 + M10).
 - On `master`, pushed.
 
 ## Last thing done
-Completed **Milestone 9 — Data & tooling hardening**:
-data/schema/reference validation, persistent headless regression runner, input-map cleanup,
-dynamic pickup persistence contract, and runtime guardrails for unknown content IDs.
+Completed **Milestone 10 - World authoring pipeline**:
+generated/normalized a serious proxy tileset atlas, added data-authored map generation, persistent
+chest/door/switch library, world-object/asset-set data, expanded validation, and M10 headless
+regression coverage.
 
 ## Next thing to do
-Begin **Milestone 10 — World authoring pipeline**: map index/conventions, persistent world-object
-library, expanded world validation, dev sandbox vs production start separation, and a lightweight
-tileset/asset-proxy scalability probe. Use proxy/mock assets to test map constraints now; keep real
-art direction and production assets for M17/M18.
+Begin **SR2 - Map scalability review**: decide whether M10 is enough to scale world authoring
+before M11. Stress the map/object/asset contracts, check sandbox isolation, and promote blockers
+before expanding narrative/content pipelines.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -66,7 +72,7 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 regression suite
+.\test.bat                                                   # M9 + M10 regression suites
 ```
 Controls: move = WASD/arrows · talk = E/Space · journal = J · inventory = I · attack = left mouse ·
 save = F5 · load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
@@ -85,5 +91,5 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 6. `docs/ai_memory/DECISIONS.md` · `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, M10 dev
-  sandbox vs production start separation.
+- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, SR2 map
+  scalability review before M11.

@@ -20,6 +20,11 @@ position = Vector2(560, 200)
 script = ExtResource("2_sp")
 spawn_id = "spawn_from_cave"
 
+[node name="SpawnFromProbe" type="Marker2D" parent="."]
+position = Vector2(320, 340)
+script = ExtResource("2_sp")
+spawn_id = "spawn_from_probe"
+
 [node name="ToVillage" type="Area2D" parent="."]
 position = Vector2(40, 200)
 script = ExtResource("3_tr")
@@ -33,3 +38,11 @@ script = ExtResource("3_tr")
 target_map_id = "map_cave_01"
 target_spawn_point_id = "spawn_from_forest"
 size = Vector2(24, 90)
+
+[node name="ToProbeRuins" type="Area2D" parent="."]
+position = Vector2(320, 365)
+script = ExtResource("3_tr")
+target_map_id = "map_probe_ruins"
+target_spawn_point_id = "spawn_probe_entry"
+size = Vector2(104, 28)
+color = Color(0.35, 0.25, 0.55, 0.55)

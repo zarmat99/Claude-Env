@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/Door.gd" id="1_door"]
+[ext_resource type="Script" path="res://scripts/components/InteractionComponent.gd" id="2_ic"]
+
+[sub_resource type="RectangleShape2D" id="rect_body"]
+size = Vector2(18, 40)
+
+[sub_resource type="CircleShape2D" id="circle_interaction"]
+radius = 32.0
+
+[node name="Door" type="StaticBody2D"]
+script = ExtResource("1_door")
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.48, 0.26, 0.12, 1)
+polygon = PackedVector2Array(-9, -20, 9, -20, 9, 20, -9, 20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("rect_body")
+
+[node name="InteractionComponent" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_ic")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionComponent"]
+shape = SubResource("circle_interaction")

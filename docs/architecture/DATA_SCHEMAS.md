@@ -141,18 +141,104 @@ implemented, validation rejects them so authoring mistakes do not silently do no
 }
 ```
 
-## maps/maps.json (index of map scenes + spawn points)
+## assets/asset_sets.json (M10)
+```json
+{
+  "asset_proxy_dark_fantasy": {
+    "id": "asset_proxy_dark_fantasy",
+    "name": "Dark Fantasy Proxy Atlas",
+    "atlas": "res://assets/tilesets/proxy_dark_fantasy_atlas.png",
+    "source_tile_size": 128,
+    "world_tile_size": 64,
+    "columns": 8,
+    "rows": 8,
+    "tiles": {
+      "tile_stone_floor": {
+        "id": "tile_stone_floor",
+        "name": "Stone Floor",
+        "col": 3,
+        "row": 0,
+        "kind": "ground",
+        "collision": "none"
+      },
+      "tile_stone_wall": {
+        "id": "tile_stone_wall",
+        "name": "Stone Wall",
+        "col": 0,
+        "row": 1,
+        "kind": "wall",
+        "collision": "solid"
+      }
+    }
+  }
+}
+```
+Validated by `DataRegistry`: atlas path exists and loads as `Texture2D`; dimensions match
+`source_tile_size * columns/rows`; tile IDs use `tile_`; atlas coordinates are in bounds;
+`collision` is `none | solid | water`.
+
+## world/world_objects.json (M10)
+```json
+{
+  "world_object_proxy_chest": {
+    "id": "world_object_proxy_chest",
+    "kind": "chest",
+    "scene": "res://scenes/world/Chest.tscn",
+    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_tile": "tile_closed_chest",
+    "persistent": true
+  }
+}
+```
+`kind` is currently `chest | door | switch | pickup | enemy`. `scene` must exist. If `asset_tile`
+is set, `asset_set` must point to a valid asset set and the tile must exist inside it. Persistent
+world objects need a stable `persistent_id` when placed in a scene or authored map.
+
+## maps/maps.json (index of map scenes + spawn points; authored maps in M10)
 ```json
 {
   "map_village": { "id": "map_village", "scene": "res://scenes/maps/Village.tscn",
-    "display_name": "Valdombra Village", "spawn_points": ["spawn_default", "spawn_from_forest"] },
-  "map_forest":  { "id": "map_forest", "scene": "res://scenes/maps/Forest.tscn",
-    "display_name": "Whispering Forest", "spawn_points": ["spawn_from_village", "spawn_from_cave"] },
-  "map_cave_01": { "id": "map_cave_01", "scene": "res://scenes/maps/Cave.tscn",
-    "display_name": "Old Cave", "spawn_points": ["spawn_from_forest"] }
+    "display_name": "Valdombra Village", "region": "region_dev_sandbox",
+    "dev_role": "vertical_slice", "spawn_points": ["spawn_default", "spawn_from_forest"] },
+  "map_probe_ruins": {
+    "id": "map_probe_ruins",
+    "scene": "res://scenes/maps/ProbeRuins.tscn",
+    "display_name": "Proxy Ruins Testbed",
+    "region": "region_dev_sandbox",
+    "dev_role": "asset_probe",
+    "asset_set": "asset_proxy_dark_fantasy",
+    "spawn_points": ["spawn_probe_entry", "spawn_probe_exit"],
+    "authoring": {
+      "width": 2,
+      "height": 2,
+      "layers": {
+        "ground": [["tile_stone_wall", "tile_stone_wall"], ["tile_stone_wall", "tile_stone_floor"]],
+        "props": [["", ""], ["", "tile_floor_crack"]]
+      },
+      "spawns": [{ "id": "spawn_probe_entry", "position": { "x": 96, "y": 352 } }],
+      "transitions": [{
+        "name": "ToForest",
+        "position": { "x": 608, "y": 352 },
+        "size": { "x": 36, "y": 104 },
+        "target_map": "map_forest",
+        "target_spawn": "spawn_from_probe"
+      }],
+      "objects": [{
+        "name": "ProbeChest",
+        "world_object": "world_object_proxy_chest",
+        "persistent_id": "chest_probe_ruins_001",
+        "position": { "x": 224, "y": 160 },
+        "loot": [{ "id": "item_health_potion", "count": 2 }]
+      }]
+    }
+  }
 }
 ```
-`AreaTransition` nodes reference `{ target_map_id, target_spawn_point_id, required_condition? }`.
+Scene-authored maps are validated by instantiating their scene and checking `SpawnPoint`,
+`AreaTransition`, content references, and `persistent_id`s. M10 authored maps are validated directly
+from `authoring`: dimensions, layer row/cell counts, tile IDs, spawns, transition targets, object
+scene/data refs, loot/item/enemy refs, switch targets, and duplicate `persistent_id`s.
+`AuthoredMap.gd` consumes the same `authoring` block at runtime.
 
 ---
 
@@ -179,7 +265,8 @@ implemented, validation rejects them so authoring mistakes do not silently do no
   "world_objects": {
     "chest_forest_001":     { "state": "opened" },
     "enemy_cave_boss_001":  { "state": "dead" },
-    "door_mine_locked_001": { "state": "unlocked" },
+    "door_mine_locked_001": { "state": "open" },
+    "switch_mine_001":      { "state": "on" },
     "drop_enemy_cave_slime_001_00": {
       "state": "active",
       "kind": "pickup",

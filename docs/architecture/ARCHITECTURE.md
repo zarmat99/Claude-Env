@@ -27,7 +27,8 @@ res://
     actors/      ActorBase.tscn
     enemies/     EnemyBase.tscn  Slime.tscn
     npcs/        NPCBase.tscn    Blacksmith.tscn
-    maps/        Village.tscn    Forest.tscn   Cave.tscn
+    maps/        Village.tscn    Forest.tscn   Cave.tscn   ProbeRuins.tscn
+    world/       Chest.tscn      Door.tscn     Switch.tscn
     items/       PickupItem.tscn
     ui/          HUD.tscn DialogueBox.tscn InventoryUI.tscn QuestJournalUI.tscn
   scripts/
@@ -43,11 +44,13 @@ res://
     quest/       QuestManager.gd QuestData.gd QuestStage.gd
     dialogue/    DialogueManager.gd DialogueData.gd
     inventory/   InventoryManager.gd ItemData.gd
-    world/       MapManager.gd AreaTransition.gd SpawnPoint.gd PersistentWorldObject.gd
+    world/       AuthoredMap.gd AreaTransition.gd SpawnPoint.gd PersistentWorldObject.gd
+                 Chest.gd Door.gd Switch.gd
     ui/          HUD.gd DialogueBox.gd InventoryUI.gd QuestJournalUI.gd
   data/
     items/items.json  quests/quests.json  dialogues/dialogues.json  npcs/npcs.json
     enemies/enemies.json  factions/factions.json  skills/skills.json  maps/maps.json
+    assets/asset_sets.json  world/world_objects.json
   assets/
     sprites/  tilesets/  audio/  fonts/
   docs/
@@ -65,8 +68,8 @@ This follows the requested structure. Deliberate clarifications/changes:
    **from** the JSON — they are not the data itself. JSON in `data/` is the source of truth.
 3. **Manager singletons** (`QuestManager`, `DialogueManager`, `InventoryManager`, `MapManager`)
    are **autoloads** (global game systems). Other `scripts/*` are attached to scenes/components.
-4. **`assets/` stays empty / placeholders only** in early milestones (no heavy art). Placeholder
-   visuals are generated in-scene (ColorRect / simple shapes) to avoid asset dependencies.
+4. **`assets/` may contain lightweight proxy assets** once they validate a pipeline. M10 adds a
+   generated technical proxy atlas; final art direction and production assets remain M17/M18 work.
 5. **`.godot/` is git-ignored** (editor cache) when the skeleton is created.
 Any further change to this structure must be explained in `DECISIONS.md` and reflected here.
 
@@ -102,8 +105,10 @@ Load order matters (later ones may use earlier ones):
   `SceneLoader`) and a `UIRoot` (HUD + windows). Autoloads exist above the tree.
 - Boot: autoloads initialize → DataRegistry loads JSON → GameState builds initial/new-game state
   → SceneLoader loads the start map into `WorldRoot` and places the player at a `SpawnPoint`.
-- Maps are separate scenes (`Village/Forest/Cave`) connected by `AreaTransition` nodes that carry
-  `target_map_id` + `target_spawn_point_id` (+ optional condition).
+- Maps are separate scenes (`Village/Forest/Cave/ProbeRuins`) connected by `AreaTransition` nodes
+  that carry `target_map_id` + `target_spawn_point_id` (+ optional condition). Some maps may use
+  `AuthoredMap.gd` to build tile layers, collisions, spawns, transitions, and objects from
+  `maps.json`.
 
 ## 6. Data flow (example: pick up an item)
 `PickupItem` (has `item_id`, `persistent_id`) → on player overlap calls `InventoryManager.add(item_id)`

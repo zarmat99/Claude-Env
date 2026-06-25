@@ -8,25 +8,41 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — M10 is ready to start)
+- (none - SR2 is ready to start)
 
 ## Backlog
 
-### Milestone 10 — World authoring pipeline
-- **M10-T1 · Map index and authoring conventions** · backlog.
-- **M10-T2 · Persistent world-object library** · backlog: chests, doors, switches, and reusable
-  placement conventions.
-- **M10-T3 · Spawn/transition/encounter validation expansion** · backlog.
-- **M10-T4 · Dev sandbox vs production start separation** · backlog.
-- **M10-T5 · Tileset/asset scalability probe** · backlog: use asset-proxy/mock tileset content to
-  verify tile size, collision metadata, map layers, props, naming/import conventions, and fit with
-  future art without producing final maps/art yet.
+### SR2 - Map scalability review
+- **SR2-T1 · Review M10 world authoring scalability** · backlog: test whether five more maps could
+  be added with data/scene authoring only; check spawn/transition/object validation, dev sandbox
+  isolation, and asset-proxy assumptions before M11.
 
 ### Later roadmap
-- Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M10-M20,
+- Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M10-T5 · Tileset/asset scalability probe** · M10 · files:
+  `assets/tilesets/proxy_dark_fantasy_atlas.png`, `data/assets/asset_sets.json`,
+  `tests/headless/M10WorldAuthoringRunner.{gd,tscn}` · **done** (2026-06-25): generated a serious
+  proxy atlas with Imagen, normalized it to a 1024x1024 8x8 technical atlas, and validated import,
+  source/world tile size, tile metadata, collision semantics, and authored-map use.
+- **M10-T4 · Dev sandbox vs production start separation** · M10 · files:
+  `data/maps/maps.json`, `scenes/maps/{Forest,ProbeRuins}.tscn` · **done** (2026-06-25): kept the
+  existing Village/Forest/Cave slice as dev sandbox content and added `map_probe_ruins` as an
+  explicit asset/world-authoring testbed connected from Forest.
+- **M10-T3 · Spawn/transition/encounter validation expansion** · M10 · files:
+  `scripts/core/DataRegistry.gd`, `data/maps/maps.json` · **done** (2026-06-25): validation now
+  checks authored spawns, transition targets, map layer dimensions/tile IDs, placed pickups,
+  enemies, loot, switch targets, and duplicate persistent IDs across scene and authored content.
+- **M10-T2 · Persistent world-object library** · M10 · files:
+  `scripts/world/{Chest,Door,Switch,PersistentWorldObject}.gd`, `scenes/world/{Chest,Door,Switch}.tscn`,
+  `data/world/world_objects.json` · **done** (2026-06-25): added reusable chest, door, and switch
+  objects with persistent `opened`, `open`, and `on` states.
+- **M10-T1 · Map index and authoring conventions** · M10 · files:
+  `scripts/world/AuthoredMap.gd`, `data/maps/maps.json`, `docs/architecture/DATA_SCHEMAS.md` ·
+  **done** (2026-06-25): maps can now declare region/dev role plus data-authored layers, spawns,
+  transitions, and object placements consumed by `AuthoredMap`.
 - **M9-V1 · Verify M9 in Godot, then commit/push** · M9 · files: `test.bat`,
   `tests/headless/M9RegressionRunner.{gd,tscn}` · **done** (2026-06-25): Godot import and M9
   regression suite pass; command verified via `.\test.bat`.

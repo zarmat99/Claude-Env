@@ -145,3 +145,15 @@
 - **Consequences**: Dynamic systems must register persistable runtime objects before spawning them.
   Scene loaders rebuild active dynamic objects from state; collected/dead/unlocked states remain
   state changes on the same `persistent_id`.
+
+## Decision 13 - M10 uses a generated technical proxy atlas before final art
+- **Date**: 2026-06-25
+- **Context**: Map authoring depends on asset constraints (tile size, layer/collision metadata,
+  prop naming, import behavior), but final art direction belongs later in M17/M18.
+- **Decision**: Use a generated dark-fantasy proxy atlas in M10, normalize it into a strict
+  1024x1024 8x8 technical atlas, and validate it through `asset_sets.json` and headless tests.
+- **Motivation**: Prove the pipeline with realistic-looking proxy content without letting test art
+  become production art or delaying systems work for final visuals.
+- **Consequences**: Future art can replace the proxy atlas if it preserves the documented
+  `asset_sets.json` contract. M10 tests assert technical dimensions and tile metadata so generated
+  or hand-made art cannot silently break the map pipeline.

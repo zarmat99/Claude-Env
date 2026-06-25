@@ -47,32 +47,30 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 9 — COMPLETE and verified in Godot 4.3.** M0-M8 and SR1 complete before it.
-- Three connected maps (Village / Forest / Cave) with walk-on `AreaTransition`s and `SpawnPoint`s.
-  `SceneLoader` swaps maps data-driven (`maps.json`), keeps a **persistent player**, and emits
-  `map_changed`. **`quest_first_dungeon` is now completable in-world**: blacksmith → forest → cave
-  (entered_area) → grab the fragment (has_item) → return + talk (talked_to) → reward.
-- `SaveManager` now saves/loads JSON snapshots to `user://saves/slot_N.json`: current map, player
+- **Milestone 10 - COMPLETE and verified in Godot 4.3.** M0-M9 and SR1 complete before it.
+- Village / Forest / Cave remain the connected dev sandbox/regression slice. Forest now also
+  connects to `map_probe_ruins`, an M10 sandbox map for world-authoring and asset-pipeline
+  validation.
+- `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
+  `map_changed`. `quest_first_dungeon` remains completable in-world: blacksmith -> forest -> cave
+  -> fragment -> return + talk -> reward.
+- `SaveManager` saves/loads JSON snapshots to `user://saves/slot_N.json`: current map, player
   position/stats/gold/inventory/equipment, quests, factions, flags, kills, and per-`persistent_id`
   `world_objects`.
-- Pickups and enemies apply persistent `collected` / `dead` state on map load. Existing slimes have
-  stable IDs: `enemy_village_slime_001`, `enemy_cave_slime_001`.
-- Verified: M7 headless save/load test restored map, player position/health/gold, inventory,
-  active quest stage, kill count, collected fragment, and dead enemy removal; boot clean.
-- `ProgressionManager` now handles XP and level-ups. Quest rewards and enemy kills grant XP;
-  reaching the threshold increases level, max health, refills health, increases damage, and emits
-  `player_level_up`. HUD shows level + XP progress.
-- SR1 core scalability review is complete (`docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md`): no
-  rewrite needed before M9; skeleton remains scalable, but M9 must harden validation, tests, input,
-  dynamic-object persistence contracts, and runtime guardrails.
-- M9 adds `DataRegistry.validate_all()` preflight checks, faction/spawn-map data needed by
-  validation, input actions for journal/inventory/attack/save/load, unknown-ID runtime guardrails,
-  dynamic pickup persistence through `GameState.world_objects`, and a persistent headless
-  regression runner under `tests/headless/`.
-- Verified: Godot headless import and `.\test.bat` pass. The M9 suite covers data validation, boot,
-  map transitions, first quest flow, save/load, progression, and dynamic pickup persistence.
+- Pickups and enemies apply persistent `collected` / `dead` state on map load. M10 adds persistent
+  chest/door/switch states (`opened`, `open`, `on`) and validates authored object placement.
+- `ProgressionManager` handles XP and level-ups. Quest rewards and enemy kills grant XP; level-up
+  increases level, max health, health, damage, and emits `player_level_up`. HUD shows level + XP.
+- M9 adds `DataRegistry.validate_all()` preflight checks, input actions, unknown-ID runtime
+  guardrails, dynamic pickup persistence through `GameState.world_objects`, and persistent headless
+  regression coverage.
+- M10 adds `asset_sets.json`, `world_objects.json`, `AuthoredMap.gd`, a normalized generated proxy
+  atlas (`assets/tilesets/proxy_dark_fantasy_atlas.png`, 1024x1024, 8x8), `ProbeRuins.tscn`,
+  chest/door/switch scenes, authored map validation, and `M10WorldAuthoringRunner`.
+- Verified: Godot headless import and `.\test.bat` pass. The command now runs M9 regression plus
+  M10 world-authoring regression.
 - Note: player death is still a placeholder (respawn full HP).
-- Next: Milestone 10 (World authoring pipeline).
+- Next: SR2 (Map scalability review).
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -94,18 +92,23 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **M9**: `DataRegistry` validates JSON/data references and map scenes; managers refuse unknown
   content IDs; runtime loot drops register active dynamic pickup state in `world_objects`; input
   uses actions for inventory/journal/attack/save/load; persistent tests live in `tests/headless/`.
+- **M10**: `AuthoredMap` builds data-authored maps from `maps.json`: tile layers, collision
+  metadata, spawn points, transitions, and placed objects. `DataRegistry` validates asset sets,
+  world-object definitions, authored layer dimensions/tile IDs, transition targets, object
+  references, switch targets, loot/items/enemies, and duplicate `persistent_id`s. Chest, door, and
+  switch objects persist state through `GameState.world_objects`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
   DialogueManager, SceneLoader, SaveManager, ProgressionManager.
 - **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse ·
   save F5 · load F9. Code now reads input action names for journal/inventory/attack/save/load.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
-- M8 Progression (XP/level/stats) is complete.
-- SR1 Core scalability review and M9 Data & tooling hardening are complete.
-- M9-M20 are now scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
-  to production content: tooling/data validation, world authoring, quest/dialogue pipeline, factions,
-  economy/equipment, combat/skills/magic, dungeons, UX/persistence hardening, art/audio pipeline,
-  first real region/story act, world expansion, and alpha stabilization.
+- M8 Progression, SR1 Core scalability review, M9 Data & tooling hardening, and M10 World
+  authoring pipeline are complete.
+- M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
+  to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
+  dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
+  expansion, and alpha stabilization.
 - Scalability reviews are explicit milestones: SR1 after M8, SR2 after world authoring, SR3 after
   narrative systems, SR4 before production region work, and SR5 before broad world/story expansion.
 - Strategic rule: keep the current Village/Forest/Cave content as dev sandbox/regression content
@@ -138,7 +141,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **Content IDs** (defined in `data/`): `item_iron_sword`, `item_health_potion`,
   `item_ancient_iron_fragment`, `quest_first_dungeon`, `npc_blacksmith_valdombra`,
   `enemy_cave_rat`, `faction_valdombra_village`, `dialogue_blacksmith_intro`, `map_village`,
-  `map_forest`, `map_cave_01`, `skill_one_handed`.
+  `map_forest`, `map_cave_01`, `map_probe_ruins`, `skill_one_handed`,
+  `asset_proxy_dark_fantasy`, `world_object_proxy_chest`.
 - **Persistent world-object IDs** (`persistent_id`): every world object whose state must survive
   save/reload (chests, unique loot, doors, bosses, switches) carries a stable, globally-unique
   `persistent_id`: `chest_forest_001`, `enemy_cave_boss_001`, `door_mine_locked_001`,
@@ -146,23 +150,23 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M9 — Data & tooling hardening: COMPLETE** (validators, persistent tests, input actions,
-dynamic pickup persistence, unknown-ID guardrails; verified with `.\test.bat`). M0-M8 and SR1 are
-complete before it.
+**M10 - World authoring pipeline: COMPLETE** (asset proxy, authored map builder, world-object
+library, expanded validation, dev sandbox map, M10 regression suite; verified with `.\test.bat`).
+M0-M9 and SR1 are complete before it.
 
 ## 12. Recommended next step
-Begin **Milestone 10 — World authoring pipeline**: map index/conventions, persistent world-object
-library, spawn/transition/encounter validation expansion, dev sandbox vs production start
-separation, and a lightweight tileset/asset-proxy scalability probe. Use mock/proxy assets in M10
-to validate map-authoring constraints; defer real art direction/asset pipeline work to M17/M18.
+Begin **SR2 - Map scalability review**: stress the M10 world-authoring pipeline and decide whether
+five additional maps could be added with data/scene authoring only. Check transition/spawn/object
+validation, dev sandbox isolation, asset-proxy assumptions, and whether any manager-code changes
+are still needed before M11.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **Milestone 9 is complete and verified**: Village, Forest, and Cave
-are connected by data-driven map transitions, `quest_first_dungeon` is playable end-to-end,
-save/load restores core runtime state plus persistent world-object states, XP/level progression
-works, and M9 adds data validation, guardrails, input actions, dynamic pickup persistence, and
-persistent regression tests. The next milestone is **M10 world authoring pipeline**.
+GDScript, designed to scale. **Milestone 10 is complete and verified**: Village/Forest/Cave remain
+the playable dev slice, `map_probe_ruins` proves data-authored map generation with a generated
+proxy atlas, chest/door/switch/pickup/enemy placement, expanded validation, and persistent tests.
+Save/load, progression, quest flow, dynamic pickups, and world-object states are covered by
+`.\test.bat`. The next milestone is **SR2 map scalability review**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

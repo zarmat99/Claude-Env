@@ -8,4 +8,7 @@ set "PROJECT_DIR=%~dp0."
 if errorlevel 1 exit /b %errorlevel%
 
 "%GODOT_EXE%" --path "%PROJECT_DIR%" --headless res://tests/headless/M9RegressionRunner.tscn
+if errorlevel 1 exit /b %errorlevel%
+
+"%GODOT_EXE%" --path "%PROJECT_DIR%" --headless res://tests/headless/M10WorldAuthoringRunner.tscn
 exit /b %errorlevel%

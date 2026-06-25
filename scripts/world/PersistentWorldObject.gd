@@ -5,7 +5,14 @@ extends Node
 const STATE_COLLECTED := "collected"
 const STATE_DEAD := "dead"
 const STATE_ACTIVE := "active"
+const STATE_OPENED := "opened"
+const STATE_OPEN := "open"
+const STATE_ON := "on"
 const KIND_PICKUP := "pickup"
+const KIND_ENEMY := "enemy"
+const KIND_CHEST := "chest"
+const KIND_DOOR := "door"
+const KIND_SWITCH := "switch"
 
 @export var persistent_id: String = ""
 @export var remove_when_state: Array[String] = [STATE_COLLECTED, STATE_DEAD]

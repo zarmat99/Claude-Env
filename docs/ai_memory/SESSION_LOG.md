@@ -4,6 +4,39 @@
 
 ---
 
+## 2026-06-25 - Session 015 - Milestone 10: world authoring pipeline
+
+- **Goal**: implement M10 and turn the asset-proxy decision into a real, validated map-authoring
+  pipeline.
+- **Files created**: `assets/tilesets/proxy_dark_fantasy_atlas.png`,
+  `data/assets/asset_sets.json`, `data/world/world_objects.json`,
+  `scripts/world/{AuthoredMap,Chest,Door,Switch}.gd`, `scenes/world/{Chest,Door,Switch}.tscn`,
+  `scenes/maps/ProbeRuins.tscn`, `tests/headless/M10WorldAuthoringRunner.{gd,tscn}`.
+- **Files modified**: `data/maps/maps.json`, `scenes/maps/Forest.tscn`,
+  `scenes/main/Main.gd`, `scripts/core/DataRegistry.gd`, `scripts/world/PersistentWorldObject.gd`,
+  `test.bat`, and architecture/AI-memory docs.
+- **Asset probe**: generated a serious dark-fantasy proxy atlas with Imagen, copied it into the
+  repo, then normalized it to a strict 1024x1024 8x8 atlas after validation caught the generated
+  image's non-technical 1254x1254 dimensions.
+- **World authoring**: `map_probe_ruins` is now a data-authored sandbox map connected from Forest.
+  `AuthoredMap` builds tile layers, collision cells, spawn points, transitions, and placed objects
+  from `maps.json`.
+- **World objects**: added reusable chest, door, and switch scenes/scripts. Their states persist as
+  `opened`, `open`, and `on` in `GameState.world_objects`; switches can open target doors by
+  `persistent_id`.
+- **Validation**: `DataRegistry.validate_all()` now checks asset sets, atlas dimensions, tile IDs
+  and collision metadata, world-object definitions, authored map dimensions/layers/spawns,
+  transitions, placed pickups/enemies/chests/switches, loot refs, switch targets, and duplicate
+  `persistent_id`s.
+- **Tests**: `test.bat` now runs M9 plus M10. M10 verifies proxy atlas import, authored spawn/
+  transition/object generation, chest loot persistence, and switch/door persistence across map
+  reloads.
+- **Checks run**: Godot headless import OK; final `.\test.bat` OK.
+- **Final result**: **Milestone 10 COMPLETE and verified.**
+- **Next**: SR2 - Map scalability review.
+
+---
+
 ## 2026-06-25 - Session 014 - M10 asset-proxy roadmap refinement
 
 - **Goal**: clarify whether M10 map authoring should test art/asset scalability before real maps.

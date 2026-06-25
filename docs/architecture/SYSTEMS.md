@@ -25,12 +25,15 @@ current codebase, so it should avoid "current milestone" language that can go st
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
   (`get_item(id)`, `get_quest(id)`, `get_dialogue(id)`, `get_npc(id)`, `get_enemy(id)`,
-  `get_faction(id)`, `get_skill(id)`, `get_map(id)`). Fail loudly on bad IDs/malformed data.
+  `get_faction(id)`, `get_skill(id)`, `get_asset_set(id)`, `get_world_object(id)`, `get_map(id)`).
+  Fail loudly on bad IDs/malformed data.
 - **Depends on**: nothing (reads files).
 - **Implementation**: M9 adds boot-time and test-callable validation for JSON shape, ID prefixes,
   cross-file references, quest/dialogue conditions, implemented dialogue actions, map scene paths,
   declared spawn points, transition targets, loot/reward item refs, and duplicate `persistent_id`s.
-  Lookups push errors for missing IDs instead of quietly accepting them.
+  M10 extends this to asset sets, generated atlas dimensions, tile metadata, world-object
+  definitions, authored map dimensions/layers/spawns/transitions/objects, switch targets, and
+  asset-tile references. Lookups push errors for missing IDs instead of quietly accepting them.
 
 ## GameState (autoload) — `scripts/core/GameState.gd`
 - **Role**: single runtime source of truth: `current_map`, player snapshot (position, stats,
@@ -48,7 +51,8 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Depends on**: GameState, EventBus, DataRegistry (map index).
 - **Implementation**: swaps data-driven maps, keeps the persistent player, places `SpawnPoint`s,
   emits `map_changed`, rejects invalid map/spawn IDs, and respawns active dynamic pickups from
-  `GameState.world_objects`.
+  `GameState.world_objects`. M10 authored maps still enter through normal map scenes; `AuthoredMap`
+  builds its runtime children before `SceneLoader` resolves the requested spawn.
 
 ## SaveManager (autoload) — `scripts/core/SaveManager.gd`
 - **Role**: serialize a `GameState` snapshot to `user://saves/slot_N.json` and restore it
@@ -70,7 +74,9 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Implementation**: `SpawnPoint`, `AreaTransition`, `PlaceholderMap`, and
   `PersistentWorldObject` are live. Static pickups/enemies apply `collected` / `dead` state on map
   load. M9 adds active dynamic pickup state so runtime loot drops can be saved and respawned until
-  collected.
+  collected. M10 adds `AuthoredMap` for data-authored tile layers, collisions, spawns, transitions,
+  and placed objects, plus reusable `Chest`, `Door`, and `Switch` scenes/scripts. Chest/door/switch
+  state persists as `opened`, `open`, and `on` in `GameState.world_objects`.
 
 ## QuestManager (autoload) — `scripts/quest/*`
 - **Role**: start/advance/complete quests; evaluate `advance_on` conditions against GameState;
@@ -130,4 +136,6 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Role**: persistent regression coverage for milestone-critical flows.
 - **Implementation**: M9 adds `tests/headless/M9RegressionRunner.tscn` plus `test.bat`. The runner
   covers data validation, boot, map transitions, first quest completion, save/load, progression,
-  and dynamic pickup persistence.
+  and dynamic pickup persistence. M10 adds `M10WorldAuthoringRunner`, and `test.bat` now runs both
+  M9 and M10. The M10 runner validates proxy atlas import, authored map generation, object
+  placement, chest loot persistence, and switch/door persistence across map reloads.

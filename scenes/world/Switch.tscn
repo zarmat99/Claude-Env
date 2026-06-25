@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/Switch.gd" id="1_switch"]
+[ext_resource type="Script" path="res://scripts/components/InteractionComponent.gd" id="2_ic"]
+
+[sub_resource type="RectangleShape2D" id="rect_body"]
+size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="circle_interaction"]
+radius = 28.0
+
+[node name="Switch" type="StaticBody2D"]
+script = ExtResource("1_switch")
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.65, 0.45, 0.25, 1)
+polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("rect_body")
+
+[node name="InteractionComponent" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_ic")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionComponent"]
+shape = SubResource("circle_interaction")

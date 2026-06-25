@@ -1,0 +1,42 @@
+{
+  "world_object_proxy_chest": {
+    "id": "world_object_proxy_chest",
+    "kind": "chest",
+    "scene": "res://scenes/world/Chest.tscn",
+    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_tile": "tile_closed_chest",
+    "persistent": true
+  },
+  "world_object_proxy_door": {
+    "id": "world_object_proxy_door",
+    "kind": "door",
+    "scene": "res://scenes/world/Door.tscn",
+    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_tile": "tile_wooden_door",
+    "persistent": true
+  },
+  "world_object_proxy_switch": {
+    "id": "world_object_proxy_switch",
+    "kind": "switch",
+    "scene": "res://scenes/world/Switch.tscn",
+    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_tile": "tile_lever",
+    "persistent": true
+  },
+  "world_object_proxy_pickup": {
+    "id": "world_object_proxy_pickup",
+    "kind": "pickup",
+    "scene": "res://scenes/items/PickupItem.tscn",
+    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_tile": "tile_pressure_plate",
+    "persistent": true
+  },
+  "world_object_proxy_slime": {
+    "id": "world_object_proxy_slime",
+    "kind": "enemy",
+    "scene": "res://scenes/enemies/Slime.tscn",
+    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_tile": "tile_bone_pile",
+    "persistent": true
+  }
+}

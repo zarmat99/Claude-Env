@@ -11,6 +11,8 @@ const FILES := {
     "enemies": "res://data/enemies/enemies.json",
     "factions": "res://data/factions/factions.json",
     "skills": "res://data/skills/skills.json",
+    "asset_sets": "res://data/assets/asset_sets.json",
+    "world_objects": "res://data/world/world_objects.json",
     "maps": "res://data/maps/maps.json",
 }
 
@@ -22,6 +24,8 @@ const ID_PREFIXES := {
     "enemies": "enemy_",
     "factions": "faction_",
     "skills": "skill_",
+    "asset_sets": "asset_",
+    "world_objects": "world_object_",
     "maps": "map_",
 }
 
@@ -45,6 +49,9 @@ const DIALOGUE_ACTION_TYPES := [
     "advance_quest",
 ]
 
+const ASSET_TILE_COLLISIONS := ["none", "solid", "water"]
+const WORLD_OBJECT_KINDS := ["chest", "door", "switch", "pickup", "enemy"]
+
 var _tables: Dictionary = {}
 var _validation_errors: Array[String] = []
 var _load_errors: Array[String] = []
@@ -62,6 +69,8 @@ func validate_all() -> bool:
     _validate_items()
     _validate_factions()
     _validate_skills()
+    _validate_asset_sets()
+    _validate_world_objects()
     _validate_npcs()
     _validate_enemies()
     _validate_quests()
@@ -115,6 +124,8 @@ func get_npc(content_id: String) -> Dictionary: return _entry("npcs", content_id
 func get_enemy(content_id: String) -> Dictionary: return _entry("enemies", content_id)
 func get_faction(content_id: String) -> Dictionary: return _entry("factions", content_id)
 func get_skill(content_id: String) -> Dictionary: return _entry("skills", content_id)
+func get_asset_set(content_id: String) -> Dictionary: return _entry("asset_sets", content_id)
+func get_world_object(content_id: String) -> Dictionary: return _entry("world_objects", content_id)
 func get_map(content_id: String) -> Dictionary: return _entry("maps", content_id)
 
 func _validate_table_ids() -> void:
@@ -174,6 +185,86 @@ func _validate_skills() -> void:
         var skill_id := String(raw_skill_id)
         var skill := get_skill(skill_id)
         _require_string(skill, "skills/%s" % skill_id, "name")
+
+func _validate_asset_sets() -> void:
+    for raw_asset_set_id in all("asset_sets").keys():
+        var asset_set_id := String(raw_asset_set_id)
+        var asset_set := get_asset_set(asset_set_id)
+        _require_string(asset_set, "asset_sets/%s" % asset_set_id, "name")
+
+        var atlas_path := String(asset_set.get("atlas", ""))
+        if atlas_path == "" or not ResourceLoader.exists(atlas_path):
+            _error("asset_sets/%s.atlas is missing or invalid: %s" % [asset_set_id, atlas_path])
+        var source_tile_size := int(asset_set.get("source_tile_size", 0))
+        var world_tile_size := int(asset_set.get("world_tile_size", 0))
+        var columns := int(asset_set.get("columns", 0))
+        var rows := int(asset_set.get("rows", 0))
+        if source_tile_size <= 0:
+            _error("asset_sets/%s.source_tile_size must be positive" % asset_set_id)
+        if world_tile_size <= 0:
+            _error("asset_sets/%s.world_tile_size must be positive" % asset_set_id)
+        if columns <= 0 or rows <= 0:
+            _error("asset_sets/%s.columns and rows must be positive" % asset_set_id)
+
+        if atlas_path != "" and ResourceLoader.exists(atlas_path) and source_tile_size > 0 and columns > 0 and rows > 0:
+            var texture := load(atlas_path) as Texture2D
+            if texture == null:
+                _error("asset_sets/%s.atlas could not be loaded as a Texture2D" % asset_set_id)
+            elif texture.get_width() != source_tile_size * columns or texture.get_height() != source_tile_size * rows:
+                _error(
+                    "asset_sets/%s atlas dimensions are %dx%d; expected %dx%d" %
+                    [asset_set_id, texture.get_width(), texture.get_height(), source_tile_size * columns, source_tile_size * rows]
+                )
+
+        var tiles = asset_set.get("tiles", {})
+        if not (tiles is Dictionary) or tiles.is_empty():
+            _error("asset_sets/%s.tiles must be a non-empty object" % asset_set_id)
+            continue
+        var coords: Dictionary = {}
+        for raw_tile_id in tiles.keys():
+            var tile_id := String(raw_tile_id)
+            var tile = tiles[raw_tile_id]
+            var tile_path := "asset_sets/%s.tiles.%s" % [asset_set_id, tile_id]
+            if not tile_id.begins_with("tile_"):
+                _error("%s must use the tile_ prefix" % tile_path)
+            if not (tile is Dictionary):
+                _error("%s must be an object" % tile_path)
+                continue
+            if String(tile.get("id", "")) != tile_id:
+                _error("%s has mismatched id '%s'" % [tile_path, tile.get("id", "")])
+            _require_string(tile, tile_path, "name")
+            _require_string(tile, tile_path, "kind")
+            var col := int(tile.get("col", -1))
+            var row := int(tile.get("row", -1))
+            if col < 0 or col >= columns or row < 0 or row >= rows:
+                _error("%s coordinates (%d,%d) are outside the %dx%d atlas" % [tile_path, col, row, columns, rows])
+            var coord_key := "%d:%d" % [col, row]
+            if coords.has(coord_key):
+                _error("%s reuses atlas cell %s already used by %s" % [tile_path, coord_key, coords[coord_key]])
+            coords[coord_key] = tile_id
+            var collision := String(tile.get("collision", ""))
+            if not ASSET_TILE_COLLISIONS.has(collision):
+                _error("%s.collision has unsupported value '%s'" % [tile_path, collision])
+
+func _validate_world_objects() -> void:
+    for raw_world_object_id in all("world_objects").keys():
+        var world_object_id := String(raw_world_object_id)
+        var world_object := get_world_object(world_object_id)
+        var path := "world_objects/%s" % world_object_id
+        var kind := String(world_object.get("kind", ""))
+        if not WORLD_OBJECT_KINDS.has(kind):
+            _error("%s.kind has unsupported value '%s'" % [path, kind])
+        var scene_path := String(world_object.get("scene", ""))
+        if scene_path == "" or not ResourceLoader.exists(scene_path):
+            _error("%s.scene is missing or invalid: %s" % [path, scene_path])
+        var asset_set_id := String(world_object.get("asset_set", ""))
+        if asset_set_id != "":
+            _require_ref("asset_sets", asset_set_id, "%s.asset_set" % path)
+            var tile_id := String(world_object.get("asset_tile", ""))
+            if tile_id != "":
+                _require_asset_tile(asset_set_id, tile_id, "%s.asset_tile" % path)
+        elif String(world_object.get("asset_tile", "")) != "":
+            _error("%s.asset_tile is set but asset_set is empty" % path)
 
 func _validate_npcs() -> void:
     for raw_npc_id in all("npcs").keys():
@@ -272,12 +363,15 @@ func _validate_dialogues() -> void:
 func _validate_maps_and_scenes() -> void:
     var map_spawn_points: Dictionary = {}
     var map_instances: Dictionary = {}
+    var authored_maps: Dictionary = {}
     var persistent_ids: Dictionary = {}
 
     for raw_map_id in all("maps").keys():
         var map_id := String(raw_map_id)
         var map := get_map(map_id)
         _require_string(map, "maps/%s" % map_id, "display_name")
+        _require_string(map, "maps/%s" % map_id, "region")
+        _require_string(map, "maps/%s" % map_id, "dev_role")
         var scene_path := String(map.get("scene", ""))
         if scene_path == "" or not ResourceLoader.exists(scene_path):
             _error("maps/%s.scene is missing or invalid: %s" % [map_id, scene_path])
@@ -287,13 +381,22 @@ func _validate_maps_and_scenes() -> void:
             _error("maps/%s.scene could not be loaded: %s" % [map_id, scene_path])
             continue
         var instance := packed.instantiate()
-        map_instances[map_id] = instance
 
         var declared_spawns = map.get("spawn_points", [])
         if not (declared_spawns is Array) or declared_spawns.is_empty():
             _error("maps/%s.spawn_points must be a non-empty array" % map_id)
             declared_spawns = []
-        var actual_spawns := _collect_spawn_points(instance)
+        var authoring = map.get("authoring", {})
+        var is_authored: bool = authoring is Dictionary and not authoring.is_empty()
+        var actual_spawns: Array[String] = []
+        if is_authored:
+            authored_maps[map_id] = authoring
+            actual_spawns = _validate_authored_map(map_id, map, persistent_ids)
+            instance.free()
+        else:
+            map_instances[map_id] = instance
+            actual_spawns = _collect_spawn_points(instance)
+            _validate_scene_world_objects(instance, map_id, persistent_ids)
         map_spawn_points[map_id] = actual_spawns
         for spawn_id in declared_spawns:
             if not actual_spawns.has(String(spawn_id)):
@@ -301,12 +404,156 @@ func _validate_maps_and_scenes() -> void:
         for spawn_id in actual_spawns:
             if not declared_spawns.has(spawn_id):
                 _error("maps/%s scene has undeclared spawn point '%s'" % [map_id, spawn_id])
-        _validate_scene_world_objects(instance, map_id, persistent_ids)
 
     for raw_map_id in map_instances.keys():
         var map_id := String(raw_map_id)
         _validate_scene_transitions(map_instances[map_id], map_id, map_spawn_points)
         map_instances[map_id].free()
+    for raw_map_id in authored_maps.keys():
+        var map_id := String(raw_map_id)
+        _validate_authored_transitions(map_id, authored_maps[map_id], map_spawn_points)
+
+func _validate_authored_map(map_id: String, map: Dictionary, persistent_ids: Dictionary) -> Array[String]:
+    var out: Array[String] = []
+    var authoring: Dictionary = map.get("authoring", {})
+    var asset_set_id := String(map.get("asset_set", ""))
+    if asset_set_id == "":
+        _error("maps/%s authored map must declare asset_set" % map_id)
+    else:
+        _require_ref("asset_sets", asset_set_id, "maps/%s.asset_set" % map_id)
+
+    var width := int(authoring.get("width", 0))
+    var height := int(authoring.get("height", 0))
+    if width <= 0 or height <= 0:
+        _error("maps/%s.authoring width and height must be positive" % map_id)
+    _validate_authored_layers(map_id, authoring, asset_set_id, width, height)
+    out = _validate_authored_spawns(map_id, authoring)
+    _validate_authored_objects(map_id, authoring, persistent_ids)
+    return out
+
+func _validate_authored_layers(map_id: String, authoring: Dictionary, asset_set_id: String, width: int, height: int) -> void:
+    var layers = authoring.get("layers", {})
+    if not (layers is Dictionary) or layers.is_empty():
+        _error("maps/%s.authoring.layers must be a non-empty object" % map_id)
+        return
+    for raw_layer_name in layers.keys():
+        var layer_name := String(raw_layer_name)
+        var layer = layers[raw_layer_name]
+        var layer_path := "maps/%s.authoring.layers.%s" % [map_id, layer_name]
+        if not (layer is Array):
+            _error("%s must be an array of rows" % layer_path)
+            continue
+        if height > 0 and layer.size() != height:
+            _error("%s has %d rows; expected %d" % [layer_path, layer.size(), height])
+        for y in range(layer.size()):
+            var row = layer[y]
+            if not (row is Array):
+                _error("%s[%d] must be an array" % [layer_path, y])
+                continue
+            if width > 0 and row.size() != width:
+                _error("%s[%d] has %d cells; expected %d" % [layer_path, y, row.size(), width])
+            for x in range(row.size()):
+                var tile_id := String(row[x])
+                if tile_id == "":
+                    continue
+                _require_asset_tile(asset_set_id, tile_id, "%s[%d][%d]" % [layer_path, y, x])
+
+func _validate_authored_spawns(map_id: String, authoring: Dictionary) -> Array[String]:
+    var out: Array[String] = []
+    var spawns = authoring.get("spawns", [])
+    if not (spawns is Array) or spawns.is_empty():
+        _error("maps/%s.authoring.spawns must be a non-empty array" % map_id)
+        return out
+    for index in range(spawns.size()):
+        var spawn = spawns[index]
+        var path := "maps/%s.authoring.spawns[%d]" % [map_id, index]
+        if not (spawn is Dictionary):
+            _error("%s must be an object" % path)
+            continue
+        var spawn_id := String(spawn.get("id", ""))
+        if spawn_id == "":
+            _error("%s.id must be a non-empty string" % path)
+            continue
+        if out.has(spawn_id):
+            _error("maps/%s has duplicate authored spawn point '%s'" % [map_id, spawn_id])
+        out.append(spawn_id)
+        _validate_vector2_dict(spawn.get("position", {}), "%s.position" % path)
+    return out
+
+func _validate_authored_objects(map_id: String, authoring: Dictionary, persistent_ids: Dictionary) -> void:
+    var objects = authoring.get("objects", [])
+    if not (objects is Array):
+        _error("maps/%s.authoring.objects must be an array" % map_id)
+        return
+    var local_persistent_ids: Dictionary = {}
+    var switch_targets: Array[Dictionary] = []
+    for index in range(objects.size()):
+        var object = objects[index]
+        var path := "maps/%s.authoring.objects[%d]" % [map_id, index]
+        if not (object is Dictionary):
+            _error("%s must be an object" % path)
+            continue
+        _require_string(object, path, "name")
+        _validate_vector2_dict(object.get("position", {}), "%s.position" % path)
+        var world_object_id := String(object.get("world_object", ""))
+        _require_ref("world_objects", world_object_id, "%s.world_object" % path)
+        if world_object_id == "" or not has_id("world_objects", world_object_id):
+            continue
+        var world_object := get_world_object(world_object_id)
+        var kind := String(world_object.get("kind", ""))
+        var persistent_id := String(object.get("persistent_id", ""))
+        if bool(world_object.get("persistent", false)) and persistent_id == "":
+            _error("%s.persistent_id is required for persistent world object '%s'" % [path, world_object_id])
+        if persistent_id != "":
+            if persistent_ids.has(persistent_id):
+                _error("Duplicate persistent_id '%s' in %s and %s" % [persistent_id, persistent_ids[persistent_id], path])
+            persistent_ids[persistent_id] = path
+            local_persistent_ids[persistent_id] = true
+
+        match kind:
+            "chest":
+                _validate_object_loot(object.get("loot", []), "%s.loot" % path)
+            "pickup":
+                _require_ref("items", String(object.get("item_id", "")), "%s.item_id" % path)
+                if int(object.get("count", 1)) <= 0:
+                    _error("%s.count must be positive" % path)
+            "enemy":
+                _require_ref("enemies", String(object.get("enemy_id", "")), "%s.enemy_id" % path)
+            "switch":
+                var target := String(object.get("target_persistent_id", ""))
+                if target == "":
+                    _error("%s.target_persistent_id must be a non-empty string" % path)
+                else:
+                    switch_targets.append({"path": path, "target": target})
+
+    for switch_target in switch_targets:
+        var target := String(switch_target.get("target", ""))
+        if not local_persistent_ids.has(target):
+            _error("%s.target_persistent_id references missing local persistent object '%s'" % [switch_target.get("path", ""), target])
+
+func _validate_authored_transitions(map_id: String, authoring: Dictionary, map_spawn_points: Dictionary) -> void:
+    var transitions = authoring.get("transitions", [])
+    if not (transitions is Array):
+        _error("maps/%s.authoring.transitions must be an array" % map_id)
+        return
+    for index in range(transitions.size()):
+        var transition = transitions[index]
+        var path := "maps/%s.authoring.transitions[%d]" % [map_id, index]
+        if not (transition is Dictionary):
+            _error("%s must be an object" % path)
+            continue
+        _require_string(transition, path, "name")
+        _validate_vector2_dict(transition.get("position", {}), "%s.position" % path)
+        _validate_vector2_dict(transition.get("size", {}), "%s.size" % path)
+        var target_map := String(transition.get("target_map", ""))
+        var target_spawn := String(transition.get("target_spawn", ""))
+        _require_ref("maps", target_map, "%s.target_map" % path)
+        if target_spawn == "":
+            _error("%s.target_spawn is empty" % path)
+            continue
+        var target_spawns: Array = map_spawn_points.get(target_map, [])
+        if not target_spawns.has(target_spawn):
+            _error("%s targets missing spawn '%s' in %s" % [path, target_spawn, target_map])
 
 func _validate_scene_transitions(root: Node, map_id: String, map_spawn_points: Dictionary) -> void:
     for node in _walk_nodes(root):
@@ -452,6 +699,27 @@ func _validate_loot_table(loot_table, path: String) -> void:
         elif int(count) <= 0:
             _error("%s[%d].count must be positive" % [path, index])
 
+func _validate_object_loot(loot_items, path: String) -> void:
+    if not (loot_items is Array):
+        _error("%s must be an array" % path)
+        return
+    for index in range(loot_items.size()):
+        var loot = loot_items[index]
+        var item_path := "%s[%d]" % [path, index]
+        if not (loot is Dictionary):
+            _error("%s must be an object" % item_path)
+            continue
+        _require_ref("items", String(loot.get("id", "")), "%s.id" % item_path)
+        if int(loot.get("count", 1)) <= 0:
+            _error("%s.count must be positive" % item_path)
+
+func _validate_vector2_dict(value, path: String) -> void:
+    if not (value is Dictionary):
+        _error("%s must be an object with x/y" % path)
+        return
+    if not value.has("x") or not value.has("y"):
+        _error("%s must contain x and y" % path)
+
 func _collect_spawn_points(root: Node) -> Array[String]:
     var out: Array[String] = []
     for node in _walk_nodes(root):
@@ -484,6 +752,21 @@ func _require_ref(table: String, content_id: String, path: String) -> void:
         _error("%s is empty" % path)
     elif not has_id(table, content_id):
         _error("%s references missing %s ID '%s'" % [path, table, content_id])
+
+func _require_asset_tile(asset_set_id: String, tile_id: String, path: String) -> void:
+    if asset_set_id == "":
+        _error("%s cannot reference tile '%s' without an asset_set" % [path, tile_id])
+        return
+    if tile_id == "":
+        _error("%s is empty" % path)
+        return
+    if not has_id("asset_sets", asset_set_id):
+        _error("%s references missing asset_set '%s'" % [path, asset_set_id])
+        return
+    var asset_set := get_asset_set(asset_set_id)
+    var tiles: Dictionary = asset_set.get("tiles", {})
+    if not tiles.has(tile_id):
+        _error("%s references missing tile '%s' in %s" % [path, tile_id, asset_set_id])
 
 func _require_string(entry: Dictionary, path: String, field: String) -> void:
     if String(entry.get(field, "")) == "":
