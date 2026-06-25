@@ -14,7 +14,7 @@ func _ready() -> void:
 func start_quest(quest_id: String) -> void:
     var q := DataRegistry.get_quest(quest_id)
     if q.is_empty():
-        push_warning("QuestManager: unknown quest '%s'" % quest_id)
+        push_error("QuestManager: unknown quest '%s'" % quest_id)
         return
     if GameState.quests["active"].has(quest_id) or GameState.quests["completed"].has(quest_id):
         return
@@ -26,6 +26,9 @@ func start_quest(quest_id: String) -> void:
 
 ## Force the current stage to its `next` (used by the dialogue `advance_quest` action).
 func advance_quest(quest_id: String) -> void:
+    if not DataRegistry.has_id("quests", quest_id):
+        push_error("QuestManager: cannot advance unknown quest '%s'" % quest_id)
+        return
     if GameState.quests["active"].has(quest_id):
         _advance(quest_id)
 

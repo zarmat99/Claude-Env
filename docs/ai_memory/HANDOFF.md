@@ -10,7 +10,7 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 8 — COMPLETE and verified in Godot 4.3** (M0–M7 done before it).
+- **Milestone 9 — COMPLETE and verified in Godot 4.3.** M0-M8 and SR1 complete before it.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith → accept `quest_first_dungeon` → travel to the cave (quest advances on
   entering) → kill/dodge the slime, grab the ancient iron fragment → return and talk → quest
@@ -19,21 +19,24 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
   map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
-  `world_objects`. Pickups stay collected and enemies with `persistent_id` stay dead.
+  `world_objects`. Pickups stay collected, enemies with `persistent_id` stay dead, and M9 adds the
+  contract for active dynamic pickup drops to respawn from `world_objects`.
 - Progression works: quest rewards and enemy kills grant XP; level-up increases max health and
   damage, refills health, emits `player_level_up`, and appears in the HUD.
+- M9 added `DataRegistry.validate_all()`, runtime unknown-ID guardrails, input actions for journal/
+  inventory/attack/save/load, dynamic pickup persistence, and persistent headless regression files
+  under `tests/headless/`.
+- Verified with Godot headless import and `.\test.bat`.
 - On `master`, pushed.
 
 ## Last thing done
-Completed **SR1 — Core scalability review** (`docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md`).
-Verdict: the M0-M8 skeleton is still structurally scalable and does **not** need a rewrite before
-M9. Main risk is prototype permissiveness: missing validation, temporary tests, hardcoded controls,
-dynamic loot persistence, unsupported dialogue actions, and dev-sandbox boot assumptions.
+Completed **Milestone 9 — Data & tooling hardening**:
+data/schema/reference validation, persistent headless regression runner, input-map cleanup,
+dynamic pickup persistence contract, and runtime guardrails for unknown content IDs.
 
 ## Next thing to do
-Begin **Milestone 9 — Data & tooling hardening**. Required work from SR1:
-validators/preflight, repeatable headless regression checks, input-map cleanup, dynamic
-world-object persistence contract, and runtime guardrails for unknown content IDs.
+Begin **Milestone 10 — World authoring pipeline**: map index/conventions, persistent world-object
+library, expanded world validation, and dev sandbox vs production start separation.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -61,9 +64,10 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
+.\test.bat                                                   # M9 regression suite
 ```
 Controls: move = WASD/arrows · talk = E/Space · journal = J · inventory = I · attack = left mouse ·
-save = F5 · load = F9. HUD shows HP, level, and XP progress.
+save = F5 · load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
 Maps connect via walk-on pads (the colored rectangles near map edges).
 
 ## Screenshot trick (visual checks; delete temp files + clear .godot after)
@@ -79,5 +83,5 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 6. `docs/ai_memory/DECISIONS.md` · `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- (none blocking) — M8 done & verified. Known follow-ups: player death/game-over (placeholder),
-  input actions for J/I/F5/F9/attack (currently hardcoded keys), save UI/slots beyond debug keys.
+- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, M10 dev
+  sandbox vs production start separation.

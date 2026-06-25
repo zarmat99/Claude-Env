@@ -10,6 +10,10 @@ const PersistentWorldObject = preload("res://scripts/world/PersistentWorldObject
 @export var persistent_id: String = ""
 
 func _ready() -> void:
+    if not DataRegistry.has_id("items", item_id):
+        push_error("PickupItem: unknown item_id '%s' on %s" % [item_id, name])
+        queue_free()
+        return
     if PersistentWorldObject.has_state(persistent_id, PersistentWorldObject.STATE_COLLECTED):
         queue_free()
         return
@@ -18,6 +22,7 @@ func _ready() -> void:
 func _on_body_entered(body: Node) -> void:
     if not body.is_in_group("player"):
         return
-    InventoryManager.add(item_id, count)
+    if not InventoryManager.add(item_id, count):
+        return
     PersistentWorldObject.set_state(persistent_id, PersistentWorldObject.STATE_COLLECTED)
     queue_free()

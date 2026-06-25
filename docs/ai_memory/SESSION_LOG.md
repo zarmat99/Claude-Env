@@ -4,6 +4,40 @@
 
 ---
 
+## 2026-06-25 - Session 013 - Milestone 9: data & tooling hardening
+
+- **Goal**: implement M9 data/tooling hardening from SR1: validators, persistent tests, input map
+  cleanup, dynamic world-object persistence contract, and runtime guardrails.
+- **Files created**: `tests/headless/M9RegressionRunner.gd`,
+  `tests/headless/M9RegressionRunner.tscn`, `test.bat`.
+- **Files modified**: `scripts/core/DataRegistry.gd`, `scripts/core/SceneLoader.gd`,
+  `scripts/core/SaveManager.gd`, `scripts/world/PersistentWorldObject.gd`,
+  `scripts/components/LootComponent.gd`, runtime managers/actors that use content IDs,
+  `project.godot`, `data/{factions,maps}.json`, and docs/memory/schema files.
+- **Design**: `DataRegistry.validate_all()` is now the preflight boundary for JSON shape, ID
+  prefixes, cross-file references, quest/dialogue conditions, supported dialogue actions,
+  map scenes/spawns/transitions, loot/reward refs, and duplicate `persistent_id`s. Runtime manager
+  APIs now reject unknown IDs instead of creating invalid state.
+- **Dynamic persistence**: runtime loot drops register active pickup entries in
+  `GameState.world_objects` with `kind`, `map_id`, `item_id`, `count`, and `position`.
+  `SceneLoader` respawns active dynamic pickups on map load; collecting them changes state to
+  `collected`.
+- **Input cleanup**: inventory, quest journal, primary attack, save, and load now read InputMap
+  actions instead of raw keys/buttons.
+- **Persistent tests**: M9 runner covers data validation, boot, map transitions, first quest flow,
+  save/load, progression, and dynamic pickup persistence. `test.bat` runs Godot import and then the
+  M9 runner.
+- **Runtime fixes during verification**: fixed the runner's `persistent_id` lookup on nodes without
+  that property, fixed `test.bat` path quoting by using `%~dp0.`, and updated the boot print to
+  "Milestone 9".
+- **Checks run**: JSON parse OK for all data files; static data reference check OK; persistent ID
+  text scan OK (5 IDs); Godot headless import OK; direct M9 runner OK; final `.\test.bat` OK;
+  `git diff --check` clean apart from normal CRLF warnings.
+- **Final result**: **Milestone 9 COMPLETE and verified.**
+- **Next**: Milestone 10 - World authoring pipeline.
+
+---
+
 ## 2026-06-25 — Session 012 — SR1 core scalability review
 
 - **Goal**: review the M0-M8 skeleton before M9 and decide whether the project remains scalable

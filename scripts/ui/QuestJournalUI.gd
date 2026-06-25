@@ -1,5 +1,5 @@
 extends Control
-## Quest journal overlay (M3). Toggle with J. Lists active quests (title + current stage) and
+## Quest journal overlay (M3). Toggle with the journal action. Lists active quests (title + current stage) and
 ## completed quests. Read-only view of GameState.quests; rebuilds on quest events and on open.
 
 @onready var _list: VBoxContainer = $Panel/List
@@ -11,7 +11,7 @@ func _ready() -> void:
     EventBus.quest_completed.connect(func(_id): _refresh())
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_J:
+    if event.is_action_pressed("quest_journal_toggle"):
         visible = not visible
         if visible:
             _refresh()

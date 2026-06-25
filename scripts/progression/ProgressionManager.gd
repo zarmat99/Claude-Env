@@ -66,6 +66,9 @@ func _on_actor_died(actor: Node) -> void:
     if enemy_id == "":
         return
     var enemy := DataRegistry.get_enemy(enemy_id)
+    if enemy.is_empty():
+        push_error("ProgressionManager: enemy '%s' has no data, XP skipped" % enemy_id)
+        return
     var xp := int(enemy.get("xp_reward", 0))
     if xp > 0:
         EventBus.xp_gained.emit(xp)

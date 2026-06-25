@@ -4,9 +4,12 @@ extends Node
 ## Non-player inventories (containers, merchants, loot) will use a dedicated InventoryComponent
 ## node when those land (M5+); this manager is the player's.
 
-func add(item_id: String, count: int = 1) -> void:
+func add(item_id: String, count: int = 1) -> bool:
     if item_id == "" or count <= 0:
-        return
+        return false
+    if not DataRegistry.has_id("items", item_id):
+        push_error("InventoryManager: cannot add unknown item '%s'" % item_id)
+        return false
     var def := DataRegistry.get_item(item_id)
     var stackable := bool(def.get("stackable", false))
     var max_stack := int(def.get("max_stack", 1)) if stackable else 1
@@ -25,9 +28,15 @@ func add(item_id: String, count: int = 1) -> void:
         inv.append({"id": item_id, "count": put})
         remaining -= put
     EventBus.item_added.emit(item_id, count)
+    return true
 
 func remove(item_id: String, count: int = 1) -> bool:
-    if item_id == "" or count <= 0 or get_count(item_id) < count:
+    if item_id == "" or count <= 0:
+        return false
+    if not DataRegistry.has_id("items", item_id):
+        push_error("InventoryManager: cannot remove unknown item '%s'" % item_id)
+        return false
+    if get_count(item_id) < count:
         return false
     var inv: Array = GameState.player["inventory"]
     var remaining := count

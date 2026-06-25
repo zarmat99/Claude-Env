@@ -7,13 +7,12 @@ const SAVE_DIR := "user://saves/"
 const SAVE_VERSION := 1
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event is InputEventKey and event.pressed and not event.echo:
-        if event.keycode == KEY_F5:
-            save_game(0)
-            get_viewport().set_input_as_handled()
-        elif event.keycode == KEY_F9:
-            load_game(0)
-            get_viewport().set_input_as_handled()
+    if event.is_action_pressed("save_game"):
+        save_game(0)
+        get_viewport().set_input_as_handled()
+    elif event.is_action_pressed("load_game"):
+        load_game(0)
+        get_viewport().set_input_as_handled()
 
 func save_game(slot: int = 0) -> bool:
     _sync_player_from_world()

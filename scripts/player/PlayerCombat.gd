@@ -1,5 +1,5 @@
 extends Node
-## Player combat (M5): a melee attack (left mouse) via the sibling AttackHitbox, and ownership of
+## Player combat (M5): a melee attack via the sibling AttackHitbox, and ownership of
 ## the player's HealthComponent — synced to GameState.player.stats.health so the HUD and (future)
 ## save see it. Kept separate from movement (PlayerController).
 
@@ -17,8 +17,9 @@ func _ready() -> void:
     _health.died.connect(_on_died)
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+    if event.is_action_pressed("attack_primary"):
         attack()
+        get_viewport().set_input_as_handled()
 
 func attack() -> void:
     if _cooling or not _health.is_alive():

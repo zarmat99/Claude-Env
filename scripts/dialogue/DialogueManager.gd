@@ -20,7 +20,7 @@ func start(dialogue_id: String) -> void:
         return
     _dialogue = DataRegistry.get_dialogue(dialogue_id)
     if _dialogue.is_empty():
-        push_warning("DialogueManager: unknown dialogue '%s'" % dialogue_id)
+        push_error("DialogueManager: unknown dialogue '%s'" % dialogue_id)
         return
     _id = dialogue_id
     _node_id = String(_dialogue.get("entry", "start"))
@@ -80,7 +80,7 @@ func _run_actions(actions: Array) -> void:
             "advance_quest":
                 QuestManager.advance_quest(String(a.get("quest", "")))
             _:
-                pass  # give_item / take_item / ... handled from M4+
+                push_error("DialogueManager: unsupported action type '%s'" % a.get("type", ""))
 
 func _speaker_name(speaker_id: String) -> String:
     if speaker_id == "" or speaker_id == "player":

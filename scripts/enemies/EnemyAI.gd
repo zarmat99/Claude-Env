@@ -24,6 +24,10 @@ func _ready() -> void:
         return
     add_to_group("enemy")
     _data = DataRegistry.get_enemy(enemy_id)
+    if _data.is_empty():
+        push_error("EnemyAI: unknown enemy_id '%s' on %s" % [enemy_id, name])
+        queue_free()
+        return
     var s: Dictionary = _data.get("stats", {})
     _stats.set_stats(s)
     _health.setup(int(s.get("max_health", 10)))
@@ -56,7 +60,7 @@ func _on_died(_source: Node) -> void:
     GameState.kills[enemy_id] = int(GameState.kills.get(enemy_id, 0)) + 1
     PersistentWorldObject.set_state(persistent_id, PersistentWorldObject.STATE_DEAD)
     if _loot:
-        _loot.drop(global_position, get_parent())
+        _loot.drop(global_position, get_parent(), persistent_id)
     set_physics_process(false)
     var t := create_tween()
     t.tween_property(self, "modulate:a", 0.0, 0.3)

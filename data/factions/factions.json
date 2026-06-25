@@ -1,1 +1,16 @@
-{}
+{
+  "faction_valdombra_village": {
+    "id": "faction_valdombra_village",
+    "name": "Valdombra Village",
+    "default_reputation": 0,
+    "hostile_to": ["faction_monsters"],
+    "friendly_to": []
+  },
+  "faction_monsters": {
+    "id": "faction_monsters",
+    "name": "Monsters",
+    "default_reputation": -100,
+    "hostile_to": ["faction_valdombra_village"],
+    "friendly_to": []
+  }
+}

@@ -131,3 +131,17 @@
 - **Consequences**: Review milestones can block feature/content expansion until scalability issues
   are fixed or explicitly scheduled. `ROADMAP.md` is the source of truth for the full sequence;
   `TASKS.md` only expands near-term tasks.
+
+## Decision 12 - Dynamic world objects persist through GameState metadata
+- **Date**: 2026-06-25
+- **Context**: M9 hardening found that runtime-spawned loot could disappear across save/load
+  because only authored scene objects had stable `persistent_id`s.
+- **Decision**: Runtime world objects that must survive save/load are represented in
+  `GameState.world_objects` with a stable generated `persistent_id` and metadata describing how to
+  rebuild them. M9 implements this for dynamic pickups with `state`, `kind`, `map_id`, `item_id`,
+  `count`, and `position`.
+- **Motivation**: Keep one persistence boundary (`GameState`) and avoid serializing arbitrary live
+  scene nodes.
+- **Consequences**: Dynamic systems must register persistable runtime objects before spawning them.
+  Scene loaders rebuild active dynamic objects from state; collected/dead/unlocked states remain
+  state changes on the same `persistent_id`.

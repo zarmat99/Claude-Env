@@ -1,5 +1,5 @@
 extends Control
-## Inventory overlay (M4). Toggle with I. Lists items (name + count) and gold, read from GameState
+## Inventory overlay (M4). Toggle with the inventory action. Lists items (name + count) and gold, read from GameState
 ## via InventoryManager / DataRegistry. Read-only view; no game logic.
 
 @onready var _list: VBoxContainer = $Panel/List
@@ -10,7 +10,7 @@ func _ready() -> void:
     EventBus.item_removed.connect(func(_i, _n): if visible: _refresh())
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_I:
+    if event.is_action_pressed("inventory_toggle"):
         visible = not visible
         if visible:
             _refresh()
@@ -20,7 +20,7 @@ func _refresh() -> void:
     for c in _list.get_children():
         _list.remove_child(c)
         c.queue_free()
-    _add("Inventory    (I to close)", 16, Color(1, 1, 1))
+    _add("Inventory", 16, Color(1, 1, 1))
     _add("Gold: %d" % int(GameState.player.get("gold", 0)), 13, Color(0.95, 0.85, 0.4))
     var inv: Array = InventoryManager.get_items()
     if inv.is_empty():

@@ -12,6 +12,9 @@ var data: Dictionary = {}
 
 func _ready() -> void:
     data = DataRegistry.get_npc(npc_id)
+    if data.is_empty():
+        push_error("NPC: unknown npc_id '%s' on %s" % [npc_id, name])
+        return
     var display_name := String(data.get("name", npc_id))
     _name_label.text = display_name
     _interaction.prompt = "Talk to %s" % display_name

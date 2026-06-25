@@ -94,8 +94,10 @@ in their milestone.
   }
 }
 ```
-**Action types**: `start_quest{quest}` · `advance_quest{quest}` · `give_item{id,count}` ·
-`take_item{id,count}` · `set_flag{flag}` · `give_reward{...}` *(later)*. `next: null` ends dialogue.
+**Implemented action types (M9 validator accepts these)**: `start_quest{quest}` ·
+`advance_quest{quest}` · `set_flag{flag}`. `next: null` ends dialogue.
+**Planned for M11**: `give_item{id,count}` · `take_item{id,count}` · `give_reward{...}`. Until
+implemented, validation rejects them so authoring mistakes do not silently do nothing.
 
 ## npcs/npcs.json
 ```json
@@ -177,10 +179,20 @@ in their milestone.
   "world_objects": {
     "chest_forest_001":     { "state": "opened" },
     "enemy_cave_boss_001":  { "state": "dead" },
-    "door_mine_locked_001": { "state": "unlocked" }
+    "door_mine_locked_001": { "state": "unlocked" },
+    "drop_enemy_cave_slime_001_00": {
+      "state": "active",
+      "kind": "pickup",
+      "item_id": "item_health_potion",
+      "count": 1,
+      "map_id": "map_cave_01",
+      "position": { "x": 260.0, "y": 160.0 }
+    }
   }
 }
 ```
 **Rules**: everything persistable is reachable from `GameState`. `world_objects` is keyed by
 `persistent_id`; on map load, `PersistentWorldObject` nodes read their entry and apply it
-(e.g. an opened chest stays opened, a dead enemy doesn't respawn). `version` enables migrations.
+(e.g. an opened chest stays opened, a dead enemy doesn't respawn). M9 dynamic pickups use
+`kind: "pickup"` with `state: "active"` until collected; collected dynamic pickups preserve their
+metadata but stop respawning once their `state` becomes `"collected"`. `version` enables migrations.

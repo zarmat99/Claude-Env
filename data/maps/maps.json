@@ -2,16 +2,19 @@
   "map_village": {
     "id": "map_village",
     "scene": "res://scenes/maps/Village.tscn",
-    "display_name": "Valdombra Village"
+    "display_name": "Valdombra Village",
+    "spawn_points": ["spawn_default", "spawn_from_forest"]
   },
   "map_forest": {
     "id": "map_forest",
     "scene": "res://scenes/maps/Forest.tscn",
-    "display_name": "Whispering Forest"
+    "display_name": "Whispering Forest",
+    "spawn_points": ["spawn_from_village", "spawn_from_cave"]
   },
   "map_cave_01": {
     "id": "map_cave_01",
     "scene": "res://scenes/maps/Cave.tscn",
-    "display_name": "Old Cave"
+    "display_name": "Old Cave",
+    "spawn_points": ["spawn_from_forest"]
   }
 }

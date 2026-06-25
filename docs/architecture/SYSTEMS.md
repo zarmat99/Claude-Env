@@ -20,36 +20,43 @@ current codebase, so it should avoid "current milestone" language that can go st
   - World: `map_changed(map_id)` · `world_object_state_changed(persistent_id, state)`
   - Progression: `player_level_up(new_level)` · `xp_gained(amount)`
   - Economy: `gold_changed(new_total)`
-- **Implementation**: live; signals used by the M1-M8 systems.
+- **Implementation**: live; signals used by the M1-M9 systems.
 
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
   (`get_item(id)`, `get_quest(id)`, `get_dialogue(id)`, `get_npc(id)`, `get_enemy(id)`,
   `get_faction(id)`, `get_skill(id)`, `get_map(id)`). Fail loudly on bad IDs/malformed data.
 - **Depends on**: nothing (reads files).
-- **Implementation**: live; loads JSON and exposes lookups. Deep schema validation is still light.
+- **Implementation**: M9 adds boot-time and test-callable validation for JSON shape, ID prefixes,
+  cross-file references, quest/dialogue conditions, implemented dialogue actions, map scene paths,
+  declared spawn points, transition targets, loot/reward item refs, and duplicate `persistent_id`s.
+  Lookups push errors for missing IDs instead of quietly accepting them.
 
 ## GameState (autoload) — `scripts/core/GameState.gd`
 - **Role**: single runtime source of truth: `current_map`, player snapshot (position, stats,
   gold, inventory, equipment), `quests {active, completed}`, `factions`, `flags`,
   `world_objects {persistent_id: state}`. Provides new-game defaults.
 - **Depends on**: DataRegistry (defaults). Read/written by managers; serialized by SaveManager.
-- **Implementation**: partial through M7; holds map, player, quest, inventory, flags, kills, and
-  world object state. Save/load uses it as the snapshot boundary; migrations are future work.
+- **Implementation**: holds map, player, quest, inventory, flags, kills, and world object state.
+  M9 dynamic pickups use `world_objects[persistent_id]` entries with `state`, `kind`, `map_id`,
+  `item_id`, `count`, and `position`. Save/load uses GameState as the snapshot boundary;
+  migrations are future work.
 
 ## SceneLoader (autoload) — `scripts/core/SceneLoader.gd`
 - **Role**: load/unload map scenes into `Main/WorldRoot`; place the player at a named
   `SpawnPoint`; emit `map_changed`. Handles `AreaTransition` requests.
 - **Depends on**: GameState, EventBus, DataRegistry (map index).
-- **Implementation**: M6 done; swaps data-driven maps, keeps the persistent player, places
-  `SpawnPoint`s, and emits `map_changed`.
+- **Implementation**: swaps data-driven maps, keeps the persistent player, places `SpawnPoint`s,
+  emits `map_changed`, rejects invalid map/spawn IDs, and respawns active dynamic pickups from
+  `GameState.world_objects`.
 
 ## SaveManager (autoload) — `scripts/core/SaveManager.gd`
 - **Role**: serialize a `GameState` snapshot to `user://saves/slot_N.json` and restore it
   (apply player, quests, flags, and per-`persistent_id` world-object state on load).
 - **Depends on**: GameState (everything persistable flows through it). Schema in DATA_SCHEMAS.
-- **Implementation**: M7 done; F5 saves slot 0, F9 loads slot 0. Load restores the snapshot without
-  emitting `map_changed`, so quest stages do not advance merely because a saved map is reloaded.
+- **Implementation**: M7 save/load is live; M9 moves debug save/load keys behind input actions
+  (`save_game`, `load_game`). Load restores the snapshot without emitting `map_changed`, so quest
+  stages do not advance merely because a saved map is reloaded.
 
 ## IdUtils (static class) — `scripts/core/IdUtils.gd`
 - **Role**: helpers for IDs (validation, prefix checks, persistent-id formatting). Not an autoload.
@@ -60,8 +67,10 @@ current codebase, so it should avoid "current milestone" language that can go st
   `AreaTransition` triggers map swaps; `SpawnPoint` marks placement; `PersistentWorldObject`
   reads/writes its state by `persistent_id`.
 - **Depends on**: SceneLoader, GameState, EventBus.
-- **Implementation**: M7 basics done (`SpawnPoint`, `AreaTransition`, `PlaceholderMap`,
-  `PersistentWorldObject` helper). Pickups and enemies apply `collected` / `dead` state on map load.
+- **Implementation**: `SpawnPoint`, `AreaTransition`, `PlaceholderMap`, and
+  `PersistentWorldObject` are live. Static pickups/enemies apply `collected` / `dead` state on map
+  load. M9 adds active dynamic pickup state so runtime loot drops can be saved and respawned until
+  collected.
 
 ## QuestManager (autoload) — `scripts/quest/*`
 - **Role**: start/advance/complete quests; evaluate `advance_on` conditions against GameState;
@@ -74,16 +83,17 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Role**: run a dialogue graph; evaluate node/choice `conditions`; execute `actions`
   (start/advance quest, give/take item, set flag); drive `DialogueBox`. Model: `DialogueData`.
 - **Depends on**: DataRegistry, GameState, EventBus, QuestManager/InventoryManager (for actions).
-- **Implementation**: dialogue graph, conditional choices, pause handling, and quest actions are
-  live. `give_item` / `take_item` actions are still schema-level placeholders.
+- **Implementation**: dialogue graph, conditional choices, pause handling, and implemented actions
+  (`set_flag`, `start_quest`, `advance_quest`) are live. M9 validation rejects unsupported action
+  types until M11 implements the production dialogue action set.
 
 ## InventoryManager (autoload) + InventoryComponent — `scripts/inventory/*`, `scripts/components/InventoryComponent.gd`
 - **Role**: add/remove/query items, stacking, weight (later); `InventoryComponent` is the
   per-actor container; `InventoryManager` brokers operations + emits `item_added/removed`.
   Model: `ItemData`.
 - **Depends on**: DataRegistry, GameState, EventBus.
-- **Implementation**: player inventory, stacking, pickups, and inventory UI are live. Non-player
-  inventory containers remain future work.
+- **Implementation**: player inventory, stacking, pickups, and inventory UI are live. M9 makes
+  add/remove reject unknown item IDs. Non-player inventory containers remain future work.
 
 ## Combat — `scripts/combat/*`, components
 - **Role**: `Hitbox`/`Hurtbox` (Area2D) detect hits; `DamageData` carries amount/type/source;
@@ -91,7 +101,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   combat stats; `CombatSystem` mediates rules. `LootComponent` drops loot on death.
 - **Depends on**: EventBus, GameState (rewards), DataRegistry (enemy/loot defs).
 - **Implementation**: M5 simple combat is live (health, stats, hitbox/hurtbox, enemy AI, loot).
-  `DamageData` / `CombatSystem` are still deferred until needed.
+  M9 loot drops register dynamic pickup persistence state. `DamageData` / `CombatSystem` are still
+  deferred until needed.
 
 ## Progression — `scripts/progression/ProgressionManager.gd`, `StatsComponent`, skills data
 - **Role**: XP gain, level-up curve, stat growth, (later) skills. Reacts to `xp_gained`,
@@ -113,3 +124,10 @@ current codebase, so it should avoid "current milestone" language that can go st
   managers; they never own game logic.
 - **Depends on**: EventBus + managers (read-only).
 - **Implementation**: HUD (M1), DialogueBox (M2), QuestJournalUI (M3), InventoryUI (M4) are live.
+  M9 routes journal/inventory toggles through input actions.
+
+## Testing / checks - `tests/headless/*`
+- **Role**: persistent regression coverage for milestone-critical flows.
+- **Implementation**: M9 adds `tests/headless/M9RegressionRunner.tscn` plus `test.bat`. The runner
+  covers data validation, boot, map transitions, first quest completion, save/load, progression,
+  and dynamic pickup persistence.

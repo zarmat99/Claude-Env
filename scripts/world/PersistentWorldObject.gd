@@ -4,6 +4,8 @@ extends Node
 
 const STATE_COLLECTED := "collected"
 const STATE_DEAD := "dead"
+const STATE_ACTIVE := "active"
+const KIND_PICKUP := "pickup"
 
 @export var persistent_id: String = ""
 @export var remove_when_state: Array[String] = [STATE_COLLECTED, STATE_DEAD]
@@ -26,7 +28,29 @@ static func should_remove(persistent_id: String, removed_states: Array[String]) 
     return removed_states.has(get_state(persistent_id))
 
 static func set_state(persistent_id: String, state: String) -> void:
-    if persistent_id == "" or state == "":
+    if persistent_id == "":
+        push_error("PersistentWorldObject: cannot set state on an empty persistent_id")
         return
-    GameState.world_objects[persistent_id] = {"state": state}
+    if state == "":
+        return
+    var entry: Dictionary = GameState.world_objects.get(persistent_id, {})
+    entry["state"] = state
+    GameState.world_objects[persistent_id] = entry
     EventBus.world_object_state_changed.emit(persistent_id, state)
+
+static func register_dynamic_pickup(persistent_id: String, item_id: String, count: int, map_id: String, position: Vector2) -> void:
+    if persistent_id == "":
+        push_error("PersistentWorldObject: dynamic pickup needs a persistent_id")
+        return
+    if item_id == "" or count <= 0 or map_id == "":
+        push_error("PersistentWorldObject: invalid dynamic pickup '%s'" % persistent_id)
+        return
+    GameState.world_objects[persistent_id] = {
+        "state": STATE_ACTIVE,
+        "kind": KIND_PICKUP,
+        "item_id": item_id,
+        "count": count,
+        "map_id": map_id,
+        "position": {"x": position.x, "y": position.y},
+    }
+    EventBus.world_object_state_changed.emit(persistent_id, STATE_ACTIVE)

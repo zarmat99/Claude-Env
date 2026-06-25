@@ -8,28 +8,44 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — M9 is ready to start)
+- (none — M10 is ready to start)
 
 ## Backlog
 
-### Milestone 9 — Data & tooling hardening
-- **M9-T1 · Data validators + duplicate ID / persistent_id checks** · backlog: validate JSON shape,
-  content IDs, cross-file references, scene paths, map/spawn references, unsupported dialogue
-  actions, and duplicate `persistent_id`s.
-- **M9-T2 · Repeatable headless smoke/regression checks** · backlog: persistent tests for boot,
-  data validation, map transitions, first quest flow, save/load, and progression.
-- **M9-T3 · Input-map cleanup for hardcoded controls** · backlog: inventory, journal, attack,
-  save, and load actions.
-- **M9-T4 · Dynamic world-object persistence contract** · backlog: especially dropped loot spawned
-  at runtime.
-- **M9-T5 · Runtime guardrails for unknown content IDs** · backlog: managers should reject unknown
-  IDs rather than creating invalid state.
+### Milestone 10 — World authoring pipeline
+- **M10-T1 · Map index and authoring conventions** · backlog.
+- **M10-T2 · Persistent world-object library** · backlog: chests, doors, switches, and reusable
+  placement conventions.
+- **M10-T3 · Spawn/transition/encounter validation expansion** · backlog.
+- **M10-T4 · Dev sandbox vs production start separation** · backlog.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M10-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M9-V1 · Verify M9 in Godot, then commit/push** · M9 · files: `test.bat`,
+  `tests/headless/M9RegressionRunner.{gd,tscn}` · **done** (2026-06-25): Godot import and M9
+  regression suite pass; command verified via `.\test.bat`.
+- **M9-T1 · Data validators + duplicate ID / persistent_id checks** · M9 · files:
+  `scripts/core/DataRegistry.gd`, `data/{factions,maps}.json` · **done** (2026-06-25): added
+  preflight validation for JSON shape, content IDs, cross-file
+  references, scene paths, map/spawn references, unsupported dialogue actions, loot/reward refs,
+  and duplicate `persistent_id`s.
+- **M9-T2 · Repeatable headless smoke/regression checks** · M9 · files:
+  `tests/headless/M9RegressionRunner.{gd,tscn}`, `test.bat` · **done** (2026-06-25): persistent
+  suite covers data validation, boot, map transitions,
+  first quest flow, save/load, progression, and dynamic pickup persistence.
+- **M9-T3 · Input-map cleanup for hardcoded controls** · M9 · files:
+  `project.godot`, `scripts/{ui,player,core}` · **done** (2026-06-25): inventory, journal,
+  attack, save, and load now use input actions.
+- **M9-T4 · Dynamic world-object persistence contract** · M9 · files:
+  `scripts/components/LootComponent.gd`, `scripts/world/PersistentWorldObject.gd`,
+  `scripts/core/SceneLoader.gd` · **done** (2026-06-25): runtime loot drops register active dynamic
+  pickup state in `GameState.world_objects` and respawn from it.
+- **M9-T5 · Runtime guardrails for unknown content IDs** · M9 · files:
+  `scripts/{inventory,dialogue,quest,core,items,enemies,npcs,progression}` · **done** (2026-06-25):
+  unknown IDs now push errors and refuse invalid state in manager and scene entry points.
 - **SR1-T1 · Review core scalability after M8** · SR1 · files:
   `docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md` · **done** (2026-06-25): project remains scalable
   enough to proceed; required hardening promoted into M9; no rewrite needed before M9.
