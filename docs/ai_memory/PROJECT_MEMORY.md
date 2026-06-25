@@ -47,26 +47,27 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 3 — COMPLETE and verified in Godot 4.3.** (M0–M2 complete before it.)
-- Staged, data-driven **quests**: the Blacksmith offers `quest_first_dungeon` (dialogue choices are
-  now gated by quest state); accepting starts it; stages advance via events (entered_area, has_item,
-  talked_to); completion grants rewards (gold + item). A **quest journal** (key J) lists
-  active/completed quests. `Conditions.gd` evaluates conditions for both quests and dialogue.
-- `QuestManager` is a live autoload; dialogue `conditions` are now evaluated (were ignored in M2).
-- Verified: import clean; full quest flow + reward + dialogue-gating checks pass; journal screenshot.
-- Note: the quest can't yet be finished *in-world* (needs the cave map at M6 + item pickup at M4);
-  the systems are proven via events.
-- Next: Milestone 4 (inventory & items).
+- **Milestone 4 — COMPLETE and verified in Godot 4.3.** (M0–M3 complete before it.)
+- Items are data-driven (`items.json`); `InventoryManager` brokers the player's inventory
+  (stacking/max_stack); `PickupItem` auto-collects on walk-over (with a `persistent_id`); an
+  **inventory UI** toggles with **I**. Picking items up emits `item_added`, which the quest system
+  reads (`has_item`).
+- Verified: stacking, remove, auto-pickup, and has_item→quest advancement; inventory screenshot.
+- Note: `quest_first_dungeon` still can't be finished purely in-world (its `entered_area` cave stage
+  needs the cave map at M6); systems proven via events.
+- Next: Milestone 5 (combat).
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
-- **M2**: `DataRegistry` (loads all JSON by ID), `InteractionComponent` + `PlayerInteraction`, `NPC`
-  (data-driven), `DialogueManager` + `DialogueBox`. EventBus +`interaction_prompt_changed`.
-- **M3**: `Conditions.gd` (shared predicate eval), `QuestManager` (staged, event-driven quests +
-  rewards), `QuestJournalUI` (key J). Dialogue now filters choices by `conditions` and runs
-  `start_quest`/`advance_quest`. EventBus +`npc_talked`; GameState +`kills`.
-- **Autoloads live**: EventBus, GameState, DataRegistry, QuestManager, DialogueManager.
-  **Still stubs**: SceneLoader, SaveManager (fleshed out at M6 / M7).
+- **M2**: `DataRegistry`, `InteractionComponent` + `PlayerInteraction`, `NPC`, `DialogueManager` +
+  `DialogueBox`.
+- **M3**: `Conditions.gd` (shared predicate eval), `QuestManager` (staged, event-driven + rewards),
+  `QuestJournalUI` (J). Dialogue filters choices by `conditions` + runs `start_quest`/`advance_quest`.
+- **M4**: `InventoryManager` (player inventory broker, stacking), `PickupItem` (Area2D auto-collect
+  + persistent_id), `InventoryUI` (I). Quest rewards now go through InventoryManager.
+- **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
+  DialogueManager. **Still stubs**: SceneLoader, SaveManager (fleshed out at M6 / M7).
+- **UI toggle keys**: J = quest journal, I = inventory.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M1 Player + test map + camera + HUD.
@@ -114,13 +115,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M3 — Quest system: COMPLETE** (staged data-driven quests, condition eval, journal; verified in
-Godot 4.3). M0–M2 complete before it. M4 not started.
+**M4 — Inventory & items: COMPLETE** (items.json, InventoryManager, PickupItem, InventoryUI;
+verified in Godot 4.3). M0–M3 complete before it. M5 not started.
 
 ## 12. Recommended next step
-Begin **Milestone 4** (on the user's go-ahead): `ItemData` + `items.json` → `InventoryManager`
-(+ `InventoryComponent`) → `PickupItem` (collectible) → `InventoryUI`. This makes the quest's
-`has_item` stage reachable in-world (pick up the fragment).
+Begin **Milestone 5** (on the user's go-ahead): `HealthComponent` / `StatsComponent` →
+`Hitbox`/`Hurtbox` + `DamageData` → an enemy (`EnemyBase`/`Slime` + `EnemyAI`) → damage + death →
+basic loot on death (first non-player inventory → introduce `InventoryComponent`/`LootComponent`).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

@@ -6,6 +6,9 @@ class_name PlayerController
 
 @export var speed: float = 110.0  # pixels per second
 
+func _ready() -> void:
+    add_to_group("player")  # so PickupItem (and future systems) can identify the player
+
 func _physics_process(_delta: float) -> void:
     var dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
     velocity = dir * speed

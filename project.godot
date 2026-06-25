@@ -22,6 +22,7 @@ DataRegistry="*res://scripts/core/DataRegistry.gd"
 GameState="*res://scripts/core/GameState.gd"
 SceneLoader="*res://scripts/core/SceneLoader.gd"
 SaveManager="*res://scripts/core/SaveManager.gd"
+InventoryManager="*res://scripts/inventory/InventoryManager.gd"
 QuestManager="*res://scripts/quest/QuestManager.gd"
 DialogueManager="*res://scripts/dialogue/DialogueManager.gd"
 

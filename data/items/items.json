@@ -1,1 +1,35 @@
-{}
+{
+  "item_health_potion": {
+    "id": "item_health_potion",
+    "name": "Health Potion",
+    "type": "consumable",
+    "stackable": true,
+    "max_stack": 99,
+    "value": 10,
+    "weight": 0.2,
+    "use_effect": { "type": "heal", "amount": 25 },
+    "description": "Restores a little health."
+  },
+  "item_iron_sword": {
+    "id": "item_iron_sword",
+    "name": "Iron Sword",
+    "type": "weapon",
+    "slot": "main_hand",
+    "stackable": false,
+    "max_stack": 1,
+    "value": 25,
+    "weight": 3.0,
+    "stats": { "damage": 6 },
+    "description": "A plain but reliable blade."
+  },
+  "item_ancient_iron_fragment": {
+    "id": "item_ancient_iron_fragment",
+    "name": "Ancient Iron Fragment",
+    "type": "quest",
+    "stackable": false,
+    "max_stack": 1,
+    "value": 0,
+    "weight": 0.5,
+    "description": "A shard of strangely old iron. The blacksmith wants it."
+  }
+}

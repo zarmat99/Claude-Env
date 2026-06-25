@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-06-25 — Session 005 — Milestone 4: inventory & items
+
+- **Goal**: data-driven items, an inventory broker, world pickups, an inventory UI; the quest reads
+  picked-up items.
+- **Files created**: `scripts/inventory/InventoryManager.gd` (autoload), `scripts/items/PickupItem.gd`
+  + `scenes/items/PickupItem.tscn`, `scripts/ui/InventoryUI.gd` + `scenes/ui/InventoryUI.tscn`.
+- **Files modified**: `data/items/items.json` (health_potion, iron_sword, ancient_iron_fragment),
+  `project.godot` (+InventoryManager autoload, before QuestManager), `scripts/quest/QuestManager.gd`
+  (rewards now call `InventoryManager.add`; removed the temporary `_add_item`),
+  `scripts/player/PlayerController.gd` (joins group "player"), `scenes/maps/Village.tscn` (2
+  health-potion pickups), `scenes/main/Main.gd` (+InventoryUI).
+- **Design**: the player's inventory stays in `GameState.player.inventory` (save-friendly);
+  `InventoryManager` brokers it honoring stackable/max_stack. `PickupItem` = Area2D that
+  auto-collects on player overlap, carries a `persistent_id`, and marks `GameState.world_objects`
+  collected (M7 hook). Inventory UI toggles with **I**. Non-player inventories
+  (containers/merchants) are deferred to an `InventoryComponent` when first needed (M5+).
+- **Tests (headless)**: items load; stacking (3 potions = 1 slot, +sword = 2 slots); remove;
+  auto-pickup on overlap (+1, node freed); `has_item` advanced the quest (forced stage 10 → 20).
+  Screenshot: inventory shows Health Potion x3, Iron Sword x1, Ancient Iron Fragment x1, Gold 0.
+- **Note**: Area2D `body_entered` needs a few physics frames; the first pickup test under-waited
+  (fixed by awaiting more frames). Real walk-over works.
+- **Final result**: **Milestone 4 COMPLETE and verified.** Play: walk over the yellow pickups in
+  the village, press **I** to view the inventory.
+- **Next**: Milestone 5 — combat (HealthComponent, Hitbox/Hurtbox, an enemy, damage/death, loot).
+
+---
+
 ## 2026-06-25 — Session 004 — Milestone 3: quest system
 
 - **Goal**: staged, data-driven quests; dialogue that starts/gates by quest state; a journal.

@@ -8,12 +8,13 @@ const PlayerScene := preload("res://scenes/player/Player.tscn")
 const HUDScene := preload("res://scenes/ui/HUD.tscn")
 const DialogueBoxScene := preload("res://scenes/ui/DialogueBox.tscn")
 const QuestJournalScene := preload("res://scenes/ui/QuestJournalUI.tscn")
+const InventoryUIScene := preload("res://scenes/ui/InventoryUI.tscn")
 
 @onready var _world: Node2D = $WorldRoot
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 3.")
+    print("[Valdombra] Boot OK - Milestone 4.")
 
     var map := VillageScene.instantiate()
     _world.add_child(map)
@@ -27,3 +28,4 @@ func _ready() -> void:
     _ui.add_child(HUDScene.instantiate())
     _ui.add_child(DialogueBoxScene.instantiate())
     _ui.add_child(QuestJournalScene.instantiate())
+    _ui.add_child(InventoryUIScene.instantiate())

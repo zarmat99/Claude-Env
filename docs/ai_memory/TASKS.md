@@ -8,15 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — awaiting user go-ahead for Milestone 4)
+- (none — awaiting user go-ahead for Milestone 5)
 
 ## Backlog
-
-### Milestone 4 — Inventory & items
-- **M4-T1 · ItemData + items.json** · backlog.
-- **M4-T2 · InventoryManager / InventoryComponent** · backlog.
-- **M4-T3 · PickupItem + collectible** · backlog.
-- **M4-T4 · Quest detects required item** · backlog.
 
 ### Milestone 5 — Combat
 - **M5-T1 · HealthComponent / StatsComponent** · backlog.
@@ -65,6 +59,15 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **M3-T3 · QuestJournalUI** (toggle J; active + completed) · M3 · **done** (2026-06-25).
 - **M3-T4 · Blacksmith assigns quest_first_dungeon** (dialogue `start_quest` action; choices gated
   by quest state) · M3 · **done** (2026-06-25). Verified full flow headless + screenshot.
+- **M4-T1 · items.json + item access** (health_potion, iron_sword, ancient_iron_fragment; items as
+  dicts via DataRegistry) · M4 · **done** (2026-06-25).
+- **M4-T2 · InventoryManager** (autoload broker over GameState.player.inventory; stacking/max_stack;
+  add/remove/count) · M4 · **done** (2026-06-25). InventoryComponent deferred to first non-player
+  inventory (M5+).
+- **M4-T3 · PickupItem** (Area2D auto-collect on player overlap; persistent_id → world_objects) ·
+  M4 · **done** (2026-06-25).
+- **M4-T4 · Inventory UI + quest reads items** (InventoryUI toggle I; has_item advances quest) ·
+  M4 · **done** (2026-06-25). Verified headless + screenshot.
 
 ## Blocked
 - (none)

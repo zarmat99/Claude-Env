@@ -106,20 +106,7 @@ func _grant_rewards(rewards: Dictionary) -> void:
         GameState.player["gold"] = int(GameState.player.get("gold", 0)) + gold
         EventBus.gold_changed.emit(GameState.player["gold"])
     for item in rewards.get("items", []):
-        _add_item(String(item.get("id", "")), int(item.get("count", 1)))
-
-# Direct inventory write until InventoryManager exists (M4).
-func _add_item(item_id: String, count: int) -> void:
-    if item_id == "" or count <= 0:
-        return
-    var inv: Array = GameState.player["inventory"]
-    for slot in inv:
-        if String(slot.get("id", "")) == item_id:
-            slot["count"] = int(slot.get("count", 0)) + count
-            EventBus.item_added.emit(item_id, count)
-            return
-    inv.append({"id": item_id, "count": count})
-    EventBus.item_added.emit(item_id, count)
+        InventoryManager.add(String(item.get("id", "")), int(item.get("count", 1)))
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
