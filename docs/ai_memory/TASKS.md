@@ -8,15 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — awaiting user go-ahead for Milestone 5)
+- (none — awaiting user go-ahead for Milestone 6)
 
 ## Backlog
-
-### Milestone 5 — Combat
-- **M5-T1 · HealthComponent / StatsComponent** · backlog.
-- **M5-T2 · Hitbox/Hurtbox + DamageData** · backlog.
-- **M5-T3 · EnemyBase + Slime/EnemyAI** · backlog.
-- **M5-T4 · LootComponent (basic loot on death)** · backlog.
 
 ### Milestone 6 — Vertical slice
 - **M6-T1 · Village/Forest/Cave maps + AreaTransition/SpawnPoint** · backlog.
@@ -68,6 +62,15 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   M4 · **done** (2026-06-25).
 - **M4-T4 · Inventory UI + quest reads items** (InventoryUI toggle I; has_item advances quest) ·
   M4 · **done** (2026-06-25). Verified headless + screenshot.
+- **M5-T1 · HealthComponent / StatsComponent** (reusable; EventBus actor_damaged/died) · M5 ·
+  **done** (2026-06-25).
+- **M5-T2 · Hitbox / Hurtbox** (team via collision layers; DamageData deferred — amount+source) ·
+  M5 · **done** (2026-06-25).
+- **M5-T3 · EnemyBase + Slime + EnemyAI** (chase + touch damage; data-driven stats) · M5 · **done**
+  (2026-06-25).
+- **M5-T4 · Death → kills + LootComponent + PlayerCombat** (killed_enemy hook; loot drops; melee
+  attack; player health synced to GameState) · M5 · **done** (2026-06-25). Verified headless +
+  screenshot.
 
 ## Blocked
 - (none)

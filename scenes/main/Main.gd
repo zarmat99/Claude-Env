@@ -14,7 +14,7 @@ const InventoryUIScene := preload("res://scenes/ui/InventoryUI.tscn")
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 4.")
+    print("[Valdombra] Boot OK - Milestone 5.")
 
     var map := VillageScene.instantiate()
     _world.add_child(map)

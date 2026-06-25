@@ -4,6 +4,35 @@
 
 ---
 
+## 2026-06-25 — Session 006 — Milestone 5: combat
+
+- **Goal**: reusable combat components, a melee attack, an enemy that chases/damages, death + loot,
+  the `killed_enemy` quest hook.
+- **Files created**: `scripts/components/{HealthComponent,StatsComponent,LootComponent}.gd`,
+  `scripts/combat/{Hitbox,Hurtbox}.gd`, `scripts/enemies/EnemyAI.gd`, `scripts/player/PlayerCombat.gd`,
+  `scenes/enemies/{EnemyBase,Slime}.tscn`.
+- **Files modified**: `data/enemies/enemies.json` (enemy_slime), `scenes/player/Player.tscn`
+  (+HealthComponent, +AttackHitbox, +PlayerCombat), `scenes/maps/Village.tscn` (+Slime),
+  `scenes/main/Main.gd` (print).
+- **Design**: `HealthComponent` (take_damage/heal; emits `actor_damaged`/`actor_died`; `owner` =
+  actor). `Hitbox.strike()` enables for 2 physics frames and damages overlapping `Hurtbox`es; teams
+  via collision layers (player hurt = 8, enemy hurt = 16; player AttackHitbox masks 16). Enemy =
+  CharacterBody2D + components + `EnemyAI` (chase in aggro range, touch damage on cooldown). On
+  death: `GameState.kills[enemy_id]++` (so `killed_enemy` conditions work) + `LootComponent` drops
+  PickupItems + fade/free. `PlayerCombat` owns the player's HealthComponent and syncs health into
+  `GameState.player.stats.health` (HUD/save). Attack = left mouse (hardcoded; rebindable later).
+  `DamageData` not introduced yet (amount + source suffice).
+- **Tests (headless)**: 2 hits killed the slime (12 hp, 6 dmg); `kills["enemy_slime"]=1`;
+  `killed_enemy` condition true; enemy touch damage reduced player 30 → 28 (HUD updated);
+  LootComponent spawned a pickup deterministically. Screenshot: player + slime, HUD HP 28/30.
+- **Note**: player death is an M5 placeholder (respawn at full HP); real game-over later.
+- **Final result**: **Milestone 5 COMPLETE and verified.** Play: approach the green slime, left-click
+  to attack.
+- **Next**: Milestone 6 — vertical slice (Village/Forest/Cave + transitions; the fragment quest
+  end-to-end via SceneLoader).
+
+---
+
 ## 2026-06-25 — Session 005 — Milestone 4: inventory & items
 
 - **Goal**: data-driven items, an inventory broker, world pickups, an inventory UI; the quest reads

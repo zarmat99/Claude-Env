@@ -1,1 +1,10 @@
-{}
+{
+  "enemy_slime": {
+    "id": "enemy_slime",
+    "name": "Slime",
+    "faction": "faction_monsters",
+    "stats": { "max_health": 12, "damage": 2, "move_speed": 45 },
+    "loot_table": [ { "id": "item_health_potion", "chance": 0.5, "count": 1 } ],
+    "xp_reward": 8
+  }
+}

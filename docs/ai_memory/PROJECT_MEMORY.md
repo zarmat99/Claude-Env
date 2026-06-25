@@ -47,15 +47,15 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 4 — COMPLETE and verified in Godot 4.3.** (M0–M3 complete before it.)
-- Items are data-driven (`items.json`); `InventoryManager` brokers the player's inventory
-  (stacking/max_stack); `PickupItem` auto-collects on walk-over (with a `persistent_id`); an
-  **inventory UI** toggles with **I**. Picking items up emits `item_added`, which the quest system
-  reads (`has_item`).
-- Verified: stacking, remove, auto-pickup, and has_item→quest advancement; inventory screenshot.
-- Note: `quest_first_dungeon` still can't be finished purely in-world (its `entered_area` cave stage
-  needs the cave map at M6); systems proven via events.
-- Next: Milestone 5 (combat).
+- **Milestone 5 — COMPLETE and verified in Godot 4.3.** (M0–M4 complete before it.)
+- Combat: reusable `HealthComponent`/`StatsComponent`, `Hitbox`/`Hurtbox`, a melee attack
+  (left mouse), and an enemy `Slime` that chases and deals touch damage. Killing it counts toward
+  `killed_enemy` conditions and drops loot (`LootComponent`); player damage flows to the HUD via
+  GameState.
+- Verified: 2 hits kill the slime; kills counter + killed_enemy condition; touch damage to player;
+  loot spawns; combat screenshot.
+- Note: player death is a placeholder (respawn at full HP); real game-over later.
+- Next: Milestone 6 (vertical slice: 3 maps + transitions + the fragment quest end-to-end).
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -64,10 +64,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **M3**: `Conditions.gd` (shared predicate eval), `QuestManager` (staged, event-driven + rewards),
   `QuestJournalUI` (J). Dialogue filters choices by `conditions` + runs `start_quest`/`advance_quest`.
 - **M4**: `InventoryManager` (player inventory broker, stacking), `PickupItem` (Area2D auto-collect
-  + persistent_id), `InventoryUI` (I). Quest rewards now go through InventoryManager.
+  + persistent_id), `InventoryUI` (I). Quest rewards go through InventoryManager.
+- **M5**: `HealthComponent`, `StatsComponent`, `Hitbox`/`Hurtbox`, `LootComponent`, `EnemyAI`
+  (Slime), `PlayerCombat` (melee + player health synced to GameState). EventBus actor_damaged/died;
+  `GameState.kills` feeds `killed_enemy`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
   DialogueManager. **Still stubs**: SceneLoader, SaveManager (fleshed out at M6 / M7).
-- **UI toggle keys**: J = quest journal, I = inventory.
+- **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M1 Player + test map + camera + HUD.
@@ -115,13 +118,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M4 — Inventory & items: COMPLETE** (items.json, InventoryManager, PickupItem, InventoryUI;
-verified in Godot 4.3). M0–M3 complete before it. M5 not started.
+**M5 — Combat: COMPLETE** (health, hit/hurt, enemy AI, death + loot, killed_enemy; verified in
+Godot 4.3). M0–M4 complete before it. M6 not started.
 
 ## 12. Recommended next step
-Begin **Milestone 5** (on the user's go-ahead): `HealthComponent` / `StatsComponent` →
-`Hitbox`/`Hurtbox` + `DamageData` → an enemy (`EnemyBase`/`Slime` + `EnemyAI`) → damage + death →
-basic loot on death (first non-player inventory → introduce `InventoryComponent`/`LootComponent`).
+Begin **Milestone 6** (on the user's go-ahead): build Forest + Cave maps + `AreaTransition` /
+`SpawnPoint`, move map loading into `SceneLoader` (data-driven via `maps.json`), place the fragment
+pickup + a slime in the cave, and wire `quest_first_dungeon` end-to-end (cave → fragment → return).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

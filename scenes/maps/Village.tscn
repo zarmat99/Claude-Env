@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/Village.gd" id="1_village"]
 [ext_resource type="PackedScene" path="res://scenes/npcs/Blacksmith.tscn" id="2_smith"]
 [ext_resource type="PackedScene" path="res://scenes/items/PickupItem.tscn" id="3_pick"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Slime.tscn" id="4_slime"]
 
 [node name="Village" type="Node2D"]
 script = ExtResource("1_village")
@@ -19,3 +20,6 @@ persistent_id = "potion_village_001"
 position = Vector2(520, 250)
 item_id = "item_health_potion"
 persistent_id = "potion_village_002"
+
+[node name="Slime" parent="." instance=ExtResource("4_slime")]
+position = Vector2(560, 200)

@@ -1,13 +1,19 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="1_pc"]
 [ext_resource type="Script" path="res://scripts/player/PlayerInteraction.gd" id="2_pi"]
+[ext_resource type="Script" path="res://scripts/components/HealthComponent.gd" id="3_hc"]
+[ext_resource type="Script" path="res://scripts/combat/Hitbox.gd" id="4_hit"]
+[ext_resource type="Script" path="res://scripts/player/PlayerCombat.gd" id="5_cmb"]
 
 [sub_resource type="RectangleShape2D" id="rect_player"]
 size = Vector2(14, 14)
 
 [sub_resource type="CircleShape2D" id="circle_inter"]
 radius = 22.0
+
+[sub_resource type="CircleShape2D" id="circle_attack"]
+radius = 26.0
 
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
@@ -31,3 +37,20 @@ script = ExtResource("2_pi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerInteraction"]
 shape = SubResource("circle_inter")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_hc")
+max_health = 30
+
+[node name="AttackHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitoring = false
+script = ExtResource("4_hit")
+damage = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox"]
+shape = SubResource("circle_attack")
+
+[node name="PlayerCombat" type="Node" parent="."]
+script = ExtResource("5_cmb")
