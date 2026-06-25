@@ -83,15 +83,16 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   save F5 · load F9.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
-- M1 Player + test map + camera + HUD.
-- M2 Interaction + NPC + DialogueBox + first data-driven dialogue.
-- M3 Quest system (staged) + QuestJournalUI.
-- M4 Inventory + items + pickups.
-- M5 Combat (Health, Hitbox/Hurtbox) + enemy + loot.
-- M6 Vertical slice (Village/Forest/Cave + transitions + fetch quest).
-- M8 Progression (XP/level/stats).
-- Later (designed, not built): factions, reputation, economy, merchants, equipment depth,
-  crafting, magic, skill tree, crime, NPC routines, modular dungeons.
+- M8 Progression (XP/level/stats) remains the next implementation milestone.
+- M9-M20 are now scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
+  to production content: tooling/data validation, world authoring, quest/dialogue pipeline, factions,
+  economy/equipment, combat/skills/magic, dungeons, UX/persistence hardening, art/audio pipeline,
+  first real region/story act, world expansion, and alpha stabilization.
+- Scalability reviews are explicit milestones: SR1 after M8, SR2 after world authoring, SR3 after
+  narrative systems, SR4 before production region work, and SR5 before broad world/story expansion.
+- Strategic rule: keep the current Village/Forest/Cave content as dev sandbox/regression content
+  until a real production region exists; do not let test content become a hidden dependency of core
+  systems.
 
 ## 8. What NOT to do
 - ❌ No giant `Player.gd` that does everything.
@@ -133,7 +134,8 @@ in Godot 4.3). M0–M6 complete before it. M8 not started.
 ## 12. Recommended next step
 Begin **Milestone 8** (on the user's go-ahead): progression — XP storage, level thresholds, stat
 growth, and rewards from quests/kills. Hook `xp_gained` and existing enemy/quest reward data into
-`GameState.player.stats.xp` and level-up behavior.
+`GameState.player.stats.xp` and level-up behavior. After M8, perform **SR1 — Core scalability
+review** before adding broader production systems.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

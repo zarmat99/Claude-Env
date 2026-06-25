@@ -115,3 +115,19 @@
 - **Motivation**: Maximum portability for agents/tooling; consistency with code.
 - **Alternatives considered**: Italian (user's working language). Will switch on request.
 - **Consequences**: If the user prefers Italian, translate and keep one language consistently.
+
+## Decision 11 — Roadmap includes mandatory scalability reviews
+- **Date**: 2026-06-25
+- **Context**: M0-M7 proved the prototype skeleton. Before producing the real map and story, the
+  project needs explicit guardrails so test content does not become a hidden dependency and broad
+  content creation remains mostly authoring work.
+- **Decision**: Extend the roadmap through M20 and insert named scalability review gates: SR1 after
+  progression, SR2 after world authoring, SR3 after narrative systems, SR4 before production region
+  work, and SR5 before broad world/story expansion.
+- **Motivation**: Keep the main objective visible: build systems and pipelines that make creating
+  the real game world and story straightforward, repeatable, and safe.
+- **Alternatives considered**: Continue feature milestones without review gates (too easy to drift);
+  start real content immediately after M8 (too much risk before validation/tooling hardening).
+- **Consequences**: Review milestones can block feature/content expansion until scalability issues
+  are fixed or explicitly scheduled. `ROADMAP.md` is the source of truth for the full sequence;
+  `TASKS.md` only expands near-term tasks.

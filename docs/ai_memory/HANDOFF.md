@@ -23,15 +23,16 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, pushed.
 
 ## Last thing done
-Built Milestone 7 (save/load): `SaveManager` JSON snapshots under `user://saves/slot_N.json`,
-restore through `SceneLoader` without emitting `map_changed`, `PersistentWorldObject` helper,
-pickup collected-state reuse, enemy `persistent_id` + dead-state persistence, and F5/F9 controls.
-Verified with a headless M7 save/load scene and a clean boot run.
+Updated `docs/architecture/ROADMAP.md` from an M0-M8 prototype roadmap into a production-scalability
+roadmap through M20, with explicit scalability review gates SR1-SR5. The strategic intent is now:
+finish core systems, harden tooling/validation, build authoring pipelines, then produce the real
+world/story content.
 
 ## Next thing to do
 Begin **Milestone 8 — Progression** (on user go-ahead): store XP in
 `GameState.player.stats.xp`, react to `EventBus.xp_gained`, add level thresholds/stat growth, and
-wire quest/enemy XP rewards into level-up behavior. See `TASKS.md` (M8).
+wire quest/enemy XP rewards into level-up behavior. See `TASKS.md` (M8). After M8, do **SR1 —
+Core scalability review** before continuing to M9.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

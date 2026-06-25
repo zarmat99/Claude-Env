@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-06-25 — Session 010 — Production roadmap and scalability gates
+
+- **Goal**: update the roadmap now that the prototype skeleton is substantial enough to plan the
+  path toward the real game map and story.
+- **Files modified**: `docs/architecture/ROADMAP.md`, `docs/ai_memory/{PROJECT_MEMORY,HANDOFF,
+  TASKS,DECISIONS,SESSION_LOG}.md`.
+- **Design**: roadmap now continues beyond M8 through M20 and includes mandatory scalability review
+  gates SR1-SR5. The reviews protect the main objective: systems and authoring pipelines should make
+  it simple to build the real world and story later, while current Village/Forest/Cave content stays
+  removable test/dev sandbox content.
+- **Roadmap shape**: M9 data/tooling hardening, M10 world authoring, M11 quest/dialogue production,
+  M12 NPC/factions/reputation, M13 items/equipment/economy/merchants, M14 combat/skills/magic,
+  M15 dungeons/encounters, M16 persistence/UX hardening, M17 art/audio pipeline, M18 first real
+  region/story act, M19 world/story expansion, M20 alpha stabilization.
+- **Next**: implement M8, then perform SR1 before M9.
+
+---
+
 ## 2026-06-25 — Session 009 — Milestone 7: save/load
 
 - **Goal**: implement minimal save/load and persistent world-object restore.

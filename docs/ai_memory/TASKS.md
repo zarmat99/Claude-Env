@@ -15,7 +15,22 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ### Milestone 8 — Progression
 - **M8-T1 · XP/level/stat growth + rewards** · backlog.
 
+### SR1 — Core scalability review
+- **SR1-T1 · Review core scalability after M8** · backlog.
+
+### Milestone 9 — Data & tooling hardening
+- **M9-T1 · Data validators + duplicate ID / persistent_id checks** · backlog.
+- **M9-T2 · Repeatable headless smoke/regression checks** · backlog.
+- **M9-T3 · Input-map cleanup for hardcoded controls** · backlog.
+
+### Later roadmap
+- Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M10-M20,
+  SR2-SR5). Add detailed tasks here when each milestone becomes current.
+
 ## Done
+- **DOC-T2 · Define production-scalability roadmap with review gates** · docs · **done**
+  (2026-06-25): `ROADMAP.md` now schedules M9-M20 and SR1-SR5 so content production stays aligned
+  with the goal of scalable world/story authoring.
 - **DOC-T1 · Remove stale live-status wording from architecture docs** · docs · **done**
   (2026-06-25): `ROADMAP.md`, `SYSTEMS.md`, `ARCHITECTURE.md`, `PROJECT_MEMORY.md`, and handoff
   memory aligned before M7.
