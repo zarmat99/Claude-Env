@@ -62,8 +62,11 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - `ProgressionManager` now handles XP and level-ups. Quest rewards and enemy kills grant XP;
   reaching the threshold increases level, max health, refills health, increases damage, and emits
   `player_level_up`. HUD shows level + XP progress.
+- SR1 core scalability review is complete (`docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md`): no
+  rewrite needed before M9; skeleton remains scalable, but M9 must harden validation, tests, input,
+  dynamic-object persistence contracts, and runtime guardrails.
 - Note: player death is still a placeholder (respawn full HP).
-- Next: SR1 (Core scalability review).
+- Next: Milestone 9 (Data & tooling hardening).
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -89,7 +92,7 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M8 Progression (XP/level/stats) is complete.
-- SR1 Core scalability review is the next required milestone before M9.
+- SR1 Core scalability review is complete. M9 Data & tooling hardening is next.
 - M9-M20 are now scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: tooling/data validation, world authoring, quest/dialogue pipeline, factions,
   economy/equipment, combat/skills/magic, dungeons, UX/persistence hardening, art/audio pipeline,
@@ -135,19 +138,20 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 
 ## 11. Current milestone state
 **M8 — Progression: COMPLETE** (XP/level/stat growth + quest/enemy XP rewards; verified in Godot
-4.3). M0–M7 complete before it. SR1 not started.
+4.3). M0–M7 complete before it. **SR1 complete**; M9 not started.
 
 ## 12. Recommended next step
-Begin **SR1 — Core scalability review**: check whether the M0-M8 skeleton remains scalable before
-M9 tooling/data hardening. Review hardcoded assumptions, data-driven boundaries, save/load,
-persistent IDs, testability, and whether Village/Forest/Cave can stay removable dev sandbox content.
+Begin **Milestone 9**: data/tooling hardening. Implement validators/preflight, repeatable headless
+regression checks, input-map cleanup, dynamic world-object persistence contract, and runtime
+guardrails for unknown content IDs. Findings are in `docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md`.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
 GDScript, designed to scale. **Milestone 8 is complete and verified**: Village, Forest, and Cave
 are connected by data-driven map transitions, `quest_first_dungeon` is playable end-to-end, and
 save/load restores the core runtime state plus persistent world-object states. XP/level progression
-now works through quest and enemy rewards. The next milestone is **SR1 core scalability review**.
+now works through quest and enemy rewards. SR1 found no need for a rewrite; the next milestone is
+**M9 data/tooling hardening**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

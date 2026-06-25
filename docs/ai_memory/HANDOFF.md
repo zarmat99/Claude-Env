@@ -25,15 +25,15 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, pushed.
 
 ## Last thing done
-Built Milestone 8 (progression): added `ProgressionManager` autoload, XP gain from quest rewards and
-enemy `xp_reward`, level thresholds, max-health/damage growth, level-up health refill, HUD level/XP
-display, and save/load compatibility for `damage`. Verified with headless M8 progression test and
-clean boot.
+Completed **SR1 — Core scalability review** (`docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md`).
+Verdict: the M0-M8 skeleton is still structurally scalable and does **not** need a rewrite before
+M9. Main risk is prototype permissiveness: missing validation, temporary tests, hardcoded controls,
+dynamic loot persistence, unsupported dialogue actions, and dev-sandbox boot assumptions.
 
 ## Next thing to do
-Begin **SR1 — Core scalability review**: review whether the M0-M8 skeleton remains scalable before
-M9. Focus on data-driven boundaries, hardcoded assumptions, save/load edge cases, testability,
-`persistent_id` discipline, and whether test content can be removed without breaking systems.
+Begin **Milestone 9 — Data & tooling hardening**. Required work from SR1:
+validators/preflight, repeatable headless regression checks, input-map cleanup, dynamic
+world-object persistence contract, and runtime guardrails for unknown content IDs.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

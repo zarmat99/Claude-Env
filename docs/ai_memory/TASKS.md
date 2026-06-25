@@ -8,23 +8,31 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — SR1 is ready to start)
+- (none — M9 is ready to start)
 
 ## Backlog
 
-### SR1 — Core scalability review
-- **SR1-T1 · Review core scalability after M8** · backlog.
-
 ### Milestone 9 — Data & tooling hardening
-- **M9-T1 · Data validators + duplicate ID / persistent_id checks** · backlog.
-- **M9-T2 · Repeatable headless smoke/regression checks** · backlog.
-- **M9-T3 · Input-map cleanup for hardcoded controls** · backlog.
+- **M9-T1 · Data validators + duplicate ID / persistent_id checks** · backlog: validate JSON shape,
+  content IDs, cross-file references, scene paths, map/spawn references, unsupported dialogue
+  actions, and duplicate `persistent_id`s.
+- **M9-T2 · Repeatable headless smoke/regression checks** · backlog: persistent tests for boot,
+  data validation, map transitions, first quest flow, save/load, and progression.
+- **M9-T3 · Input-map cleanup for hardcoded controls** · backlog: inventory, journal, attack,
+  save, and load actions.
+- **M9-T4 · Dynamic world-object persistence contract** · backlog: especially dropped loot spawned
+  at runtime.
+- **M9-T5 · Runtime guardrails for unknown content IDs** · backlog: managers should reject unknown
+  IDs rather than creating invalid state.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M10-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **SR1-T1 · Review core scalability after M8** · SR1 · files:
+  `docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md` · **done** (2026-06-25): project remains scalable
+  enough to proceed; required hardening promoted into M9; no rewrite needed before M9.
 - **M8-T1 · XP/level/stat growth + rewards** · M8 · files:
   `scripts/progression/ProgressionManager.gd`, `project.godot`, `scripts/core/GameState.gd`,
   `scripts/core/SaveManager.gd`, `scripts/player/PlayerCombat.gd`, `scripts/ui/HUD.gd`,

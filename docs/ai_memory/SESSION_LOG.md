@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-06-25 — Session 012 — SR1 core scalability review
+
+- **Goal**: review the M0-M8 skeleton before M9 and decide whether the project remains scalable
+  enough to proceed toward production pipelines.
+- **Files created**: `docs/reviews/SR1_CORE_SCALABILITY_REVIEW.md`.
+- **Files modified**: `docs/ai_memory/{PROJECT_MEMORY,HANDOFF,TASKS,SESSION_LOG}.md`.
+- **Verdict**: no rewrite needed before M9. The system separation remains healthy: `GameState`
+  remains the save boundary, `EventBus` routes cross-system notifications, content definitions are
+  JSON-backed, actors remain component-based, and the test slice can remain a dev sandbox.
+- **Findings promoted to M9**: data/reference validation, persistent headless regression tests,
+  input-map cleanup, dynamic world-object persistence contract (especially dropped loot), and runtime
+  guardrails against unknown content IDs. M10 keeps the follow-up to split dev sandbox/start content
+  from production world authoring.
+- **Next**: Milestone 9 — Data & tooling hardening.
+
+---
+
 ## 2026-06-25 — Session 011 — Milestone 8: progression
 
 - **Goal**: add XP, level, stat growth, quest/enemy XP rewards, and HUD progression feedback.
