@@ -4,6 +4,36 @@
 
 ---
 
+## 2026-06-25 — Session 004 — Milestone 3: quest system
+
+- **Goal**: staged, data-driven quests; dialogue that starts/gates by quest state; a journal.
+- **Files created**: `scripts/core/Conditions.gd` (shared predicate eval, preload-based),
+  `scripts/quest/QuestManager.gd` (autoload), `scripts/ui/QuestJournalUI.gd` +
+  `scenes/ui/QuestJournalUI.tscn`, `play.bat`.
+- **Files modified**: `project.godot` (+QuestManager autoload), `scripts/core/GameState.gd`
+  (+`kills`), `scripts/core/EventBus.gd` (+`npc_talked`), `scripts/dialogue/DialogueManager.gd`
+  (filter choices by `conditions`; +`start_quest`/`advance_quest` actions; track `_visible_choices`),
+  `scripts/npcs/NPC.gd` (emit `npc_talked`), `scenes/main/Main.gd` (+QuestJournal),
+  `data/quests/quests.json` (quest_first_dungeon), `data/dialogues/dialogues.json` (quest-aware
+  blacksmith).
+- **Design**: `Conditions.gd` evaluates all condition types against GameState and is shared by
+  BOTH quest stage advancement and dialogue choice gating. `QuestManager` is event-driven
+  (item_added, actor_died, map_changed, npc_talked). `talked_to` advances **momentarily** (on the
+  event) so a "return to X" stage isn't auto-satisfied by an earlier conversation; other conditions
+  advance on state recheck. Rewards: xp via EventBus (stored from M8), gold + items into GameState.
+  Quests/QuestData kept as **dicts** (consistent with dialogue) rather than separate model classes.
+  Journal toggles with J (hardcoded key for now; overlay, no pause).
+- **Tests (Godot 4.3, headless)**: import clean; full flow verified — dialogue gating
+  ("Looking for work" → "Thanks again" after completion), `start_quest` at stage 0,
+  `entered_area`→10, `has_item`→20, `talked_to`→complete, gold=20 + iron sword granted. Screenshot
+  confirms the journal shows the active quest + current stage.
+- **Final result**: **Milestone 3 COMPLETE and verified.** In-game: talk to the blacksmith, accept
+  the quest, press **J** for the journal. (The quest can't finish in-world yet — needs the cave map
+  at M6 + item pickup at M4; systems proven via events.)
+- **Next**: Milestone 4 — inventory & items.
+
+---
+
 ## 2026-06-25 — Session 003 — Milestone 2: interaction, NPC, dialogue
 
 - **Goal**: data-driven interaction + NPC + dialogue. Walk to an NPC, press interact, read a

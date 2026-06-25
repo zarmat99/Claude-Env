@@ -47,21 +47,25 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 2 — COMPLETE and verified in Godot 4.3.** (M0–M1 complete before it.)
-- On top of M1's player/camera/map/HUD: walk to an NPC (the Blacksmith), press E/Space, and read a
-  branching **data-driven dialogue** (from `data/dialogues/`); choices run actions (e.g. set_flag)
-  and the game pauses during dialogue.
-- `DataRegistry` now loads all `data/*.json`; `DialogueManager` is a live autoload.
-- Verified: editor import clean, headless run clean, behavioral checks pass, screenshot confirms
-  the NPC + DialogueBox.
-- Next: Milestone 3 (quest system).
+- **Milestone 3 — COMPLETE and verified in Godot 4.3.** (M0–M2 complete before it.)
+- Staged, data-driven **quests**: the Blacksmith offers `quest_first_dungeon` (dialogue choices are
+  now gated by quest state); accepting starts it; stages advance via events (entered_area, has_item,
+  talked_to); completion grants rewards (gold + item). A **quest journal** (key J) lists
+  active/completed quests. `Conditions.gd` evaluates conditions for both quests and dialogue.
+- `QuestManager` is a live autoload; dialogue `conditions` are now evaluated (were ignored in M2).
+- Verified: import clean; full quest flow + reward + dialogue-gating checks pass; journal screenshot.
+- Note: the quest can't yet be finished *in-world* (needs the cave map at M6 + item pickup at M4);
+  the systems are proven via events.
+- Next: Milestone 4 (inventory & items).
 
 ## 6. Implemented systems
-- **M1**: `PlayerController` (movement), `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
-- **M2**: `DataRegistry` (loads all JSON content by ID), `InteractionComponent` + `PlayerInteraction`
-  (proximity interact + EventBus prompt), `NPC` (data-driven), `DialogueManager` (JSON node-graph,
-  actions, pause-during-dialogue) + `DialogueBox` UI. `EventBus` gained `interaction_prompt_changed`.
-- **Autoloads live**: EventBus, GameState (state shape), DataRegistry, DialogueManager.
+- **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
+- **M2**: `DataRegistry` (loads all JSON by ID), `InteractionComponent` + `PlayerInteraction`, `NPC`
+  (data-driven), `DialogueManager` + `DialogueBox`. EventBus +`interaction_prompt_changed`.
+- **M3**: `Conditions.gd` (shared predicate eval), `QuestManager` (staged, event-driven quests +
+  rewards), `QuestJournalUI` (key J). Dialogue now filters choices by `conditions` and runs
+  `start_quest`/`advance_quest`. EventBus +`npc_talked`; GameState +`kills`.
+- **Autoloads live**: EventBus, GameState, DataRegistry, QuestManager, DialogueManager.
   **Still stubs**: SceneLoader, SaveManager (fleshed out at M6 / M7).
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
@@ -110,13 +114,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M2 — Interaction & NPC: COMPLETE** (interaction, data-driven NPC + branching dialogue; verified
-in Godot 4.3). M0–M1 complete before it. M3 not started.
+**M3 — Quest system: COMPLETE** (staged data-driven quests, condition eval, journal; verified in
+Godot 4.3). M0–M2 complete before it. M4 not started.
 
 ## 12. Recommended next step
-Begin **Milestone 3** (on the user's go-ahead): `QuestData`/`QuestStage` + `quests.json` →
-`QuestManager` (staged, event-driven; also evaluate dialogue choice `conditions`) → `QuestJournalUI`
-→ the Blacksmith assigns `quest_first_dungeon` via a dialogue action.
+Begin **Milestone 4** (on the user's go-ahead): `ItemData` + `items.json` → `InventoryManager`
+(+ `InventoryComponent`) → `PickupItem` (collectible) → `InventoryUI`. This makes the quest's
+`has_item` stage reachable in-world (pick up the fragment).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

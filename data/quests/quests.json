@@ -1,1 +1,33 @@
-{}
+{
+  "quest_first_dungeon": {
+    "id": "quest_first_dungeon",
+    "title": "The Ancient Fragment",
+    "giver": "npc_blacksmith_valdombra",
+    "stages": [
+      {
+        "stage": 0,
+        "desc": "Travel east to the old cave and search for the ancient iron fragment.",
+        "advance_on": { "type": "entered_area", "target": "map_cave_01" },
+        "next": 10
+      },
+      {
+        "stage": 10,
+        "desc": "Recover the ancient iron fragment from the cave.",
+        "advance_on": { "type": "has_item", "target": "item_ancient_iron_fragment", "count": 1 },
+        "next": 20
+      },
+      {
+        "stage": 20,
+        "desc": "Bring the ancient iron fragment back to the Blacksmith.",
+        "advance_on": { "type": "talked_to", "target": "npc_blacksmith_valdombra" },
+        "next": 30
+      },
+      {
+        "stage": 30,
+        "desc": "Reward claimed.",
+        "completes": true,
+        "rewards": { "xp": 50, "gold": 20, "items": [ { "id": "item_iron_sword", "count": 1 } ] }
+      }
+    ]
+  }
+}

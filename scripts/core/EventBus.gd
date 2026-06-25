@@ -22,6 +22,7 @@ signal dialogue_ended(dialogue_id: String)
 
 # --- Interaction (UI prompt; empty string hides it) ---
 signal interaction_prompt_changed(text: String)
+signal npc_talked(npc_id: String)
 
 # --- World ---
 signal map_changed(map_id: String)

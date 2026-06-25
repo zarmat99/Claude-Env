@@ -8,15 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — awaiting user go-ahead for Milestone 3)
+- (none — awaiting user go-ahead for Milestone 4)
 
 ## Backlog
-
-### Milestone 3 — Quest system
-- **M3-T1 · QuestData/QuestStage models + quests.json** · backlog.
-- **M3-T2 · QuestManager (staged, event-driven)** · backlog.
-- **M3-T3 · QuestJournalUI** · backlog.
-- **M3-T4 · Blacksmith assigns quest_first_dungeon** · backlog.
 
 ### Milestone 4 — Inventory & items
 - **M4-T1 · ItemData + items.json** · backlog.
@@ -64,6 +58,13 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   **done** (2026-06-25).
 - **M2-T4 · DialogueManager + first data-driven dialogue** (JSON node-graph, actions=set_flag,
   pauses game) · M2 · **done** (2026-06-25). Verified headless + screenshot.
+- **M3-T1 · Quest data + Conditions** (quests.json + `Conditions.gd` shared predicate eval; quests
+  modeled as dicts, not separate classes) · M3 · **done** (2026-06-25).
+- **M3-T2 · QuestManager** (staged, event-driven advancement; talked_to momentary; rewards) · M3 ·
+  **done** (2026-06-25).
+- **M3-T3 · QuestJournalUI** (toggle J; active + completed) · M3 · **done** (2026-06-25).
+- **M3-T4 · Blacksmith assigns quest_first_dungeon** (dialogue `start_quest` action; choices gated
+  by quest state) · M3 · **done** (2026-06-25). Verified full flow headless + screenshot.
 
 ## Blocked
 - (none)

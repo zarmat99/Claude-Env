@@ -17,6 +17,7 @@ var quests: Dictionary = {"active": {}, "completed": []}   # active: quest_id ->
 var factions: Dictionary = {}                              # faction_id -> {"reputation": int}
 var flags: Dictionary = {}                                 # flag -> bool
 var world_objects: Dictionary = {}                         # persistent_id -> {"state": String}
+var kills: Dictionary = {}                                 # enemy_id -> count killed (M5+)
 
 func reset_to_new_game() -> void:
     # M0 stub: real new-game defaults are wired when systems land (M1+).

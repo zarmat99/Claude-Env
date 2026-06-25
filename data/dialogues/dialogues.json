@@ -5,29 +5,47 @@
     "nodes": {
       "start": {
         "speaker": "npc_blacksmith_valdombra",
-        "text": "Well met, traveler. The forge is hot and the roads are dangerous. What brings you to Valdombra?",
+        "text": "Well met, traveler. The forge is hot and the roads are dangerous. What can I do for you?",
         "choices": [
+          {
+            "text": "Looking for work.",
+            "next": "offer",
+            "conditions": [ { "type": "quest_not_started", "quest": "quest_first_dungeon" } ]
+          },
+          {
+            "text": "About that fragment...",
+            "next": "reminder",
+            "conditions": [ { "type": "quest_active", "quest": "quest_first_dungeon" } ]
+          },
+          {
+            "text": "Thanks again for the work.",
+            "next": "thanks",
+            "conditions": [ { "type": "quest_completed", "quest": "quest_first_dungeon" } ]
+          },
           { "text": "Just passing through.", "next": "passing" },
-          { "text": "Looking for work.", "next": "work" },
           { "text": "(Leave)", "next": null }
         ]
+      },
+      "offer": {
+        "speaker": "npc_blacksmith_valdombra",
+        "text": "There's an old cave east of here. Inside lies a fragment of ancient iron - I need it for a commission. Bring it to me and I'll make it worth your while.",
+        "actions": [ { "type": "start_quest", "quest": "quest_first_dungeon" } ],
+        "choices": [ { "text": "I'll find it.", "next": null } ]
+      },
+      "reminder": {
+        "speaker": "npc_blacksmith_valdombra",
+        "text": "The fragment is still out there, in the cave to the east. Bring it back and the reward is yours.",
+        "choices": [ { "text": "I'm on it.", "next": null } ]
+      },
+      "thanks": {
+        "speaker": "npc_blacksmith_valdombra",
+        "text": "That fragment was exactly what I needed. You have my thanks - and my forge, should you ever need it.",
+        "choices": [ { "text": "Farewell.", "next": null } ]
       },
       "passing": {
         "speaker": "npc_blacksmith_valdombra",
         "text": "Then keep your blade close. The woods east of here have grown unfriendly of late.",
-        "choices": [
-          { "text": "I will. Farewell.", "next": null }
-        ]
-      },
-      "work": {
-        "speaker": "npc_blacksmith_valdombra",
-        "text": "Hah! Bold. Come back when I have something worth your steel - I may yet have a task for you.",
-        "actions": [
-          { "type": "set_flag", "flag": "met_blacksmith" }
-        ],
-        "choices": [
-          { "text": "I will return.", "next": null }
-        ]
+        "choices": [ { "text": "I will. Farewell.", "next": null } ]
       }
     }
   }

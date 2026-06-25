@@ -18,6 +18,7 @@ func _ready() -> void:
     _interaction.interacted.connect(_on_interacted)
 
 func _on_interacted(_by: Node) -> void:
+    EventBus.npc_talked.emit(npc_id)
     var dialogue_id := String(data.get("dialogue", ""))
     if dialogue_id != "":
         DialogueManager.start(dialogue_id)
