@@ -290,6 +290,29 @@ No weapon in hand. Clean magenta background.
 
 ---
 
+### `ice_spire` — Guglia di ghiaccio
+
+```
+STYLE: Dark nordic fantasy pixel art RPG asset.
+Pixel art style, 16-bit era, SNES quality, hand-crafted look.
+Color palette: ice blue (#91c7d4, #d7f4f7), deep blue (#335a69).
+Shadows: #0d1117, #1a2128. No bright white. Cold, crystalline.
+Image size: 1024x1024 pixels.
+Background: solid hot pink magenta #FF00FF.
+Subject centered, occupying 60-70% of canvas.
+
+CAMERA: top-down 3/4 RPG perspective, 60 degrees from horizontal,
+you see the top and front face of the spire.
+
+SUBJECT: a single jagged ice spire/shard rising from the ground.
+Tall and narrow, translucent blue-white crystalline ice (#91c7d4, #d7f4f7).
+Angular facets catching light. Dark deep-blue interior (#335a69).
+Not glowing — cold and opaque at the base, slightly translucent at the tip.
+Reads clearly at 48x92 pixels. Single spire. Clean magenta background.
+```
+
+---
+
 ## Ordine di priorità per la generazione
 
 Per avere una prima mappa funzionante, genera nell'ordine:
