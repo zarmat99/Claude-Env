@@ -152,8 +152,9 @@ complete before it.
 
 ## 12. Recommended next step
 Begin **Milestone 10 — World authoring pipeline**: map index/conventions, persistent world-object
-library, spawn/transition/encounter validation expansion, and dev sandbox vs production start
-separation.
+library, spawn/transition/encounter validation expansion, dev sandbox vs production start
+separation, and a lightweight tileset/asset-proxy scalability probe. Use mock/proxy assets in M10
+to validate map-authoring constraints; defer real art direction/asset pipeline work to M17/M18.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

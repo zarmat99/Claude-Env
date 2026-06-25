@@ -83,9 +83,11 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
 - **Goal**: make maps, transitions, world objects, and encounters scalable to many regions.
 - **Scope**: richer map index, region conventions, world-object library, chests/doors/switches,
   encounter placement conventions, spawn/transition validation, dev sandbox separation from real
-  content.
-- **Exit criteria**: adding a new connected map with pickups/enemies/chests/doors requires data/scene
-  authoring only, not changes to manager code.
+  content, and a lightweight tileset/asset-proxy scalability probe.
+- **Exit criteria**: adding a new connected map with pickups/enemies/chests/doors requires
+  data/scene authoring only, not changes to manager code; a small mock tileset/asset set proves
+  tile size, collision metadata, layers, props, naming, and import conventions are compatible with
+  the future art pipeline without committing to final art.
 
 ## SR2 — Map scalability review
 - **Goal**: prove that the world can grow without architectural drift.

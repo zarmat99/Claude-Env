@@ -18,6 +18,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   placement conventions.
 - **M10-T3 · Spawn/transition/encounter validation expansion** · backlog.
 - **M10-T4 · Dev sandbox vs production start separation** · backlog.
+- **M10-T5 · Tileset/asset scalability probe** · backlog: use asset-proxy/mock tileset content to
+  verify tile size, collision metadata, map layers, props, naming/import conventions, and fit with
+  future art without producing final maps/art yet.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M10-M20,

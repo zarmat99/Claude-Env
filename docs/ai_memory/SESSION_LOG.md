@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-06-25 - Session 014 - M10 asset-proxy roadmap refinement
+
+- **Goal**: clarify whether M10 map authoring should test art/asset scalability before real maps.
+- **Decision**: M10 should include a lightweight tileset/asset-proxy probe, not final art
+  production. The probe validates tile size, collision metadata, map layers, props, naming/import
+  conventions, and compatibility with future art.
+- **Files modified**: `docs/architecture/ROADMAP.md`,
+  `docs/ai_memory/{PROJECT_MEMORY,HANDOFF,TASKS,SESSION_LOG}.md`.
+- **Rationale**: map authoring depends on asset constraints, so the pipeline must be tested early;
+  real art direction and production assets still belong to M17/M18.
+- **Next**: start M10 with map pipeline tasks including `M10-T5`.
+
+---
+
 ## 2026-06-25 - Session 013 - Milestone 9: data & tooling hardening
 
 - **Goal**: implement M9 data/tooling hardening from SR1: validators, persistent tests, input map

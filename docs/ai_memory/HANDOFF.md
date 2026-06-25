@@ -36,7 +36,9 @@ dynamic pickup persistence contract, and runtime guardrails for unknown content 
 
 ## Next thing to do
 Begin **Milestone 10 — World authoring pipeline**: map index/conventions, persistent world-object
-library, expanded world validation, and dev sandbox vs production start separation.
+library, expanded world validation, dev sandbox vs production start separation, and a lightweight
+tileset/asset-proxy scalability probe. Use proxy/mock assets to test map constraints now; keep real
+art direction and production assets for M17/M18.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
