@@ -4,6 +4,41 @@
 
 ---
 
+## 2026-06-25 — Session 003 — Milestone 2: interaction, NPC, dialogue
+
+- **Goal**: data-driven interaction + NPC + dialogue. Walk to an NPC, press interact, read a
+  branching dialogue defined in JSON.
+- **Files created**: `scripts/components/InteractionComponent.gd`,
+  `scripts/player/PlayerInteraction.gd`, `scripts/npcs/NPC.gd`,
+  `scripts/dialogue/DialogueManager.gd`, `scripts/ui/DialogueBox.gd`, `scenes/npcs/NPCBase.tscn`,
+  `scenes/npcs/Blacksmith.tscn`, `scenes/ui/DialogueBox.tscn`.
+- **Files modified**: `scripts/core/DataRegistry.gd` (now actually loads all `data/*.json`),
+  `scripts/core/EventBus.gd` (+`interaction_prompt_changed`), `project.godot` (+`DialogueManager`
+  autoload), `scenes/player/Player.tscn` (+PlayerInteraction area), `scenes/maps/Village.tscn`
+  (+Blacksmith instance), `scenes/main/Main.gd` (+DialogueBox), `scripts/ui/HUD.{gd,tscn}`
+  (+interaction prompt), `data/npcs/npcs.json` + `data/dialogues/dialogues.json` (blacksmith +
+  intro dialogue).
+- **Design**: interaction is player-centric — NPCs carry an `InteractionComponent` (Area2D on
+  collision layer 4, monitorable); the player's `PlayerInteraction` (Area2D, mask 4) tracks nearby
+  ones and triggers the nearest on `interact`. `DialogueManager` runs a JSON node-graph, executes
+  `actions` (set_flag now; quest/item later) and pauses the tree during dialogue (DialogueBox is
+  `process_mode = ALWAYS` so its buttons work while paused). Choice `conditions` are parsed but not
+  yet evaluated (M3).
+- **Problem fixed (important)**: adding `class_name` scripts without an editor import left Godot's
+  global class cache stale → "Could not find type InteractionComponent" at headless run. **Fix**:
+  run `--headless --editor --quit` (or open the editor) to regenerate
+  `.godot/global_script_class_cache.cfg` before headless game runs.
+- **Tests (Godot 4.3)**: editor import exit 0 (no errors); dev run — DataRegistry returns the
+  blacksmith; `DialogueManager.start` → active; choosing "Looking for work" set flag
+  `met_blacksmith`; the final choice ended the dialogue and unpaused. Screenshot confirms the NPC +
+  name label + the DialogueBox (speaker, wrapped text, all 3 choice buttons).
+- **Final result**: **Milestone 2 COMPLETE and verified.** In-game: walk to the blacksmith, press
+  E/Space, pick choices (feel-test with `run.bat` → F5).
+- **Next**: Milestone 3 — quest system (staged quests, QuestManager, QuestJournalUI; blacksmith
+  assigns a quest).
+
+---
+
 ## 2026-06-25 — Session 002 — Milestone 1: player, camera, test map, HUD
 
 - **Goal**: Make the game playable at a basic level — controllable top-down player on a test map,

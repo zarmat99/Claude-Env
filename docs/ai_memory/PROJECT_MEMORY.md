@@ -47,22 +47,22 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 1 — COMPLETE and verified in Godot 4.3.** (M0 complete before it.)
-- Playable basics: top-down player (`CharacterBody2D` + `move_and_slide`), `Camera2D` follow,
-  a placeholder test map (`Village`) with border walls + obstacle colliders, a minimal HUD
-  (health), and the `[input]` map (WASD/arrows + E/Space).
-- Boot flow: `Main` assembles map + player + HUD (map loading is temporary there; it moves into
-  `SceneLoader` at M6). Autoloads remain stubs except where used.
-- Verified: headless run exit 0, no errors, boot prints; a screenshot confirms player/camera/map/
-  HUD render correctly.
-- Next: Milestone 2 (interaction + NPC + dialogue).
+- **Milestone 2 — COMPLETE and verified in Godot 4.3.** (M0–M1 complete before it.)
+- On top of M1's player/camera/map/HUD: walk to an NPC (the Blacksmith), press E/Space, and read a
+  branching **data-driven dialogue** (from `data/dialogues/`); choices run actions (e.g. set_flag)
+  and the game pauses during dialogue.
+- `DataRegistry` now loads all `data/*.json`; `DialogueManager` is a live autoload.
+- Verified: editor import clean, headless run clean, behavioral checks pass, screenshot confirms
+  the NPC + DialogueBox.
+- Next: Milestone 3 (quest system).
 
 ## 6. Implemented systems
-- **M1 gameplay**: `PlayerController` (top-down movement via the project input map), `Camera2D`
-  follow, `Village` placeholder map (visuals + colliders built from one geometry list), minimal
-  `HUD` (reads `GameState.player.stats`). `Main` wires them together.
-- **Autoloads**: still M0 **stubs** (EventBus signals declared; GameState holds the state shape;
-  DataRegistry / SceneLoader / SaveManager are stubs) — each fleshed out in its milestone.
+- **M1**: `PlayerController` (movement), `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
+- **M2**: `DataRegistry` (loads all JSON content by ID), `InteractionComponent` + `PlayerInteraction`
+  (proximity interact + EventBus prompt), `NPC` (data-driven), `DialogueManager` (JSON node-graph,
+  actions, pause-during-dialogue) + `DialogueBox` UI. `EventBus` gained `interaction_prompt_changed`.
+- **Autoloads live**: EventBus, GameState (state shape), DataRegistry, DialogueManager.
+  **Still stubs**: SceneLoader, SaveManager (fleshed out at M6 / M7).
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M1 Player + test map + camera + HUD.
@@ -110,12 +110,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M1 — Player & test map: COMPLETE** (player, camera, test map + collisions, HUD; verified in
-Godot 4.3). M0 complete before it. M2 not started.
+**M2 — Interaction & NPC: COMPLETE** (interaction, data-driven NPC + branching dialogue; verified
+in Godot 4.3). M0–M1 complete before it. M3 not started.
 
 ## 12. Recommended next step
-Begin **Milestone 2** (on the user's go-ahead): `InteractionComponent` → NPC base + Blacksmith →
-`DialogueBox` UI → `DialogueManager` + first data-driven dialogue (from `data/dialogues/`).
+Begin **Milestone 3** (on the user's go-ahead): `QuestData`/`QuestStage` + `quests.json` →
+`QuestManager` (staged, event-driven; also evaluate dialogue choice `conditions`) → `QuestJournalUI`
+→ the Blacksmith assigns `quest_first_dungeon` via a dialogue action.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

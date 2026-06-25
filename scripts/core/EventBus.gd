@@ -20,6 +20,9 @@ signal actor_died(actor: Node)
 signal dialogue_started(dialogue_id: String)
 signal dialogue_ended(dialogue_id: String)
 
+# --- Interaction (UI prompt; empty string hides it) ---
+signal interaction_prompt_changed(text: String)
+
 # --- World ---
 signal map_changed(map_id: String)
 signal world_object_state_changed(persistent_id: String, state: String)

@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/Village.gd" id="1_village"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/Blacksmith.tscn" id="2_smith"]
 
 [node name="Village" type="Node2D"]
 script = ExtResource("1_village")
+
+[node name="Blacksmith" parent="." instance=ExtResource("2_smith")]
+position = Vector2(400, 240)

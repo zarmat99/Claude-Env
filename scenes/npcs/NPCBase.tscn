@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/npcs/NPC.gd" id="1_npc"]
+[ext_resource type="Script" path="res://scripts/components/InteractionComponent.gd" id="2_ic"]
+
+[sub_resource type="RectangleShape2D" id="rect_body"]
+size = Vector2(14, 16)
+
+[sub_resource type="CircleShape2D" id="circle_int"]
+radius = 26.0
+
+[node name="NPCBase" type="StaticBody2D"]
+script = ExtResource("1_npc")
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.85, 0.55, 0.25, 1)
+polygon = PackedVector2Array(-7, -8, 7, -8, 7, 8, -7, 8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("rect_body")
+
+[node name="NameLabel" type="Label" parent="."]
+offset_left = -40.0
+offset_top = -34.0
+offset_right = 40.0
+offset_bottom = -18.0
+horizontal_alignment = 1
+text = "NPC"
+
+[node name="InteractionComponent" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_ic")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionComponent"]
+shape = SubResource("circle_int")

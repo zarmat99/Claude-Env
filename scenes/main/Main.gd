@@ -6,12 +6,13 @@ extends Node2D
 const VillageScene := preload("res://scenes/maps/Village.tscn")
 const PlayerScene := preload("res://scenes/player/Player.tscn")
 const HUDScene := preload("res://scenes/ui/HUD.tscn")
+const DialogueBoxScene := preload("res://scenes/ui/DialogueBox.tscn")
 
 @onready var _world: Node2D = $WorldRoot
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 1.")
+    print("[Valdombra] Boot OK - Milestone 2.")
 
     var map := VillageScene.instantiate()
     _world.add_child(map)
@@ -23,3 +24,4 @@ func _ready() -> void:
     GameState.current_map = "map_village"
 
     _ui.add_child(HUDScene.instantiate())
+    _ui.add_child(DialogueBoxScene.instantiate())

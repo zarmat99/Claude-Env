@@ -8,18 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — awaiting user go-ahead for Milestone 2)
+- (none — awaiting user go-ahead for Milestone 3)
 
 ## Backlog
-
-### Milestone 2 — Interaction & NPC
-- **M2-T1 · InteractionComponent** (Area2D-based "interactable" + player interact action) ·
-  scripts/components/InteractionComponent.gd, scripts/player/PlayerInteraction.gd · backlog.
-- **M2-T2 · NPCBase + Blacksmith** · scenes/npcs/*, scripts/npcs/NPC.gd, data/npcs/npcs.json ·
-  backlog.
-- **M2-T3 · DialogueBox UI** · scenes/ui/DialogueBox.tscn, scripts/ui/DialogueBox.gd · backlog.
-- **M2-T4 · DialogueManager + first data-driven dialogue** · scripts/dialogue/*,
-  data/dialogues/dialogues.json · backlog.
 
 ### Milestone 3 — Quest system
 - **M3-T1 · QuestData/QuestStage models + quests.json** · backlog.
@@ -65,6 +56,14 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   from one geometry list) · M1 · **done** (2026-06-25).
 - **M1-T4 · Minimal HUD** (health from GameState) + Main wiring (map+player+HUD) · M1 · **done**
   (2026-06-25). Verified headless + screenshot.
+- **M2-T1 · InteractionComponent + PlayerInteraction** (Area2D layer-4 interactable; player area
+  triggers nearest on `interact`; prompt via EventBus) · M2 · **done** (2026-06-25).
+- **M2-T2 · NPCBase + Blacksmith** (data-driven from npcs.json; name label; blocks player) · M2 ·
+  **done** (2026-06-25).
+- **M2-T3 · DialogueBox UI** (speaker + wrapped text + choice buttons; ALWAYS process mode) · M2 ·
+  **done** (2026-06-25).
+- **M2-T4 · DialogueManager + first data-driven dialogue** (JSON node-graph, actions=set_flag,
+  pauses game) · M2 · **done** (2026-06-25). Verified headless + screenshot.
 
 ## Blocked
 - (none)

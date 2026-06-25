@@ -1,1 +1,34 @@
-{}
+{
+  "dialogue_blacksmith_intro": {
+    "id": "dialogue_blacksmith_intro",
+    "entry": "start",
+    "nodes": {
+      "start": {
+        "speaker": "npc_blacksmith_valdombra",
+        "text": "Well met, traveler. The forge is hot and the roads are dangerous. What brings you to Valdombra?",
+        "choices": [
+          { "text": "Just passing through.", "next": "passing" },
+          { "text": "Looking for work.", "next": "work" },
+          { "text": "(Leave)", "next": null }
+        ]
+      },
+      "passing": {
+        "speaker": "npc_blacksmith_valdombra",
+        "text": "Then keep your blade close. The woods east of here have grown unfriendly of late.",
+        "choices": [
+          { "text": "I will. Farewell.", "next": null }
+        ]
+      },
+      "work": {
+        "speaker": "npc_blacksmith_valdombra",
+        "text": "Hah! Bold. Come back when I have something worth your steel - I may yet have a task for you.",
+        "actions": [
+          { "type": "set_flag", "flag": "met_blacksmith" }
+        ],
+        "choices": [
+          { "text": "I will return.", "next": null }
+        ]
+      }
+    }
+  }
+}

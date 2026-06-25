@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/DialogueBox.gd" id="1_db"]
+
+[node name="DialogueBox" type="Control"]
+process_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_db")
+
+[node name="Panel" type="Panel" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -150.0
+offset_right = -4.0
+offset_bottom = -4.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 6.0
+offset_right = -8.0
+offset_bottom = -6.0
+
+[node name="Speaker" type="Label" parent="Panel/VBox"]
+theme_override_font_sizes/font_size = 14
+text = "Speaker"
+
+[node name="Text" type="Label" parent="Panel/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "..."
+autowrap_mode = 3
+
+[node name="Choices" type="VBoxContainer" parent="Panel/VBox"]
