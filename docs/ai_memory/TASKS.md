@@ -63,9 +63,10 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **M0-T2 · Scaffold Godot skeleton** · M0 · files: `project.godot`, `scripts/core/*`,
   `scenes/main/Main.{tscn,gd}`, `data/*.json`, folder tree + `.gitkeep`, `.gitignore` ·
   **done** (2026-06-25).
+- **M0-T3 · Verify project opens & runs in Godot 4** · M0 · depends: M0-T2 · **done**
+  (2026-06-25): downloaded Godot 4.3 Standard; headless import exit 0 (no errors); headless run
+  prints the boot message. Godot at
+  `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64.exe`.
 
 ## Blocked
-- **M0-T3 · Verify project opens & runs in Godot 4** · M0 · files: project.godot · depends: M0-T2 ·
-  **blocked**: Godot is not installed on this machine. Needs the user (or an environment with
-  Godot 4) to open the project once and confirm no errors + the boot label/console message.
-  Record the godot binary path in `HANDOFF.md` when known.
+- (none)

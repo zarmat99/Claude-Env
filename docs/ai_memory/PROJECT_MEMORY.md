@@ -47,14 +47,15 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 0 — skeleton built; pending verification in the Godot editor.**
+- **Milestone 0 — COMPLETE and verified in Godot 4.3.**
 - Done: repo analyzed; AI memory + architecture docs; Godot skeleton — `project.godot` (5
   autoloads), full folder tree, autoload **stubs** (EventBus / DataRegistry / GameState /
   SceneLoader / SaveManager) + `IdUtils` static class, placeholder `scenes/main/Main.tscn`,
   empty `data/*.json`, Godot `.gitignore`.
-- All `data/*.json` parse OK. **Godot is not installed on this machine**, so opening/running the
-  project in the editor is an outstanding user/next-agent check (task M0-T3).
-- **No gameplay code yet** (only stubs).
+- Verified: all `data/*.json` parse OK; Godot 4.3 headless import exits 0 (no script/scene
+  errors); running prints "[Valdombra] Boot OK - Milestone 0 skeleton.". Skeleton commit
+  `302c53d` pushed to `origin/master`.
+- **No gameplay code yet** (only stubs). Next: Milestone 1.
 
 ## 6. Implemented systems
 - M0 **stubs only**: 5 autoload singletons (EventBus signal contract; GameState state shape;
@@ -107,16 +108,12 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M0 — Foundations & memory.** Docs + Godot skeleton created. Remaining: verify the project opens
-& runs in Godot 4 (task M0-T3 — blocked: Godot not installed on this machine). Nothing in M1+
-started.
+**M0 — Foundations & memory: COMPLETE** (docs + skeleton + in-engine verification in Godot 4.3).
+Nothing in M1+ started.
 
 ## 12. Recommended next step
-1. Open the project in Godot 4 once; confirm no errors and that running shows the
-   "Valdombra - Milestone 0 skeleton" boot label + console "Boot OK" (M0-T3). Record the godot
-   path in `HANDOFF.md`.
-2. On the user's go-ahead, begin **M1** (player + test map + camera + minimal HUD). Add the input
-   map (move_up/down/left/right, interact) as part of M1.
+Begin **Milestone 1** (on the user's go-ahead): input map (move_up/down/left/right, interact) →
+PlayerController + Player scene → camera follow → test map with collisions → minimal HUD.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +

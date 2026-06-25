@@ -10,40 +10,38 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 0 — skeleton built; pending in-editor verification.**
-- The Godot project exists: `project.godot` (5 autoloads), autoload **stubs**, a boot scene,
-  empty `data/*.json`, full folder tree. Branch `master`.
-- **No gameplay code yet** (only stubs). All `data/*.json` parse OK.
+- **Milestone 0 — COMPLETE and verified in Godot 4.3.** Headless import exits 0 with no
+  script/scene errors; running the project prints "[Valdombra] Boot OK - Milestone 0 skeleton.".
+- Skeleton: `project.godot` (5 autoloads), autoload **stubs** + `IdUtils`, boot scene, empty
+  `data/*.json`, full folder tree. On `master` (skeleton commit `302c53d`, pushed).
+- **No gameplay code yet** (only stubs).
 
 ## Last thing done
-Created the full documentation set, then (after user approval) scaffolded the Godot M0 skeleton:
-`project.godot`, `scripts/core/*` autoload stubs + `IdUtils`, `scenes/main/Main.{tscn,gd}`,
-empty `data/*.json`, folder tree, Godot `.gitignore`.
+Downloaded Godot 4.3 (Standard) and validated the project headlessly — import + run both clean.
 
 ## Next thing to do
-1. **M0-T3 (blocked here)**: open the project in **Godot 4** once. Confirm: no script/scene
-   errors; 5 autoloads load; running shows the boot label "Valdombra - Milestone 0 skeleton" and
-   prints "[Valdombra] Boot OK ..." to the console. **Record the godot binary path below.**
-2. On the user's go-ahead, start **M1**: input map (M1-T0) → PlayerController + Player scene →
-   camera follow → test map with collisions → minimal HUD. (See `TASKS.md`.)
+Begin **Milestone 1** (on user go-ahead): M1-T0 input map (move_up/down/left/right, interact) →
+M1-T1 PlayerController + Player scene → M1-T2 camera follow → M1-T3 test map + collisions →
+M1-T4 minimal HUD. See `TASKS.md`.
 
 ## Important warnings
-- ⚠️ `godot` is **not installed on this machine / not on PATH** — could not validate in-engine.
-  GDScript & scenes were reviewed by hand; expect to fix minor editor nits on first open.
-- ⚠️ Do **not** write gameplay code beyond the current milestone.
-- ⚠️ Do **not** hardcode RPG content in scripts — everything goes in `res://data/*.json`.
-- ⚠️ Keep autoload **stubs** minimal until their milestone.
+- ⚠️ Do not write gameplay code beyond the current milestone.
+- ⚠️ Do not hardcode RPG content in scripts — everything goes in `res://data/*.json`.
+- ⚠️ Keep autoload stubs minimal until their milestone.
 - ⚠️ Assign a stable `persistent_id` to every persistent world object (PROJECT_MEMORY §10).
 - ⚠️ Do not resurrect the wiped prototypes (Aethermoor / Grimward).
 
-## Useful commands
+## Godot & useful commands
+Godot **4.3 stable** (Standard / GDScript, win64) is installed at:
+- Editor:  `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64.exe`
+- Console (CLI/headless, captures stdout): `%LOCALAPPDATA%\Programs\Godot\Godot_v4.3-stable_win64_console.exe`
 ```powershell
-# After installing Godot 4, validate headlessly (adjust the path):
-# & "C:\path\to\Godot_v4.x.exe" --path . --headless --quit
-git status --short
-git log --oneline -5
+$g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
+& $g --path "C:\Git\Claude-Env" -e                          # open in the editor
+& $g --path "C:\Git\Claude-Env" --headless --editor --quit  # validate (import) headlessly
+& $g --path "C:\Git\Claude-Env" --headless --quit-after 30  # run headless, see boot output
+git status --short; git log --oneline -5
 ```
-Godot binary path on this machine: **<unknown — fill in once installed>**
 
 ## Key files to read (in order)
 1. `docs/ai_memory/PROJECT_MEMORY.md` — vision, rules, state, conventions, IDs.
@@ -54,5 +52,5 @@ Godot binary path on this machine: **<unknown — fill in once installed>**
 6. `docs/ai_memory/DECISIONS.md` — the "why". · `docs/ai_memory/TASKS.md` — what's next.
 
 ## Open problems / questions
-- Godot binary path unknown (engine not installed here) → M0-T3 blocked.
-- (Resolved) Data format = JSON (D3). Title = "Valdombra". Docs language = English.
+- (none) — M0 done & verified. Data = JSON (D3), title = "Valdombra", docs = English,
+  Godot 4.3 installed.

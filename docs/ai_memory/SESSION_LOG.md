@@ -4,13 +4,13 @@
 
 ---
 
-## 2026-06-25 — Session 001 — Milestone 0: foundations, memory & skeleton
+## 2026-06-25 — Session 001 — Milestone 0: foundations, memory, skeleton & verification
 
 - **Goal**: Bootstrap the project. Analyze the repo, propose a scalable structure, create the
-  AI-memory + architecture docs, and (after user approval) scaffold the Godot skeleton. No
+  AI-memory + architecture docs, scaffold the Godot skeleton, and verify it in-engine. No
   gameplay code.
 - **Repo analysis**: Empty clean slate. Only `.gitignore` tracked. No `project.godot`, no Godot
-  files, no `docs/`. `godot` binary not found on the machine. Branch: `master`.
+  files, no `docs/`. Branch: `master`.
 - **Files created — documentation**:
   - `docs/ai_memory/{PROJECT_MEMORY,SESSION_LOG,DECISIONS,TASKS,HANDOFF}.md`
   - `docs/architecture/{ARCHITECTURE,DATA_SCHEMAS,SYSTEMS,ROADMAP}.md`
@@ -22,14 +22,16 @@
   - `data/{items,quests,dialogues,npcs,enemies,factions,skills,maps}.json` — empty `{}`.
   - Full folder tree with `.gitkeep` in empty dirs.
 - **Files modified**: `.gitignore` (replaced with Godot 4 rules).
-- **Decisions taken**: D1–D10 in `DECISIONS.md`. User confirmed: JSON data format, working title
-  "Valdombra", English docs, proceed with the skeleton.
-- **Problems encountered**: `godot` not installed / not on PATH — cannot run an editor or headless
-  validation here. Worked around by parsing JSON and hand-reviewing GDScript/scenes.
-- **Tests run**: all 8 `data/*.json` parse OK. Godot project not yet opened (no engine present).
-- **Final result**: Milestone 0 skeleton complete in the working tree (not yet committed in git).
-  The project is expected to open in Godot 4 with 5 autoloads and show a boot label; **not yet
-  verified in-engine**.
-- **Next**: User opens the project in Godot 4 once to confirm (M0-T3) and records the godot path
-  in `HANDOFF.md`. Then begin **M1** (player + test map + camera + HUD; add the input map).
-  Pause for the user's go-ahead before starting M1.
+- **Decisions taken**: D1–D10 in `DECISIONS.md`. User confirmed: JSON data, title "Valdombra",
+  English docs, proceed with the skeleton, and (later) "download Godot yourself".
+- **Problems encountered**: Godot was not installed on the machine. Downloaded **Godot 4.3
+  Standard (win64)** to `%LOCALAPPDATA%\Programs\Godot` and validated with it.
+- **Tests run**:
+  - All 8 `data/*.json` parse OK.
+  - Godot 4.3 headless **import/validate**: exit 0, no script/scene errors.
+  - Godot 4.3 headless **run**: exit 0, prints "[Valdombra] Boot OK - Milestone 0 skeleton.".
+  - Import did not modify any tracked files; `.godot/` cache is git-ignored.
+- **Final result**: **Milestone 0 COMPLETE and verified in-engine (Godot 4.3).** Skeleton commit
+  `302c53d` pushed to `origin/master`; verification doc updates committed on top.
+- **Next**: Await the user's go-ahead, then begin **M1** (input map → player + test map + camera +
+  minimal HUD).
