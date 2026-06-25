@@ -1,11 +1,3 @@
 node_modules/
-.session/
 *.log
 __pycache__/
-.edge*/
-.smoke-webview*/
-.smoke-winforms/
-.webview*/
-.aethermoor-live-session/
-.game-webview/
-js/api/VisibleBridge.js
