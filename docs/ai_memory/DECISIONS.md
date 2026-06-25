@@ -157,3 +157,6 @@
 - **Consequences**: Future art can replace the proxy atlas if it preserves the documented
   `asset_sets.json` contract. M10 tests assert technical dimensions and tile metadata so generated
   or hand-made art cannot silently break the map pipeline.
+- **Post-decision correction**: the direct Imagen atlas approach failed visual review. It produced a
+  collage, not a serious tileset. Generated art may still be used for concepts or per-asset
+  experiments, but M10R must choose a reliable tile-source strategy before SR2/M11.

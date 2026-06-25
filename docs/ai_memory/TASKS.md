@@ -8,14 +8,26 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none - SR2 is ready to start)
+- **M10R-T1 · Asset-pipeline remediation gate** · in_progress: fix the failed M10 visual asset
+  probe before SR2/M11.
 
 ## Backlog
+
+### M10R - Asset-pipeline remediation gate
+- **M10R-T2 · Choose tile-source strategy** · backlog: compare curated licensed packs,
+  hand-authored proxy tiles, generated-per-tile assets with post-processing, or a hybrid.
+- **M10R-T3 · Replace or quarantine failed Imagen atlas** · backlog: stop using the generated atlas
+  as a serious tileset; keep it only as a failed-probe reference if useful.
+- **M10R-T4 · Separate terrain tiles from object sprites** · backlog: tileable floors/walls belong
+  in terrain layers; chests, doors, switches, barrels, props, enemies, and pickups are sprites or
+  scenes with pivots/scale rules.
+- **M10R-T5 · Visual approval gate** · backlog: capture an in-Godot screenshot and require human
+  approval before marking the asset pipeline acceptable.
 
 ### SR2 - Map scalability review
 - **SR2-T1 · Review M10 world authoring scalability** · backlog: test whether five more maps could
   be added with data/scene authoring only; check spawn/transition/object validation, dev sandbox
-  isolation, and asset-proxy assumptions before M11.
+  isolation, and asset-proxy assumptions before M11. Depends on M10R.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
@@ -24,9 +36,10 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ## Done
 - **M10-T5 · Tileset/asset scalability probe** · M10 · files:
   `assets/tilesets/proxy_dark_fantasy_atlas.png`, `data/assets/asset_sets.json`,
-  `tests/headless/M10WorldAuthoringRunner.{gd,tscn}` · **done** (2026-06-25): generated a serious
-  proxy atlas with Imagen, normalized it to a 1024x1024 8x8 technical atlas, and validated import,
-  source/world tile size, tile metadata, collision semantics, and authored-map use.
+  `tests/headless/M10WorldAuthoringRunner.{gd,tscn}` · **done with failure finding** (2026-06-25):
+  generated an Imagen atlas and normalized it to a 1024x1024 8x8 technical atlas; validation proved
+  import/schema mechanics, but screenshot review proved the direct generated-atlas approach is not
+  acceptable for serious map art. Follow-up moved to M10R.
 - **M10-T4 · Dev sandbox vs production start separation** · M10 · files:
   `data/maps/maps.json`, `scenes/maps/{Forest,ProbeRuins}.tscn` · **done** (2026-06-25): kept the
   existing Village/Forest/Cave slice as dev sandbox content and added `map_probe_ruins` as an

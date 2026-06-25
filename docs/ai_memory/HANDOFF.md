@@ -10,15 +10,18 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 10 - COMPLETE and verified in Godot 4.3.** M0-M9 and SR1 complete before it.
+- **M10 world-authoring code is verified, but the asset-proxy visual review failed.** M0-M9 and
+  SR1 complete before it.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
   entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
   completes, you get gold + an iron sword. Journal (J), inventory (I), combat (left mouse) all work.
 - **M10 world-authoring probe**: Forest connects to `map_probe_ruins`, a data-authored sandbox map
-  built by `AuthoredMap.gd` from `maps.json`. It uses the generated normalized proxy atlas
-  `assets/tilesets/proxy_dark_fantasy_atlas.png` (1024x1024, 8x8), validates tile/layer/collision
-  metadata, and spawns chest/door/switch/pickup/enemy objects from data.
+  built by `AuthoredMap.gd` from `maps.json`. Mechanically it validates tile/layer/collision
+  metadata and spawns chest/door/switch/pickup/enemy objects from data. Visually, the generated
+  normalized atlas `assets/tilesets/proxy_dark_fantasy_atlas.png` is unacceptable: it is a collage
+  sliced into cells, with gutters/framing, inconsistent scale, non-tileable terrain, and placeholder
+  object overlays.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `InventoryManager`, `QuestManager`,
   `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
@@ -31,20 +34,20 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   inventory/attack/save/load, dynamic pickup persistence, and persistent headless regression files
   under `tests/headless/`.
 - M10 added `asset_sets.json`, `world_objects.json`, persistent chest/door/switch objects,
-  authored-map validation, and `tests/headless/M10WorldAuthoringRunner`.
+  authored-map validation, and `tests/headless/M10WorldAuthoringRunner`. These prove the code path,
+  not the art pipeline.
 - Verified with Godot headless import and `.\test.bat` (runs M9 + M10).
 - On `master`, pushed.
 
 ## Last thing done
-Completed **Milestone 10 - World authoring pipeline**:
-generated/normalized a serious proxy tileset atlas, added data-authored map generation, persistent
-chest/door/switch library, world-object/asset-set data, expanded validation, and M10 headless
-regression coverage.
+Completed the **M10 world-authoring code path**, then failed the visual review of the generated
+asset probe. The important outcome is that direct Imagen atlas generation is not a reliable
+tileset pipeline.
 
 ## Next thing to do
-Begin **SR2 - Map scalability review**: decide whether M10 is enough to scale world authoring
-before M11. Stress the map/object/asset contracts, check sandbox isolation, and promote blockers
-before expanding narrative/content pipelines.
+Begin **M10R - Asset-pipeline remediation gate** before SR2/M11: choose a real tile-source
+strategy, replace/quarantine the failed generated atlas, separate tileable terrain from object
+sprites, define import/scale/pivot/collision rules, and require an approved Godot screenshot.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

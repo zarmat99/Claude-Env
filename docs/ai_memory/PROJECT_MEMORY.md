@@ -47,7 +47,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 10 - COMPLETE and verified in Godot 4.3.** M0-M9 and SR1 complete before it.
+- **Milestone 10 systems are implemented and verified in Godot 4.3, but the asset-proxy visual
+  review failed.** M0-M9 and SR1 complete before it.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. Forest now also
   connects to `map_probe_ruins`, an M10 sandbox map for world-authoring and asset-pipeline
   validation.
@@ -67,10 +68,14 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - M10 adds `asset_sets.json`, `world_objects.json`, `AuthoredMap.gd`, a normalized generated proxy
   atlas (`assets/tilesets/proxy_dark_fantasy_atlas.png`, 1024x1024, 8x8), `ProbeRuins.tscn`,
   chest/door/switch scenes, authored map validation, and `M10WorldAuthoringRunner`.
+- **Important asset warning**: the Imagen atlas is not acceptable as a serious tileset. It is a
+  collage in grid form: not tileable, visibly framed/guttered, inconsistent in scale, and produces
+  bad maps when sliced into cells. Treat it as a failed probe, not a production or production-proxy
+  asset.
 - Verified: Godot headless import and `.\test.bat` pass. The command now runs M9 regression plus
   M10 world-authoring regression.
 - Note: player death is still a placeholder (respawn full HP).
-- Next: SR2 (Map scalability review).
+- Next: M10R (Asset-pipeline remediation gate), then SR2.
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -150,23 +155,22 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M10 - World authoring pipeline: COMPLETE** (asset proxy, authored map builder, world-object
-library, expanded validation, dev sandbox map, M10 regression suite; verified with `.\test.bat`).
-M0-M9 and SR1 are complete before it.
+**M10 - World authoring systems: CODE VERIFIED, VISUAL ASSET PROBE FAILED.** Authored map builder,
+world-object library, validation, dev sandbox map, and M10 regression suite pass with `.\test.bat`,
+but the generated atlas/map screenshot is not acceptable. M10R must run before SR2/M11.
 
 ## 12. Recommended next step
-Begin **SR2 - Map scalability review**: stress the M10 world-authoring pipeline and decide whether
-five additional maps could be added with data/scene authoring only. Check transition/spawn/object
-validation, dev sandbox isolation, asset-proxy assumptions, and whether any manager-code changes
-are still needed before M11.
+Begin **M10R - Asset-pipeline remediation gate**: choose a real tile-source strategy, replace or
+quarantine the failed Imagen atlas, separate tileable terrain from object sprites, define import/
+scale/pivot/collision rules, and require an approved Godot screenshot before SR2.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **Milestone 10 is complete and verified**: Village/Forest/Cave remain
-the playable dev slice, `map_probe_ruins` proves data-authored map generation with a generated
-proxy atlas, chest/door/switch/pickup/enemy placement, expanded validation, and persistent tests.
-Save/load, progression, quest flow, dynamic pickups, and world-object states are covered by
-`.\test.bat`. The next milestone is **SR2 map scalability review**.
+GDScript, designed to scale. **M10's code path is verified but its visual asset probe failed**:
+Village/Forest/Cave remain the playable dev slice, `map_probe_ruins` proves data-authored map
+generation mechanically, but the generated atlas is not a serious tileset. Save/load, progression,
+quest flow, dynamic pickups, and world-object states are covered by `.\test.bat`. The next milestone
+is **M10R asset-pipeline remediation**, then SR2.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

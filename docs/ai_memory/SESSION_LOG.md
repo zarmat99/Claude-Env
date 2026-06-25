@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-06-25 - Session 016 - M10 visual asset probe failure
+
+- **Goal**: respond to the failed M10 in-game screenshot and prevent the project from continuing on
+  a broken asset-pipeline assumption.
+- **Finding**: the M10 code path works mechanically, but the generated Imagen atlas is not a serious
+  tileset. It is a framed collage sliced into cells, with non-tileable terrain, inconsistent prop
+  scale, visible gutters, and placeholder object overlays.
+- **Files created**: `docs/reviews/M10_ASSET_PIPELINE_FAILURE.md`.
+- **Files modified**: `docs/architecture/ROADMAP.md`,
+  `docs/ai_memory/{PROJECT_MEMORY,HANDOFF,TASKS,SESSION_LOG}.md`.
+- **Decision**: insert **M10R - Asset-pipeline remediation gate** before SR2/M11. Do not proceed to
+  broader map/narrative scaling until a real tile-source strategy and screenshot approval gate are
+  in place.
+- **Next**: M10R-T1/T2 - choose the asset source strategy and replace or quarantine the failed
+  generated atlas.
+
+---
+
 ## 2026-06-25 - Session 015 - Milestone 10: world authoring pipeline
 
 - **Goal**: implement M10 and turn the asset-proxy decision into a real, validated map-authoring

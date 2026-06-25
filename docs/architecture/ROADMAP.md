@@ -88,6 +88,19 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
   data/scene authoring only, not changes to manager code; a small mock tileset/asset set proves
   tile size, collision metadata, layers, props, naming, and import conventions are compatible with
   the future art pipeline without committing to final art.
+- **Post-M10 note**: systems/validation passed, but the generated Imagen atlas failed visual
+  review as a serious map asset. It behaved like a collage sliced into cells, not a true tileset.
+  The roadmap must pass M10R before SR2/M11.
+
+## M10R — Asset-pipeline remediation gate
+- **Goal**: fix the failed M10 visual asset probe before any more systems/content expansion.
+- **Scope**: choose a real tile-source strategy; stop treating generated atlas images as production
+  tilesets; separate tileable floors/walls from object sprites; define scale, pivots, collision,
+  import presets, and visual-review gates; replace or quarantine the failed proxy map.
+- **Exit criteria**: one small map renders with coherent tileable art, no atlas-cell gutters, no
+  oversized props, no placeholder object overlays, and an approved screenshot captured from Godot.
+  M10R must identify whether the preferred source is curated licensed asset packs, hand-authored
+  proxy tiles, generated-per-tile assets with post-processing, or a hybrid.
 
 ## SR2 — Map scalability review
 - **Goal**: prove that the world can grow without architectural drift.
