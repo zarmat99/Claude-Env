@@ -1,3 +1,11 @@
-node_modules/
+# Godot 4 — editor cache & build artifacts
+.godot/
+/android/
+/build/
+export_presets.cfg
+*.translation
+
+# OS / editor noise
 *.log
-__pycache__/
+.DS_Store
+Thumbs.db
