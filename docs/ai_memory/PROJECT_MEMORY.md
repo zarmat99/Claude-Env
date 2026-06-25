@@ -39,7 +39,7 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 4. **EventBus**: global cross-system notifications go through a signal bus (loose coupling).
 5. **GameState**: single source of truth for runtime state (current map, player, quests,
    inventory, gold, flags, persistent world state).
-6. **SaveManager skeleton from the start** (full serialization can come later).
+6. **SaveManager owns persistence**: serialize/restore the `GameState` snapshot through one boundary.
 7. **Quests are staged** with abstract conditions.
 8. **Dialogue supports conditions** (even if first dialogue is simple).
 9. **World = connected maps** (separate scenes + transitions), not one giant open world.
@@ -47,16 +47,20 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 6 — COMPLETE and verified in Godot 4.3.** (M0–M5 complete before it.)
+- **Milestone 7 — COMPLETE and verified in Godot 4.3.** (M0–M6 complete before it.)
 - Three connected maps (Village / Forest / Cave) with walk-on `AreaTransition`s and `SpawnPoint`s.
   `SceneLoader` swaps maps data-driven (`maps.json`), keeps a **persistent player**, and emits
   `map_changed`. **`quest_first_dungeon` is now completable in-world**: blacksmith → forest → cave
   (entered_area) → grab the fragment (has_item) → return + talk (talked_to) → reward.
-- Verified: full quest flow across maps + walk-on transition + reward; clean (no errors); cave
-  screenshot.
-- Note: player death is still a placeholder (respawn full HP); enemies lack a `persistent_id` so a
-  killed enemy respawns on map reload (address in M7).
-- Next: Milestone 7 (save/load).
+- `SaveManager` now saves/loads JSON snapshots to `user://saves/slot_N.json`: current map, player
+  position/stats/gold/inventory/equipment, quests, factions, flags, kills, and per-`persistent_id`
+  `world_objects`.
+- Pickups and enemies apply persistent `collected` / `dead` state on map load. Existing slimes have
+  stable IDs: `enemy_village_slime_001`, `enemy_cave_slime_001`.
+- Verified: M7 headless save/load test restored map, player position/health/gold, inventory,
+  active quest stage, kill count, collected fragment, and dead enemy removal; boot clean.
+- Note: player death is still a placeholder (respawn full HP).
+- Next: Milestone 8 (progression).
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -71,9 +75,12 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   `GameState.kills` feeds `killed_enemy`.
 - **M6**: `SceneLoader` (data-driven map swap + persistent player + `map_changed`), `SpawnPoint`,
   `AreaTransition` (walk-on, deferred swap), `PlaceholderMap` (room base); Forest + Cave maps.
+- **M7**: `SaveManager` full JSON save/load; `PersistentWorldObject` helper; pickup `collected`
+  state and enemy `dead` state persist across map reload/save-load.
 - **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
-  DialogueManager, SceneLoader. **Still stub**: SaveManager (M7).
-- **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse.
+  DialogueManager, SceneLoader, SaveManager.
+- **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse ·
+  save F5 · load F9.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M1 Player + test map + camera + HUD.
@@ -82,7 +89,6 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - M4 Inventory + items + pickups.
 - M5 Combat (Health, Hitbox/Hurtbox) + enemy + loot.
 - M6 Vertical slice (Village/Forest/Cave + transitions + fetch quest).
-- M7 Save/load (minimal).
 - M8 Progression (XP/level/stats).
 - Later (designed, not built): factions, reputation, economy, merchants, equipment depth,
   crafting, magic, skill tree, crime, NPC routines, modular dungeons.
@@ -121,20 +127,20 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M6 — Vertical slice: COMPLETE** (3 maps + SceneLoader + fragment quest end-to-end; verified in
-Godot 4.3). M0–M5 complete before it. M7 not started.
+**M7 — Save/load: COMPLETE** (JSON snapshots + restore + persistent pickups/dead enemies; verified
+in Godot 4.3). M0–M6 complete before it. M8 not started.
 
 ## 12. Recommended next step
-Begin **Milestone 7** (on the user's go-ahead): implement `SaveManager` serialize/restore to
-`user://saves/slot_N.json` — current map, player position/stats/gold, inventory, equipment, quest
-state, and per-`persistent_id` world-object states; `PersistentWorldObject` applies state on map
-load (and give enemies a `persistent_id` so the dead stay dead). Schema: `architecture/DATA_SCHEMAS.md`.
+Begin **Milestone 8** (on the user's go-ahead): progression — XP storage, level thresholds, stat
+growth, and rewards from quests/kills. Hook `xp_gained` and existing enemy/quest reward data into
+`GameState.player.stats.xp` and level-up behavior.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **Milestone 6 is complete and verified**: Village, Forest, and Cave
-are connected by data-driven map transitions, and `quest_first_dungeon` is playable end-to-end.
-The next milestone is **M7 save/load**.
+GDScript, designed to scale. **Milestone 7 is complete and verified**: Village, Forest, and Cave
+are connected by data-driven map transitions, `quest_first_dungeon` is playable end-to-end, and
+save/load restores the core runtime state plus persistent world-object states. The next milestone is
+**M8 progression**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

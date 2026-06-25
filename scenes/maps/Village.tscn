@@ -42,3 +42,4 @@ persistent_id = "potion_village_002"
 
 [node name="Slime" parent="." instance=ExtResource("4_slime")]
 position = Vector2(620, 160)
+persistent_id = "enemy_village_slime_001"

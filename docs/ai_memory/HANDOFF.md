@@ -10,28 +10,28 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 6 — COMPLETE and verified in Godot 4.3** (M0–M5 done before it).
+- **Milestone 7 — COMPLETE and verified in Godot 4.3** (M0–M6 done before it).
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith → accept `quest_first_dungeon` → travel to the cave (quest advances on
   entering) → kill/dodge the slime, grab the ancient iron fragment → return and talk → quest
   completes, you get gold + an iron sword. Journal (J), inventory (I), combat (left mouse) all work.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `InventoryManager`, `QuestManager`,
-  `DialogueManager`, `SceneLoader`. Still stub: `SaveManager`.
+  `DialogueManager`, `SceneLoader`, `SaveManager`.
+- Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
+  map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
+  `world_objects`. Pickups stay collected and enemies with `persistent_id` stay dead.
 - On `master`, pushed.
 
 ## Last thing done
-Cleaned the docs before M7: `ROADMAP.md` no longer claims M0 is current, `SYSTEMS.md` reflects the
-actual M6 implementation level, `ARCHITECTURE.md` clarifies that its folder tree includes planned
-extension points, and `PROJECT_MEMORY.md` no longer has a stale M0 summary. Milestone 6 remains the
-latest gameplay milestone and is verified.
+Built Milestone 7 (save/load): `SaveManager` JSON snapshots under `user://saves/slot_N.json`,
+restore through `SceneLoader` without emitting `map_changed`, `PersistentWorldObject` helper,
+pickup collected-state reuse, enemy `persistent_id` + dead-state persistence, and F5/F9 controls.
+Verified with a headless M7 save/load scene and a clean boot run.
 
 ## Next thing to do
-Begin **Milestone 7 — Save/load** (on user go-ahead): implement `SaveManager` to serialize a
-`GameState` snapshot to `user://saves/slot_N.json` and restore it — current map, player
-position/stats/gold, inventory, equipment, quest active/completed, flags, and per-`persistent_id`
-world-object states. `PersistentWorldObject` (or PickupItem's existing check) applies state on map
-load. Give **enemies a `persistent_id`** (+ mark `world_objects` dead on death) so killed enemies
-don't respawn. Schema: `docs/architecture/DATA_SCHEMAS.md` (save file). See `TASKS.md` (M7).
+Begin **Milestone 8 — Progression** (on user go-ahead): store XP in
+`GameState.player.stats.xp`, react to `EventBus.xp_gained`, add level thresholds/stat growth, and
+wire quest/enemy XP rewards into level-up behavior. See `TASKS.md` (M8).
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -60,7 +60,8 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
 ```
-Controls: move = WASD/arrows · talk = E/Space · journal = J · inventory = I · attack = left mouse.
+Controls: move = WASD/arrows · talk = E/Space · journal = J · inventory = I · attack = left mouse ·
+save = F5 · load = F9.
 Maps connect via walk-on pads (the colored rectangles near map edges).
 
 ## Screenshot trick (visual checks; delete temp files + clear .godot after)
@@ -76,5 +77,5 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 6. `docs/ai_memory/DECISIONS.md` · `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- (none blocking) — M6 done & verified. Known follow-ups: player death/game-over (placeholder),
-  enemy persistent_id for stay-dead (M7), input actions for J/I/attack (currently hardcoded keys).
+- (none blocking) — M7 done & verified. Known follow-ups: player death/game-over (placeholder),
+  input actions for J/I/F5/F9/attack (currently hardcoded keys), save UI/slots beyond debug keys.

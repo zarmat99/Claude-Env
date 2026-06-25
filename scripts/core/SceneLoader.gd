@@ -12,7 +12,7 @@ func bind(world_root: Node, player: Node2D) -> void:
     _world = world_root
     _player = player
 
-func change_map(map_id: String, spawn_point_id: String = "") -> void:
+func change_map(map_id: String, spawn_point_id: String = "", emit_event: bool = true) -> void:
     if _loading or _world == null:
         return
     var entry := DataRegistry.get_map(map_id)
@@ -39,8 +39,18 @@ func change_map(map_id: String, spawn_point_id: String = "") -> void:
         if _player.get_parent() == _world:
             _world.move_child(_player, _world.get_child_count() - 1)
 
-    EventBus.map_changed.emit(map_id)
+    if emit_event:
+        EventBus.map_changed.emit(map_id)
     _loading = false
+
+func is_bound() -> bool:
+    return _world != null and _player != null
+
+func get_player() -> Node2D:
+    return _player
+
+func get_current_map_node() -> Node:
+    return _current_map
 
 func _find_spawn(map: Node, spawn_id: String) -> Node2D:
     for sp in map.find_children("*", "SpawnPoint", true, false):

@@ -1,5 +1,5 @@
 extends Node2D
-## Boot scene root (M6). Creates the persistent player, binds SceneLoader, loads the start map, and
+## Boot scene root. Creates the persistent player, binds SceneLoader, loads the start map, and
 ## builds the UI. Map loading now lives in SceneLoader (data-driven via maps.json) — Main no longer
 ## instantiates a specific map.
 
@@ -16,7 +16,7 @@ const START_SPAWN := "spawn_default"
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 6.")
+    print("[Valdombra] Boot OK - Milestone 7.")
     var player := PlayerScene.instantiate()
     _world.add_child(player)
 

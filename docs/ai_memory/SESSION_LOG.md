@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-06-25 — Session 009 — Milestone 7: save/load
+
+- **Goal**: implement minimal save/load and persistent world-object restore.
+- **Files created**: `scripts/world/PersistentWorldObject.gd`.
+- **Files modified**: `scripts/core/{SaveManager,SceneLoader,GameState}.gd`,
+  `scripts/items/PickupItem.gd`, `scripts/enemies/EnemyAI.gd`, `scenes/maps/{Village,Cave}.tscn`,
+  `scenes/main/Main.gd`, docs/memory files.
+- **Design**: `SaveManager` serializes a normalized JSON snapshot to
+  `user://saves/slot_N.json` and restores it back into `GameState`. Save syncs the live player
+  position/health from the scene; load applies the snapshot, reloads the saved map through
+  `SceneLoader.change_map(..., emit_event=false)`, then reapplies player position/health. Suppressing
+  `map_changed` on load prevents quest stages from advancing simply because the saved map was
+  reloaded.
+- **Persistence**: pickups now share the `PersistentWorldObject` helper for `collected`; enemies
+  have exported `persistent_id`s and mark `world_objects[persistent_id] = {"state": "dead"}` on
+  death. Existing slimes: `enemy_village_slime_001`, `enemy_cave_slime_001`.
+- **Controls**: F5 saves slot 0, F9 loads slot 0. Programmatic API:
+  `SaveManager.save_game(slot)` / `SaveManager.load_game(slot)`.
+- **Tests (Godot 4.3 headless)**: editor import OK; boot OK; temporary M7 scene saved slot 99,
+  reset state, loaded it, and verified current map, player position/health/gold, inventory,
+  quest stage 20, kill count, collected fragment, and dead slime removal. Temp scene and slot 99
+  removed afterward.
+- **Final result**: **Milestone 7 COMPLETE and verified.**
+- **Next**: Milestone 8 — progression (XP/level/stat growth).
+
+---
+
 ## 2026-06-25 — Session 008 — Documentation cleanup before M7
 
 - **Goal**: remove stale milestone/status language from architecture docs before starting M7.

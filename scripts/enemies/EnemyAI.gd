@@ -3,7 +3,10 @@ extends CharacterBody2D
 ## aggro range, deals touch damage on a cooldown, and on death drops loot + counts the kill. Uses
 ## sibling components (Health/Stats/Loot/Hurtbox). No combat numbers are hardcoded here.
 
+const PersistentWorldObject = preload("res://scripts/world/PersistentWorldObject.gd")
+
 @export var enemy_id: String = ""
+@export var persistent_id: String = ""
 @export var aggro_range: float = 160.0
 @export var attack_range: float = 18.0
 
@@ -16,6 +19,9 @@ var _attack_cd := 0.0
 @onready var _loot: LootComponent = $LootComponent
 
 func _ready() -> void:
+    if PersistentWorldObject.has_state(persistent_id, PersistentWorldObject.STATE_DEAD):
+        queue_free()
+        return
     add_to_group("enemy")
     _data = DataRegistry.get_enemy(enemy_id)
     var s: Dictionary = _data.get("stats", {})
@@ -48,6 +54,7 @@ func _physics_process(delta: float) -> void:
 
 func _on_died(_source: Node) -> void:
     GameState.kills[enemy_id] = int(GameState.kills.get(enemy_id, 0)) + 1
+    PersistentWorldObject.set_state(persistent_id, PersistentWorldObject.STATE_DEAD)
     if _loot:
         _loot.drop(global_position, get_parent())
     set_physics_process(false)

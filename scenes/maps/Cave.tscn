@@ -26,6 +26,7 @@ size = Vector2(24, 90)
 
 [node name="Slime" parent="." instance=ExtResource("4_slime")]
 position = Vector2(260, 160)
+persistent_id = "enemy_cave_slime_001"
 
 [node name="Fragment" parent="." instance=ExtResource("5_pick")]
 position = Vector2(400, 160)

@@ -8,13 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — Milestone 7 is ready to start)
+- (none — Milestone 8 is ready to start)
 
 ## Backlog
-
-### Milestone 7 — Save/load
-- **M7-T1 · SaveManager full serialize/deserialize** · backlog.
-- **M7-T2 · PersistentWorldObject apply-on-load** · backlog.
 
 ### Milestone 8 — Progression
 - **M8-T1 · XP/level/stat growth + rewards** · backlog.
@@ -23,6 +19,14 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **DOC-T1 · Remove stale live-status wording from architecture docs** · docs · **done**
   (2026-06-25): `ROADMAP.md`, `SYSTEMS.md`, `ARCHITECTURE.md`, `PROJECT_MEMORY.md`, and handoff
   memory aligned before M7.
+- **M7-T1 · SaveManager full serialize/deserialize** · M7 · files:
+  `scripts/core/SaveManager.gd`, `scripts/core/SceneLoader.gd`, `scripts/core/GameState.gd` ·
+  **done** (2026-06-25): JSON snapshots to `user://saves/slot_N.json`; restores map, player
+  position/stats/gold/inventory/equipment, quests, factions, flags, world objects, and kills.
+- **M7-T2 · PersistentWorldObject apply-on-load** · M7 · files:
+  `scripts/world/PersistentWorldObject.gd`, `scripts/items/PickupItem.gd`,
+  `scripts/enemies/EnemyAI.gd`, `scenes/maps/{Village,Cave}.tscn` · **done** (2026-06-25):
+  collected pickups and dead enemies are removed on map load via stable `persistent_id`s.
 - **M0-T1 · Repo analysis + AI memory & architecture docs** · M0 · **done** (2026-06-25).
 - **M0-T2 · Scaffold Godot skeleton** · M0 · **done** (2026-06-25).
 - **M0-T3 · Verify project opens & runs in Godot 4** · M0 · **done** (2026-06-25): Godot 4.3 at

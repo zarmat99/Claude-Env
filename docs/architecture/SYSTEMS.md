@@ -20,7 +20,7 @@ current codebase, so it should avoid "current milestone" language that can go st
   - World: `map_changed(map_id)` · `world_object_state_changed(persistent_id, state)`
   - Progression: `player_level_up(new_level)` · `xp_gained(amount)`
   - Economy: `gold_changed(new_total)`
-- **Implementation**: live; signals used by the M1-M6 systems.
+- **Implementation**: live; signals used by the M1-M7 systems.
 
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
@@ -34,8 +34,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   gold, inventory, equipment), `quests {active, completed}`, `factions`, `flags`,
   `world_objects {persistent_id: state}`. Provides new-game defaults.
 - **Depends on**: DataRegistry (defaults). Read/written by managers; serialized by SaveManager.
-- **Implementation**: partial through M6; holds map, player, quest, inventory, flags, kills, and
-  world object state. Save/load reset and migrations are M7 work.
+- **Implementation**: partial through M7; holds map, player, quest, inventory, flags, kills, and
+  world object state. Save/load uses it as the snapshot boundary; migrations are future work.
 
 ## SceneLoader (autoload) — `scripts/core/SceneLoader.gd`
 - **Role**: load/unload map scenes into `Main/WorldRoot`; place the player at a named
@@ -48,7 +48,8 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Role**: serialize a `GameState` snapshot to `user://saves/slot_N.json` and restore it
   (apply player, quests, flags, and per-`persistent_id` world-object state on load).
 - **Depends on**: GameState (everything persistable flows through it). Schema in DATA_SCHEMAS.
-- **Implementation**: stub; full serialization/deserialization is M7.
+- **Implementation**: M7 done; F5 saves slot 0, F9 loads slot 0. Load restores the snapshot without
+  emitting `map_changed`, so quest stages do not advance merely because a saved map is reloaded.
 
 ## IdUtils (static class) — `scripts/core/IdUtils.gd`
 - **Role**: helpers for IDs (validation, prefix checks, persistent-id formatting). Not an autoload.
@@ -59,8 +60,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   `AreaTransition` triggers map swaps; `SpawnPoint` marks placement; `PersistentWorldObject`
   reads/writes its state by `persistent_id`.
 - **Depends on**: SceneLoader, GameState, EventBus.
-- **Implementation**: M6 map swap basics done (`SpawnPoint`, `AreaTransition`,
-  `PlaceholderMap`). Generic persistent-world-object apply-on-load is M7.
+- **Implementation**: M7 basics done (`SpawnPoint`, `AreaTransition`, `PlaceholderMap`,
+  `PersistentWorldObject` helper). Pickups and enemies apply `collected` / `dead` state on map load.
 
 ## QuestManager (autoload) — `scripts/quest/*`
 - **Role**: start/advance/complete quests; evaluate `advance_on` conditions against GameState;

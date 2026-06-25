@@ -154,7 +154,7 @@ in their milestone.
 
 ---
 
-## Save file schema (`user://saves/slot_N.json`) — full impl in M7
+## Save file schema (`user://saves/slot_N.json`) — implemented in M7
 ```json
 {
   "version": 1,
@@ -173,6 +173,7 @@ in their milestone.
   },
   "factions":  { "faction_valdombra_village": { "reputation": 0 } },
   "flags":     { "intro_seen": true },
+  "kills":     { "enemy_slime": 1 },
   "world_objects": {
     "chest_forest_001":     { "state": "opened" },
     "enemy_cave_boss_001":  { "state": "dead" },

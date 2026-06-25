@@ -1,7 +1,7 @@
 extends Node
 ## Runtime source of truth (autoload). Everything persistable is reachable from here,
-## so SaveManager can serialize a single snapshot. M0: structure only; fields are
-## populated as systems land. Schema mirrors docs/architecture/DATA_SCHEMAS.md.
+## so SaveManager can serialize a single snapshot. Schema mirrors
+## docs/architecture/DATA_SCHEMAS.md.
 
 var current_map: String = ""
 
@@ -20,5 +20,16 @@ var world_objects: Dictionary = {}                         # persistent_id -> {"
 var kills: Dictionary = {}                                 # enemy_id -> count killed (M5+)
 
 func reset_to_new_game() -> void:
-    # M0 stub: real new-game defaults are wired when systems land (M1+).
-    pass
+    current_map = ""
+    player = {
+        "position": Vector2.ZERO,
+        "stats": {"level": 1, "xp": 0, "max_health": 30, "health": 30},
+        "gold": 0,
+        "inventory": [],
+        "equipment": {},
+    }
+    quests = {"active": {}, "completed": []}
+    factions = {}
+    flags = {}
+    world_objects = {}
+    kills = {}
