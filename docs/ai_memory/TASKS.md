@@ -8,12 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none — Milestone 8 is ready to start)
+- (none — SR1 is ready to start)
 
 ## Backlog
-
-### Milestone 8 — Progression
-- **M8-T1 · XP/level/stat growth + rewards** · backlog.
 
 ### SR1 — Core scalability review
 - **SR1-T1 · Review core scalability after M8** · backlog.
@@ -28,6 +25,11 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M8-T1 · XP/level/stat growth + rewards** · M8 · files:
+  `scripts/progression/ProgressionManager.gd`, `project.godot`, `scripts/core/GameState.gd`,
+  `scripts/core/SaveManager.gd`, `scripts/player/PlayerCombat.gd`, `scripts/ui/HUD.gd`,
+  `scenes/ui/HUD.tscn` · **done** (2026-06-25): quest rewards and enemy kills grant XP; level-up
+  increases max health and damage, refills health, emits `player_level_up`, and HUD shows level/XP.
 - **DOC-T2 · Define production-scalability roadmap with review gates** · docs · **done**
   (2026-06-25): `ROADMAP.md` now schedules M9-M20 and SR1-SR5 so content production stays aligned
   with the goal of scalable world/story authoring.

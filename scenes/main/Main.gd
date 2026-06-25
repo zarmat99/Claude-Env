@@ -16,7 +16,7 @@ const START_SPAWN := "spawn_default"
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 7.")
+    print("[Valdombra] Boot OK - Milestone 8.")
     var player := PlayerScene.instantiate()
     _world.add_child(player)
 

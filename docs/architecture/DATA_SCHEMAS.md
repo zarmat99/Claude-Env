@@ -162,7 +162,7 @@ in their milestone.
   "current_map": "map_cave_01",
   "player": {
     "position": { "x": 120.0, "y": 64.0 },
-    "stats": { "level": 1, "xp": 0, "max_health": 30, "health": 30 },
+    "stats": { "level": 1, "xp": 0, "max_health": 30, "health": 30, "damage": 6 },
     "gold": 0,
     "inventory": [ { "id": "item_health_potion", "count": 2 } ],
     "equipment": { "main_hand": "item_iron_sword", "off_hand": null }

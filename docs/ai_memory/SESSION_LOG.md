@@ -4,6 +4,31 @@
 
 ---
 
+## 2026-06-25 — Session 011 — Milestone 8: progression
+
+- **Goal**: add XP, level, stat growth, quest/enemy XP rewards, and HUD progression feedback.
+- **Files created**: `scripts/progression/ProgressionManager.gd`.
+- **Files modified**: `project.godot` (+ProgressionManager autoload), `scripts/core/GameState.gd`
+  (default `damage`), `scripts/core/SaveManager.gd` (normalize `damage`), `scripts/player/
+  PlayerCombat.gd` (attack damage from player stats), `scripts/ui/HUD.gd` + `scenes/ui/HUD.tscn`
+  (level/XP display), `scenes/main/Main.gd`, docs/memory/architecture files.
+- **Design**: `ProgressionManager` listens to `EventBus.xp_gained` and `EventBus.actor_died`.
+  Quest rewards already emit `xp_gained`; enemy deaths now grant `xp_reward` from `enemies.json`.
+  Progression state lives in `GameState.player.stats` (`level`, `xp`, `max_health`, `health`,
+  `damage`) so save/load stays simple.
+- **Level rules (M8 baseline)**: level 1 starts at 0/50 XP; each next threshold adds 25 XP. Level-up
+  grants +5 max health, refills health, +1 damage, and emits `player_level_up`.
+- **Bug found/fixed**: initial level-up updated `GameState` but not the live player's
+  `HealthComponent`, so `SaveManager.save_game()` synced the old 30 max HP back into the snapshot.
+  Fixed by applying level-up health to the live player component.
+- **Tests (Godot 4.3 headless)**: editor import OK; boot OK; temporary M8 scene verified direct XP,
+  level-up event/stat growth, quest XP completion, enemy kill XP, kill count preservation, and
+  save/load of progression stats. Temp scene and slot 98 removed afterward.
+- **Final result**: **Milestone 8 COMPLETE and verified.**
+- **Next**: SR1 — Core scalability review.
+
+---
+
 ## 2026-06-25 — Session 010 — Production roadmap and scalability gates
 
 - **Goal**: update the roadmap now that the prototype skeleton is substantial enough to plan the

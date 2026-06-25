@@ -7,7 +7,7 @@ var current_map: String = ""
 
 var player: Dictionary = {
     "position": Vector2.ZERO,
-    "stats": {"level": 1, "xp": 0, "max_health": 30, "health": 30},
+    "stats": {"level": 1, "xp": 0, "max_health": 30, "health": 30, "damage": 6},
     "gold": 0,
     "inventory": [],          # Array of {"id": String, "count": int}
     "equipment": {},          # slot -> item_id
@@ -23,7 +23,7 @@ func reset_to_new_game() -> void:
     current_map = ""
     player = {
         "position": Vector2.ZERO,
-        "stats": {"level": 1, "xp": 0, "max_health": 30, "health": 30},
+        "stats": {"level": 1, "xp": 0, "max_health": 30, "health": 30, "damage": 6},
         "gold": 0,
         "inventory": [],
         "equipment": {},

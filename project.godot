@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 EventBus="*res://scripts/core/EventBus.gd"
 DataRegistry="*res://scripts/core/DataRegistry.gd"
 GameState="*res://scripts/core/GameState.gd"
+ProgressionManager="*res://scripts/progression/ProgressionManager.gd"
 SceneLoader="*res://scripts/core/SceneLoader.gd"
 SaveManager="*res://scripts/core/SaveManager.gd"
 InventoryManager="*res://scripts/inventory/InventoryManager.gd"

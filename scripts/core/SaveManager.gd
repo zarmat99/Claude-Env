@@ -155,6 +155,7 @@ func _normalize_stats(value) -> Dictionary:
     stats["xp"] = int(stats.get("xp", 0))
     stats["max_health"] = int(stats.get("max_health", 30))
     stats["health"] = int(stats.get("health", stats.get("max_health", 30)))
+    stats["damage"] = int(stats.get("damage", 6))
     return stats
 
 func _normalize_inventory(value) -> Array:

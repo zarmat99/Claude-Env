@@ -5,6 +5,7 @@ extends Control
 
 @onready var _bar: ProgressBar = $HealthBar
 @onready var _label: Label = $HealthBar/Label
+@onready var _progression: Label = $ProgressionLabel
 @onready var _prompt: Label = $Prompt
 
 func _ready() -> void:
@@ -19,6 +20,9 @@ func _process(_delta: float) -> void:
     _bar.max_value = max(1, max_hp)
     _bar.value = hp
     _label.text = "HP %d/%d" % [hp, max_hp]
+    var level := int(st.get("level", 1))
+    var xp := int(st.get("xp", 0))
+    _progression.text = "LV %d   XP %d/%d" % [level, xp, ProgressionManager.xp_to_next_level(level)]
 
 func _on_prompt_changed(text: String) -> void:
     _prompt.text = text

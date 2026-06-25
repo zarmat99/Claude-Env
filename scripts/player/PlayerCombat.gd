@@ -24,6 +24,7 @@ func attack() -> void:
     if _cooling or not _health.is_alive():
         return
     _cooling = true
+    _hitbox.damage = int(GameState.player.get("stats", {}).get("damage", _hitbox.damage))
     await _hitbox.strike(get_parent())   # source = the Player root
     await get_tree().create_timer(attack_cooldown).timeout
     _cooling = false

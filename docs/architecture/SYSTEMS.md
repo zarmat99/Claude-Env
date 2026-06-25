@@ -20,7 +20,7 @@ current codebase, so it should avoid "current milestone" language that can go st
   - World: `map_changed(map_id)` · `world_object_state_changed(persistent_id, state)`
   - Progression: `player_level_up(new_level)` · `xp_gained(amount)`
   - Economy: `gold_changed(new_total)`
-- **Implementation**: live; signals used by the M1-M7 systems.
+- **Implementation**: live; signals used by the M1-M8 systems.
 
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
@@ -93,11 +93,13 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Implementation**: M5 simple combat is live (health, stats, hitbox/hurtbox, enemy AI, loot).
   `DamageData` / `CombatSystem` are still deferred until needed.
 
-## Progression (stats/skills/levels) — `StatsComponent`, skills data
+## Progression — `scripts/progression/ProgressionManager.gd`, `StatsComponent`, skills data
 - **Role**: XP gain, level-up curve, stat growth, (later) skills. Reacts to `xp_gained`,
-  emits `player_level_up`.
+  grants enemy kill XP from `xp_reward`, stores `level`/`xp`/base stats in `GameState.player.stats`,
+  and emits `player_level_up`.
 - **Depends on**: GameState, EventBus, DataRegistry (skills).
-- **Implementation**: planned for M8.
+- **Implementation**: M8 done; quest rewards and enemy kills grant XP, level thresholds increase
+  max health and damage, HUD shows level/XP.
 
 ## Factions & reputation — `FactionComponent`, factions data
 - **Role**: actor faction membership; hostility checks; reputation values (later) influencing

@@ -10,29 +10,30 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **Milestone 7 — COMPLETE and verified in Godot 4.3** (M0–M6 done before it).
+- **Milestone 8 — COMPLETE and verified in Godot 4.3** (M0–M7 done before it).
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith → accept `quest_first_dungeon` → travel to the cave (quest advances on
   entering) → kill/dodge the slime, grab the ancient iron fragment → return and talk → quest
   completes, you get gold + an iron sword. Journal (J), inventory (I), combat (left mouse) all work.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `InventoryManager`, `QuestManager`,
-  `DialogueManager`, `SceneLoader`, `SaveManager`.
+  `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
   map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
   `world_objects`. Pickups stay collected and enemies with `persistent_id` stay dead.
+- Progression works: quest rewards and enemy kills grant XP; level-up increases max health and
+  damage, refills health, emits `player_level_up`, and appears in the HUD.
 - On `master`, pushed.
 
 ## Last thing done
-Updated `docs/architecture/ROADMAP.md` from an M0-M8 prototype roadmap into a production-scalability
-roadmap through M20, with explicit scalability review gates SR1-SR5. The strategic intent is now:
-finish core systems, harden tooling/validation, build authoring pipelines, then produce the real
-world/story content.
+Built Milestone 8 (progression): added `ProgressionManager` autoload, XP gain from quest rewards and
+enemy `xp_reward`, level thresholds, max-health/damage growth, level-up health refill, HUD level/XP
+display, and save/load compatibility for `damage`. Verified with headless M8 progression test and
+clean boot.
 
 ## Next thing to do
-Begin **Milestone 8 — Progression** (on user go-ahead): store XP in
-`GameState.player.stats.xp`, react to `EventBus.xp_gained`, add level thresholds/stat growth, and
-wire quest/enemy XP rewards into level-up behavior. See `TASKS.md` (M8). After M8, do **SR1 —
-Core scalability review** before continuing to M9.
+Begin **SR1 — Core scalability review**: review whether the M0-M8 skeleton remains scalable before
+M9. Focus on data-driven boundaries, hardcoded assumptions, save/load edge cases, testability,
+`persistent_id` discipline, and whether test content can be removed without breaking systems.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -62,7 +63,7 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
 ```
 Controls: move = WASD/arrows · talk = E/Space · journal = J · inventory = I · attack = left mouse ·
-save = F5 · load = F9.
+save = F5 · load = F9. HUD shows HP, level, and XP progress.
 Maps connect via walk-on pads (the colored rectangles near map edges).
 
 ## Screenshot trick (visual checks; delete temp files + clear .godot after)
@@ -78,5 +79,5 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 6. `docs/ai_memory/DECISIONS.md` · `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- (none blocking) — M7 done & verified. Known follow-ups: player death/game-over (placeholder),
+- (none blocking) — M8 done & verified. Known follow-ups: player death/game-over (placeholder),
   input actions for J/I/F5/F9/attack (currently hardcoded keys), save UI/slots beyond debug keys.

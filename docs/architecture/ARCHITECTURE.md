@@ -34,6 +34,7 @@ res://
     core/        GameState.gd EventBus.gd DataRegistry.gd SceneLoader.gd SaveManager.gd IdUtils.gd
     components/  HealthComponent.gd StatsComponent.gd InventoryComponent.gd
                  InteractionComponent.gd FactionComponent.gd LootComponent.gd EquipmentComponent.gd
+    progression/ ProgressionManager.gd
     player/      PlayerController.gd PlayerInteraction.gd
     actors/      Actor.gd
     enemies/     EnemyAI.gd
@@ -75,10 +76,12 @@ Load order matters (later ones may use earlier ones):
 2. **DataRegistry** — loads & validates all `data/*.json` at boot; exposes typed lookups by ID.
 3. **GameState** — runtime source of truth (current map, player snapshot, quests, inventory,
    gold, flags, persistent-object state). Depends on DataRegistry for defaults.
-4. **SceneLoader** — async map/scene swapping + spawn-point placement. Uses GameState, EventBus.
-5. **QuestManager / DialogueManager / InventoryManager** — gameplay managers; read DataRegistry,
+4. **ProgressionManager** — applies XP/level/stat growth from rewards and kills.
+5. **SceneLoader** — async map/scene swapping + spawn-point placement. Uses GameState, EventBus.
+6. **SaveManager** — serializes/deserializes GameState ↔ `user://`; loaded after core state/
+   progression/map systems and before gameplay managers.
+7. **QuestManager / DialogueManager / InventoryManager** — gameplay managers; read DataRegistry,
    mutate GameState, emit via EventBus. (Added per milestone; stubs from M0.)
-6. **SaveManager** — serializes/deserializes GameState ↔ `user://`. Loaded last.
 
 `IdUtils` is **not** an autoload (static helper).
 
