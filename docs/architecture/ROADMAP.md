@@ -102,6 +102,9 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
 - **Exit criteria**: one small map renders with coherent tileable art, no atlas-cell gutters, no
   oversized props, no placeholder object overlays, and an approved screenshot captured from Godot.
   M10R must use Image Gen through `docs/architecture/IMAGE_GEN_ASSET_RULES.md`.
+- **Status 2026-06-26**: first governed candidate batch generated from atomic Image Gen outputs:
+  three terrain tiles, two object sprites, metadata validation, and a Godot-generated review
+  screenshot. Assets remain `approved: false` until visual approval.
 
 ## SR2 — Map scalability review
 - **Goal**: prove that the world can grow without architectural drift.

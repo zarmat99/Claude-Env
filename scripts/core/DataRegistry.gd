@@ -12,6 +12,7 @@ const FILES := {
     "factions": "res://data/factions/factions.json",
     "skills": "res://data/skills/skills.json",
     "asset_sets": "res://data/assets/asset_sets.json",
+    "generated_assets": "res://data/assets/generated_assets.json",
     "world_objects": "res://data/world/world_objects.json",
     "maps": "res://data/maps/maps.json",
 }
@@ -25,6 +26,7 @@ const ID_PREFIXES := {
     "factions": "faction_",
     "skills": "skill_",
     "asset_sets": "asset_",
+    "generated_assets": "asset_",
     "world_objects": "world_object_",
     "maps": "map_",
 }
@@ -50,6 +52,7 @@ const DIALOGUE_ACTION_TYPES := [
 ]
 
 const ASSET_TILE_COLLISIONS := ["none", "solid", "water"]
+const GENERATED_ASSET_CLASSES := ["terrain_tile", "transition_tile", "object_sprite", "actor_sprite"]
 const WORLD_OBJECT_KINDS := ["chest", "door", "switch", "pickup", "enemy"]
 
 var _tables: Dictionary = {}
@@ -70,6 +73,7 @@ func validate_all() -> bool:
     _validate_factions()
     _validate_skills()
     _validate_asset_sets()
+    _validate_generated_assets()
     _validate_world_objects()
     _validate_npcs()
     _validate_enemies()
@@ -125,6 +129,7 @@ func get_enemy(content_id: String) -> Dictionary: return _entry("enemies", conte
 func get_faction(content_id: String) -> Dictionary: return _entry("factions", content_id)
 func get_skill(content_id: String) -> Dictionary: return _entry("skills", content_id)
 func get_asset_set(content_id: String) -> Dictionary: return _entry("asset_sets", content_id)
+func get_generated_asset(content_id: String) -> Dictionary: return _entry("generated_assets", content_id)
 func get_world_object(content_id: String) -> Dictionary: return _entry("world_objects", content_id)
 func get_map(content_id: String) -> Dictionary: return _entry("maps", content_id)
 
@@ -245,6 +250,37 @@ func _validate_asset_sets() -> void:
             var collision := String(tile.get("collision", ""))
             if not ASSET_TILE_COLLISIONS.has(collision):
                 _error("%s.collision has unsupported value '%s'" % [tile_path, collision])
+
+func _validate_generated_assets() -> void:
+    for raw_asset_id in all("generated_assets").keys():
+        var asset_id := String(raw_asset_id)
+        var asset := get_generated_asset(asset_id)
+        var path := "generated_assets/%s" % asset_id
+
+        if String(asset.get("source", "")) != "image_gen":
+            _error("%s.source must be image_gen" % path)
+        var asset_class := String(asset.get("class", ""))
+        if not GENERATED_ASSET_CLASSES.has(asset_class):
+            _error("%s.class has unsupported value '%s'" % [path, asset_class])
+        _require_string(asset, path, "prompt")
+        _require_existing_file(String(asset.get("original_file", "")), "%s.original_file" % path)
+        _require_existing_file(String(asset.get("processed_file", "")), "%s.processed_file" % path)
+        _validate_positive_size_dict(asset.get("source_size", {}), "%s.source_size" % path)
+        _validate_positive_size_dict(asset.get("world_size", {}), "%s.world_size" % path)
+
+        var screenshot := String(asset.get("approval_screenshot", ""))
+        if screenshot != "":
+            _require_existing_file(screenshot, "%s.approval_screenshot" % path)
+
+        match asset_class:
+            "terrain_tile", "transition_tile":
+                var collision := String(asset.get("collision", ""))
+                if not ASSET_TILE_COLLISIONS.has(collision):
+                    _error("%s.collision has unsupported value '%s'" % [path, collision])
+            "object_sprite", "actor_sprite":
+                _require_string(asset, path, "pivot")
+                _validate_positive_size_dict(asset.get("footprint_tiles", {}), "%s.footprint_tiles" % path)
+                _require_string(asset, path, "collision_shape")
 
 func _validate_world_objects() -> void:
     for raw_world_object_id in all("world_objects").keys():
@@ -720,6 +756,13 @@ func _validate_vector2_dict(value, path: String) -> void:
     if not value.has("x") or not value.has("y"):
         _error("%s must contain x and y" % path)
 
+func _validate_positive_size_dict(value, path: String) -> void:
+    _validate_vector2_dict(value, path)
+    if not (value is Dictionary):
+        return
+    if int(value.get("x", 0)) <= 0 or int(value.get("y", 0)) <= 0:
+        _error("%s x/y must be positive" % path)
+
 func _collect_spawn_points(root: Node) -> Array[String]:
     var out: Array[String] = []
     for node in _walk_nodes(root):
@@ -752,6 +795,12 @@ func _require_ref(table: String, content_id: String, path: String) -> void:
         _error("%s is empty" % path)
     elif not has_id(table, content_id):
         _error("%s references missing %s ID '%s'" % [path, table, content_id])
+
+func _require_existing_file(path: String, field_path: String) -> void:
+    if path == "":
+        _error("%s is empty" % field_path)
+    elif not FileAccess.file_exists(path):
+        _error("%s references missing file '%s'" % [field_path, path])
 
 func _require_asset_tile(asset_set_id: String, tile_id: String, path: String) -> void:
     if asset_set_id == "":
