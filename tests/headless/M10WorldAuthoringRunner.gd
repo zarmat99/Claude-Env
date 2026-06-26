@@ -1,9 +1,11 @@
 extends Node
 
+const PlayerScene := preload("res://scenes/player/Player.tscn")
 const ChestScene := preload("res://scenes/world/Chest.tscn")
 const DoorScene := preload("res://scenes/world/Door.tscn")
 const SwitchScene := preload("res://scenes/world/Switch.tscn")
 const PersistentWorldObject := preload("res://scripts/world/PersistentWorldObject.gd")
+const WorldScale := preload("res://scripts/core/WorldScale.gd")
 
 var _failures: Array[String] = []
 
@@ -13,6 +15,7 @@ func _ready() -> void:
 func _run() -> void:
     print("[M10] World authoring quarantine runner starting")
     _test_failed_probe_is_not_active()
+    _test_placeholder_collision_scale()
     await _test_world_objects_still_work()
     await _frames(2)
 
@@ -36,6 +39,20 @@ func _test_failed_probe_is_not_active() -> void:
     _assert(ResourceLoader.exists("res://scenes/world/Door.tscn"), "Door scene should remain available")
     _assert(ResourceLoader.exists("res://scenes/world/Switch.tscn"), "Switch scene should remain available")
     _assert(FileAccess.file_exists("res://scripts/world/AuthoredMap.gd"), "AuthoredMap code should remain available for the next governed asset probe")
+
+func _test_placeholder_collision_scale() -> void:
+    var player := PlayerScene.instantiate()
+    var player_collision := player.get_node("CollisionShape2D") as CollisionShape2D
+    var player_rect := player_collision.shape as RectangleShape2D
+    _assert(_near_vec(player_rect.size, WorldScale.PLAYER_COLLISION_SIZE), "Player collision should match placeholder visual scale")
+    _assert(_near_vec(player_collision.position, WorldScale.PLAYER_COLLISION_OFFSET), "Player collision should be aligned with the placeholder visual")
+    player.free()
+
+    var chest := ChestScene.instantiate()
+    var chest_collision := chest.get_node("CollisionShape2D") as CollisionShape2D
+    var chest_rect := chest_collision.shape as RectangleShape2D
+    _assert(chest_rect.size.x >= 40.0 and chest_rect.size.y >= 30.0, "Chest collision should block its visible placeholder body")
+    chest.free()
 
 func _test_world_objects_still_work() -> void:
     GameState.reset_to_new_game()
@@ -79,3 +96,6 @@ func _frames(count: int) -> void:
 func _assert(condition: bool, message: String) -> void:
     if not condition:
         _failures.append(message)
+
+func _near_vec(a: Vector2, b: Vector2, epsilon: float = 0.01) -> bool:
+    return a.distance_to(b) <= epsilon

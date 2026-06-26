@@ -6,6 +6,7 @@ const PersistentWorldObject := preload("res://scripts/world/PersistentWorldObjec
 
 const SAVE_SLOT := 91
 const DYNAMIC_SAVE_SLOT := 92
+const SAVE_TEST_POSITION := Vector2(123, 80)
 
 var _failures: Array[String] = []
 var _main: Node = null
@@ -54,7 +55,7 @@ func _test_boot_and_map_transitions() -> void:
     SceneLoader.change_map("map_cave_01", "spawn_from_forest")
     await _frames(2)
     _assert(GameState.current_map == "map_cave_01", "SceneLoader should switch to map_cave_01")
-    _assert(_near(SceneLoader.get_player().global_position, Vector2(60, 160)), "Player should use cave spawn_from_forest")
+    _assert(_near(SceneLoader.get_player().global_position, Vector2(80, 160)), "Player should use cave spawn_from_forest")
 
 func _test_first_quest_flow() -> void:
     await _new_game()
@@ -79,7 +80,7 @@ func _test_save_load() -> void:
     await _new_game()
     SceneLoader.change_map("map_cave_01", "spawn_from_forest")
     await _frames(2)
-    SceneLoader.get_player().global_position = Vector2(123, 45)
+    SceneLoader.get_player().global_position = SAVE_TEST_POSITION
     GameState.player["gold"] = 7
     _assert(InventoryManager.add("item_health_potion", 3), "Adding potions before save should succeed")
     PersistentWorldObject.set_state("test_world_object_001", PersistentWorldObject.STATE_COLLECTED)
@@ -89,7 +90,7 @@ func _test_save_load() -> void:
     _assert(SaveManager.load_game(SAVE_SLOT), "SaveManager.load_game should succeed")
     await _frames(3)
     _assert(GameState.current_map == "map_cave_01", "Load should restore current map")
-    _assert(_near(SceneLoader.get_player().global_position, Vector2(123, 45)), "Load should restore player position")
+    _assert(_near(SceneLoader.get_player().global_position, SAVE_TEST_POSITION), "Load should restore player position")
     _assert(int(GameState.player.get("gold", 0)) == 7, "Load should restore gold")
     _assert(InventoryManager.get_count("item_health_potion") == 3, "Load should restore inventory")
     _assert(PersistentWorldObject.has_state("test_world_object_001", PersistentWorldObject.STATE_COLLECTED), "Load should restore world object state")

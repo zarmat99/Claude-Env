@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://scripts/components/InteractionComponent.gd" id="2_ic"]
 
 [sub_resource type="RectangleShape2D" id="rect_body"]
-size = Vector2(18, 18)
+size = Vector2(36, 44)
 
 [sub_resource type="CircleShape2D" id="circle_int"]
 radius = 42.0
@@ -17,6 +17,7 @@ color = Color(0.85, 0.55, 0.25, 1)
 polygon = PackedVector2Array(-18, -30, 18, -30, 18, 14, -18, 14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
 shape = SubResource("rect_body")
 
 [node name="NameLabel" type="Label" parent="."]
