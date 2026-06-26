@@ -51,9 +51,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 ## 5. Current state
 - **Milestone 10 systems are implemented and verified in Godot 4.3, but the asset-proxy visual
   review failed.** M0-M9 and SR1 complete before it.
-- Village / Forest / Cave remain the connected dev sandbox/regression slice. Forest now also
-  connects to `map_probe_ruins`, an M10 sandbox map for world-authoring and asset-pipeline
-  validation.
+- Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
+  `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
   `map_changed`. `quest_first_dungeon` remains completable in-world: blacksmith -> forest -> cave
   -> fragment -> return + talk -> reward.
@@ -67,18 +66,18 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - M9 adds `DataRegistry.validate_all()` preflight checks, input actions, unknown-ID runtime
   guardrails, dynamic pickup persistence through `GameState.world_objects`, and persistent headless
   regression coverage.
-- M10 adds `asset_sets.json`, `world_objects.json`, `AuthoredMap.gd`, a normalized generated proxy
-  atlas (`assets/tilesets/proxy_dark_fantasy_atlas.png`, 1024x1024, 8x8), `ProbeRuins.tscn`,
-  chest/door/switch scenes, authored map validation, and `M10WorldAuthoringRunner`.
+- M10 adds `asset_sets.json`, `world_objects.json`, `AuthoredMap.gd`, chest/door/switch scenes,
+  authored map validation, and `M10WorldAuthoringRunner`. The failed generated atlas and
+  `ProbeRuins.tscn` were removed from active content after visual review.
 - **Important asset warning**: the Imagen atlas is not acceptable as a serious tileset. It is a
   collage in grid form: not tileable, visibly framed/guttered, inconsistent in scale, and produces
-  bad maps when sliced into cells. Treat it as a failed probe, not a production or production-proxy
-  asset.
+  bad maps when sliced into cells. It has been removed from active assets; use git history/review
+  docs only if the failed example is needed.
 - User decision (2026-06-26): Image Gen remains the source of real assets. The corrected pipeline
   is documented in `docs/architecture/IMAGE_GEN_ASSET_RULES.md`: generate one atomic asset at a
   time, process/pack by tooling, separate terrain from sprites, and require screenshot approval.
 - Verified: Godot headless import and `.\test.bat` pass. The command now runs M9 regression plus
-  M10 world-authoring regression.
+  M10 quarantine/world-object smoke coverage.
 - Note: player death is still a placeholder (respawn full HP).
 - Next: M10R (Asset-pipeline remediation gate), then SR2.
 
@@ -113,8 +112,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   save F5 · load F9. Code now reads input action names for journal/inventory/attack/save/load.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
-- M8 Progression, SR1 Core scalability review, M9 Data & tooling hardening, and M10 World
-  authoring pipeline are complete.
+- M8 Progression, SR1 Core scalability review, M9 Data & tooling hardening, and M10 reusable
+  world-authoring systems are complete; M10R is active for the visual asset pipeline.
 - M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
   dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
@@ -151,8 +150,7 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **Content IDs** (defined in `data/`): `item_iron_sword`, `item_health_potion`,
   `item_ancient_iron_fragment`, `quest_first_dungeon`, `npc_blacksmith_valdombra`,
   `enemy_cave_rat`, `faction_valdombra_village`, `dialogue_blacksmith_intro`, `map_village`,
-  `map_forest`, `map_cave_01`, `map_probe_ruins`, `skill_one_handed`,
-  `asset_proxy_dark_fantasy`, `world_object_proxy_chest`.
+  `map_forest`, `map_cave_01`, `skill_one_handed`.
 - **Persistent world-object IDs** (`persistent_id`): every world object whose state must survive
   save/reload (chests, unique loot, doors, bosses, switches) carries a stable, globally-unique
   `persistent_id`: `chest_forest_001`, `enemy_cave_boss_001`, `door_mine_locked_001`,
@@ -172,11 +170,11 @@ SR2.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M10's code path is verified but its visual asset probe failed**:
-Village/Forest/Cave remain the playable dev slice, `map_probe_ruins` proves data-authored map
-generation mechanically, but the generated atlas is not a serious tileset. Save/load, progression,
-quest flow, dynamic pickups, and world-object states are covered by `.\test.bat`. The next milestone
-is **M10R-T6 governed Image Gen asset generation**, then SR2.
+GDScript, designed to scale. **M10's reusable code path is verified but its visual asset probe
+failed and was removed from active content**. Village/Forest/Cave remain the playable dev slice.
+Save/load, progression, quest flow, dynamic pickups, quarantine checks, and world-object states are
+covered by `.\test.bat`. The next milestone is **M10R-T6 governed Image Gen asset generation**,
+then SR2.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

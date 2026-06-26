@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-06-26 - Session 018 - Remove failed M10 probe files
+
+- **Goal**: remove the failed old asset/map files from active content before generating governed
+  replacements.
+- **Files removed**: `assets/tilesets/proxy_dark_fantasy_atlas.png`,
+  `assets/tilesets/proxy_dark_fantasy_atlas.png.import`, `scenes/maps/ProbeRuins.tscn`.
+- **Files modified**: `data/maps/maps.json`, `data/assets/asset_sets.json`,
+  `data/world/world_objects.json`, `scenes/maps/Forest.tscn`,
+  `tests/headless/M10WorldAuthoringRunner.gd`, docs/memory/schema files.
+- **Result**: `map_probe_ruins`, `asset_proxy_dark_fantasy`, and `world_object_proxy_*` are no
+  longer active. Forest is back to Village/Cave connectivity only. The M10 runner now verifies the
+  failed probe is inactive and smoke-tests chest/door/switch persistence.
+- **Next**: M10R-T6 - generate the first governed Image Gen asset set.
+
+---
+
 ## 2026-06-26 - Session 017 - Image Gen asset rules
 
 - **Goal**: keep Image Gen as the real asset source while preventing another generated-atlas failure.

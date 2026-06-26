@@ -27,7 +27,7 @@ res://
     actors/      ActorBase.tscn
     enemies/     EnemyBase.tscn  Slime.tscn
     npcs/        NPCBase.tscn    Blacksmith.tscn
-    maps/        Village.tscn    Forest.tscn   Cave.tscn   ProbeRuins.tscn
+    maps/        Village.tscn    Forest.tscn   Cave.tscn
     world/       Chest.tscn      Door.tscn     Switch.tscn
     items/       PickupItem.tscn
     ui/          HUD.tscn DialogueBox.tscn InventoryUI.tscn QuestJournalUI.tscn
@@ -106,9 +106,9 @@ Load order matters (later ones may use earlier ones):
   `SceneLoader`) and a `UIRoot` (HUD + windows). Autoloads exist above the tree.
 - Boot: autoloads initialize → DataRegistry loads JSON → GameState builds initial/new-game state
   → SceneLoader loads the start map into `WorldRoot` and places the player at a `SpawnPoint`.
-- Maps are separate scenes (`Village/Forest/Cave/ProbeRuins`) connected by `AreaTransition` nodes
-  that carry `target_map_id` + `target_spawn_point_id` (+ optional condition). Some maps may use
-  `AuthoredMap.gd` to build tile layers, collisions, spawns, transitions, and objects from
+- Maps are separate scenes (`Village/Forest/Cave`) connected by `AreaTransition` nodes that carry
+  `target_map_id` + `target_spawn_point_id` (+ optional condition). Future governed asset-probe maps
+  may use `AuthoredMap.gd` to build tile layers, collisions, spawns, transitions, and objects from
   `maps.json`.
 
 ## 6. Data flow (example: pick up an item)

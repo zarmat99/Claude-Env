@@ -144,10 +144,10 @@ implemented, validation rejects them so authoring mistakes do not silently do no
 ## assets/asset_sets.json (M10)
 ```json
 {
-  "asset_proxy_dark_fantasy": {
-    "id": "asset_proxy_dark_fantasy",
-    "name": "Dark Fantasy Proxy Atlas",
-    "atlas": "res://assets/tilesets/proxy_dark_fantasy_atlas.png",
+  "asset_generated_dev_tileset": {
+    "id": "asset_generated_dev_tileset",
+    "name": "Generated Dev Tileset",
+    "atlas": "res://assets/tilesets/generated/dev_tileset.png",
     "source_tile_size": 128,
     "world_tile_size": 64,
     "columns": 8,
@@ -180,11 +180,11 @@ Validated by `DataRegistry`: atlas path exists and loads as `Texture2D`; dimensi
 ## world/world_objects.json (M10)
 ```json
 {
-  "world_object_proxy_chest": {
-    "id": "world_object_proxy_chest",
+  "world_object_generated_chest": {
+    "id": "world_object_generated_chest",
     "kind": "chest",
     "scene": "res://scenes/world/Chest.tscn",
-    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_set": "asset_generated_dev_tileset",
     "asset_tile": "tile_closed_chest",
     "persistent": true
   }
@@ -200,13 +200,13 @@ world objects need a stable `persistent_id` when placed in a scene or authored m
   "map_village": { "id": "map_village", "scene": "res://scenes/maps/Village.tscn",
     "display_name": "Valdombra Village", "region": "region_dev_sandbox",
     "dev_role": "vertical_slice", "spawn_points": ["spawn_default", "spawn_from_forest"] },
-  "map_probe_ruins": {
-    "id": "map_probe_ruins",
-    "scene": "res://scenes/maps/ProbeRuins.tscn",
-    "display_name": "Proxy Ruins Testbed",
+  "map_generated_probe": {
+    "id": "map_generated_probe",
+    "scene": "res://scenes/maps/GeneratedProbe.tscn",
+    "display_name": "Generated Asset Probe",
     "region": "region_dev_sandbox",
     "dev_role": "asset_probe",
-    "asset_set": "asset_proxy_dark_fantasy",
+    "asset_set": "asset_generated_dev_tileset",
     "spawn_points": ["spawn_probe_entry", "spawn_probe_exit"],
     "authoring": {
       "width": 2,
@@ -225,7 +225,7 @@ world objects need a stable `persistent_id` when placed in a scene or authored m
       }],
       "objects": [{
         "name": "ProbeChest",
-        "world_object": "world_object_proxy_chest",
+        "world_object": "world_object_generated_chest",
         "persistent_id": "chest_probe_ruins_001",
         "position": { "x": 224, "y": 160 },
         "loot": [{ "id": "item_health_potion", "count": 2 }]

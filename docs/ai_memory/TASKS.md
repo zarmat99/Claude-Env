@@ -13,8 +13,6 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ## Backlog
 
 ### M10R - Asset-pipeline remediation gate
-- **M10R-T3 · Replace or quarantine failed Imagen atlas** · backlog: stop using the generated atlas
-  as a serious tileset; generate atomic replacement assets under `IMAGE_GEN_ASSET_RULES.md`.
 - **M10R-T4 · Separate terrain tiles from object sprites** · backlog: tileable floors/walls belong
   in terrain layers; chests, doors, switches, barrels, props, enemies, and pickups are sprites or
   scenes with pivots/scale rules.
@@ -33,6 +31,13 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M10R-T3 · Quarantine failed M10 probe content** · M10R · files:
+  `assets/tilesets/proxy_dark_fantasy_atlas.png`, `scenes/maps/ProbeRuins.tscn`,
+  `data/{assets,world}/`, `data/maps/maps.json`, `scenes/maps/Forest.tscn`,
+  `tests/headless/M10WorldAuthoringRunner.gd` · **done** (2026-06-26): removed the failed atlas,
+  import file, probe scene, active map link, proxy asset set, and proxy world-object data from
+  active content; runner now verifies the failed probe is inactive while preserving useful M10
+  code smoke coverage.
 - **M10R-T2 · Choose tile-source strategy** · M10R · files:
   `docs/architecture/IMAGE_GEN_ASSET_RULES.md`, `docs/ai_memory/DECISIONS.md` · **done**
   (2026-06-26): user confirmed Image Gen remains the primary real-asset source; the fix is atomic
@@ -48,9 +53,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   import/schema mechanics, but screenshot review proved the direct generated-atlas approach is not
   acceptable for serious map art. Follow-up moved to M10R.
 - **M10-T4 · Dev sandbox vs production start separation** · M10 · files:
-  `data/maps/maps.json`, `scenes/maps/{Forest,ProbeRuins}.tscn` · **done** (2026-06-25): kept the
-  existing Village/Forest/Cave slice as dev sandbox content and added `map_probe_ruins` as an
-  explicit asset/world-authoring testbed connected from Forest.
+  `data/maps/maps.json`, `scenes/maps/Forest.tscn` · **done** (2026-06-25): kept the existing
+  Village/Forest/Cave slice as dev sandbox content; the failed probe map added during M10 was
+  removed from active content during M10R.
 - **M10-T3 · Spawn/transition/encounter validation expansion** · M10 · files:
   `scripts/core/DataRegistry.gd`, `data/maps/maps.json` · **done** (2026-06-25): validation now
   checks authored spawns, transition targets, map layer dimensions/tile IDs, placed pickups,

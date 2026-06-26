@@ -27,7 +27,8 @@ is wrong. A usable tile pipeline needs explicit source constraints and review:
 ## Required Remediation Before SR2
 1. Keep Image Gen as the primary real-asset source, per user decision on 2026-06-26.
 2. Follow `docs/architecture/IMAGE_GEN_ASSET_RULES.md`.
-3. Replace or quarantine `assets/tilesets/proxy_dark_fantasy_atlas.png`.
+3. Keep the failed `assets/tilesets/proxy_dark_fantasy_atlas.png` removed from active content
+   (completed 2026-06-26; retained only in git history).
 4. Generate atomic assets one by one: terrain tiles, transition tiles, object sprites, actor
    sprites.
 5. Separate terrain tile layers from object sprites/scenes.

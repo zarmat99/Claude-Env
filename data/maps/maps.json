@@ -13,7 +13,7 @@
     "display_name": "Whispering Forest",
     "region": "region_dev_sandbox",
     "dev_role": "vertical_slice",
-    "spawn_points": ["spawn_from_village", "spawn_from_cave", "spawn_from_probe"]
+    "spawn_points": ["spawn_from_village", "spawn_from_cave"]
   },
   "map_cave_01": {
     "id": "map_cave_01",
@@ -22,90 +22,5 @@
     "region": "region_dev_sandbox",
     "dev_role": "vertical_slice",
     "spawn_points": ["spawn_from_forest"]
-  },
-  "map_probe_ruins": {
-    "id": "map_probe_ruins",
-    "scene": "res://scenes/maps/ProbeRuins.tscn",
-    "display_name": "Proxy Ruins Testbed",
-    "region": "region_dev_sandbox",
-    "dev_role": "asset_probe",
-    "asset_set": "asset_proxy_dark_fantasy",
-    "spawn_points": ["spawn_probe_entry", "spawn_probe_exit"],
-    "authoring": {
-      "width": 10,
-      "height": 8,
-      "layers": {
-        "ground": [
-          ["tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall"],
-          ["tile_stone_wall", "tile_cobblestone", "tile_cobblestone", "tile_stone_floor", "tile_stone_floor", "tile_stone_floor", "tile_stone_floor", "tile_cobblestone", "tile_cobblestone", "tile_stone_wall"],
-          ["tile_stone_wall", "tile_cobblestone", "tile_dirt_path", "tile_dirt_path", "tile_stone_floor", "tile_stone_floor", "tile_dirt_path", "tile_dirt_path", "tile_cobblestone", "tile_stone_wall"],
-          ["tile_stone_wall", "tile_cave_floor", "tile_dirt_path", "tile_shallow_water", "tile_wood_bridge", "tile_wood_bridge", "tile_shallow_water", "tile_dirt_path", "tile_cave_floor", "tile_stone_wall"],
-          ["tile_stone_wall", "tile_cave_floor", "tile_dirt_path", "tile_dirt_path", "tile_stone_floor", "tile_stone_floor", "tile_dirt_path", "tile_dirt_path", "tile_cave_floor", "tile_stone_wall"],
-          ["tile_stone_wall", "tile_grass_moss", "tile_grass_moss", "tile_dirt_path", "tile_stone_floor", "tile_stone_floor", "tile_dirt_path", "tile_grass_moss", "tile_grass_moss", "tile_stone_wall"],
-          ["tile_stone_wall", "tile_grass_moss", "tile_grass_moss", "tile_dirt_path", "tile_dirt_path", "tile_dirt_path", "tile_dirt_path", "tile_grass_moss", "tile_grass_moss", "tile_stone_wall"],
-          ["tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall", "tile_stone_wall"]
-        ],
-        "props": [
-          ["", "", "", "", "", "", "", "", "", ""],
-          ["", "tile_ruined_wall", "", "", "", "", "", "", "tile_moss_rock", ""],
-          ["", "", "", "", "", "", "", "", "", ""],
-          ["", "", "", "", "", "", "", "", "", ""],
-          ["", "tile_forest_brush", "", "", "tile_floor_crack", "tile_floor_crack", "", "", "tile_barrel", ""],
-          ["", "", "", "", "", "", "", "", "", ""],
-          ["", "", "tile_stump", "", "", "", "", "tile_bone_pile", "", ""],
-          ["", "", "", "", "", "", "", "", "", ""]
-        ]
-      },
-      "spawns": [
-        { "id": "spawn_probe_entry", "position": { "x": 96, "y": 352 } },
-        { "id": "spawn_probe_exit", "position": { "x": 544, "y": 352 } }
-      ],
-      "transitions": [
-        {
-          "name": "ToForest",
-          "position": { "x": 608, "y": 352 },
-          "size": { "x": 36, "y": 104 },
-          "target_map": "map_forest",
-          "target_spawn": "spawn_from_probe"
-        }
-      ],
-      "objects": [
-        {
-          "name": "ProbeChest",
-          "world_object": "world_object_proxy_chest",
-          "persistent_id": "chest_probe_ruins_001",
-          "position": { "x": 224, "y": 160 },
-          "loot": [{ "id": "item_health_potion", "count": 2 }]
-        },
-        {
-          "name": "ProbeDoor",
-          "world_object": "world_object_proxy_door",
-          "persistent_id": "door_probe_ruins_001",
-          "position": { "x": 352, "y": 160 }
-        },
-        {
-          "name": "ProbeSwitch",
-          "world_object": "world_object_proxy_switch",
-          "persistent_id": "switch_probe_ruins_001",
-          "position": { "x": 224, "y": 288 },
-          "target_persistent_id": "door_probe_ruins_001"
-        },
-        {
-          "name": "ProbePotion",
-          "world_object": "world_object_proxy_pickup",
-          "persistent_id": "potion_probe_ruins_001",
-          "position": { "x": 480, "y": 224 },
-          "item_id": "item_health_potion",
-          "count": 1
-        },
-        {
-          "name": "ProbeSlime",
-          "world_object": "world_object_proxy_slime",
-          "persistent_id": "enemy_probe_ruins_slime_001",
-          "position": { "x": 480, "y": 160 },
-          "enemy_id": "enemy_slime"
-        }
-      ]
-    }
   }
 }

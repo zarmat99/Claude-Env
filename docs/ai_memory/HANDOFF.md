@@ -16,12 +16,9 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
   entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
   completes, you get gold + an iron sword. Journal (J), inventory (I), combat (left mouse) all work.
-- **M10 world-authoring probe**: Forest connects to `map_probe_ruins`, a data-authored sandbox map
-  built by `AuthoredMap.gd` from `maps.json`. Mechanically it validates tile/layer/collision
-  metadata and spawns chest/door/switch/pickup/enemy objects from data. Visually, the generated
-  normalized atlas `assets/tilesets/proxy_dark_fantasy_atlas.png` is unacceptable: it is a collage
-  sliced into cells, with gutters/framing, inconsistent scale, non-tileable terrain, and placeholder
-  object overlays.
+- **M10 failed probe removed from active content**: the bad `map_probe_ruins` map, failed proxy
+  atlas, and proxy asset/world-object data are no longer active. The reusable code (`AuthoredMap`,
+  chest/door/switch objects, validation) remains for M10R.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `InventoryManager`, `QuestManager`,
   `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
@@ -34,8 +31,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   inventory/attack/save/load, dynamic pickup persistence, and persistent headless regression files
   under `tests/headless/`.
 - M10 added `asset_sets.json`, `world_objects.json`, persistent chest/door/switch objects,
-  authored-map validation, and `tests/headless/M10WorldAuthoringRunner`. These prove the code path,
-  not the art pipeline.
+  authored-map validation, and `tests/headless/M10WorldAuthoringRunner`. The runner now verifies
+  the failed probe is not active and smoke-tests the useful world-object library.
 - Verified with Godot headless import and `.\test.bat` (runs M9 + M10).
 - On `master`, pushed.
 
