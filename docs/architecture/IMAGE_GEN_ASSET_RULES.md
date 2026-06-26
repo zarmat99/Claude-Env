@@ -116,6 +116,19 @@ Rules:
 9. Human approves or rejects the screenshot.
 10. Only approved assets can be used by maps outside isolated experiments.
 
+## World Scale Contract
+All generated art must be judged against the same fundamental unit:
+
+- 1 gameplay tile = 64x64 world pixels.
+- Terrain sources are processed to 128x128 and rendered as one 64x64 tile.
+- One-tile object sprites use a 64x64 world render envelope by default.
+- Player/NPC visuals are larger than the old debug square: the current placeholder target is
+  36x44 world pixels, with a smaller collision footprint.
+- Visual size, collision footprint, and gameplay footprint are separate concepts.
+- Do not fix proportion problems by shrinking every object below the tile unit. First check the
+  player/actor visual scale, then object metadata, then collision/footprint.
+- Every visual gate must include a player-scale reference next to props and terrain.
+
 ## Mandatory Metadata
 Every generated asset needs a small metadata entry or sidecar file with:
 

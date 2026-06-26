@@ -1,10 +1,15 @@
 extends Node2D
 
+const WorldScale := preload("res://scripts/core/WorldScale.gd")
+
 const OUTPUT_PATH := "res://assets/previews/generated/m10r_godot_preview.png"
 const VIEWPORT_SIZE := Vector2i(480, 270)
-const WORLD_TILE_SIZE := 64.0
-const SOURCE_TILE_SIZE := 128.0
+const WORLD_TILE_SIZE := WorldScale.TILE_SIZE
+const SOURCE_TILE_SIZE := WorldScale.SOURCE_TILE_SIZE
+const PLAYER_REFERENCE_SIZE := WorldScale.PLAYER_VISUAL_SIZE
 const ASSET_SET_ID := "asset_generated_m10r_dev"
+const CHEST_ASSET_ID := "asset_sprite_chest_closed_a"
+const LEVER_ASSET_ID := "asset_sprite_lever_switch_a"
 const TILE_IDS := {
     "stone": "tile_generated_stone_floor_a",
     "dirt": "tile_generated_dirt_path_a",
@@ -55,8 +60,9 @@ func _draw() -> void:
         for x in range(row.size()):
             _draw_tile(String(row[x]), origin + Vector2(x, y) * WORLD_TILE_SIZE)
 
-    _draw_object(_chest, origin + Vector2(2.5, 2.75) * WORLD_TILE_SIZE)
-    _draw_object(_lever, origin + Vector2(4.55, 2.0) * WORLD_TILE_SIZE)
+    _draw_object(_chest, CHEST_ASSET_ID, origin + Vector2(2.5, 2.75) * WORLD_TILE_SIZE)
+    _draw_object(_lever, LEVER_ASSET_ID, origin + Vector2(4.55, 2.0) * WORLD_TILE_SIZE)
+    _draw_player_reference(origin + Vector2(3.5, 2.5) * WORLD_TILE_SIZE)
 
 func _draw_tile(layout_key: String, top_left: Vector2) -> void:
     var tile_id := String(TILE_IDS.get(layout_key, ""))
@@ -76,10 +82,13 @@ func _draw_tile(layout_key: String, top_left: Vector2) -> void:
         source
     )
 
-func _draw_object(texture: Texture2D, bottom_center: Vector2) -> void:
-    var target_size := Vector2(WORLD_TILE_SIZE, WORLD_TILE_SIZE)
+func _draw_object(texture: Texture2D, asset_id: String, bottom_center: Vector2) -> void:
+    var target_size := _asset_world_size(asset_id)
     var rect := Rect2(bottom_center - Vector2(target_size.x * 0.5, target_size.y), target_size)
     draw_texture_rect(texture, rect, false)
+
+func _draw_player_reference(center: Vector2) -> void:
+    draw_rect(Rect2(center - PLAYER_REFERENCE_SIZE * 0.5, PLAYER_REFERENCE_SIZE), Color(0.37, 0.64, 1.0), true)
 
 func _validate_registry() -> void:
     _assert(DataRegistry.validate_all(), "DataRegistry validation failed: %s" % str(DataRegistry.get_validation_errors()))
@@ -126,8 +135,9 @@ func _compose_review_image() -> Image:
         for x in range(row.size()):
             _blend_tile(image, atlas_image, String(row[x]), origin + Vector2i(x, y) * int(WORLD_TILE_SIZE))
 
-    _blend_object(image, chest_image, origin + Vector2i(160, 176))
-    _blend_object(image, lever_image, origin + Vector2i(291, 128))
+    _blend_object(image, chest_image, CHEST_ASSET_ID, origin + Vector2i(160, 176))
+    _blend_object(image, lever_image, LEVER_ASSET_ID, origin + Vector2i(291, 128))
+    _blend_player_reference(image, origin + Vector2i(224, 160))
     return image
 
 func _blend_tile(target: Image, atlas_image: Image, layout_key: String, top_left: Vector2i) -> void:
@@ -143,11 +153,29 @@ func _blend_tile(target: Image, atlas_image: Image, layout_key: String, top_left
     tile_image.resize(int(WORLD_TILE_SIZE), int(WORLD_TILE_SIZE), Image.INTERPOLATE_LANCZOS)
     target.blend_rect(tile_image, Rect2i(Vector2i.ZERO, Vector2i(int(WORLD_TILE_SIZE), int(WORLD_TILE_SIZE))), top_left)
 
-func _blend_object(target: Image, source: Image, bottom_center: Vector2i) -> void:
+func _blend_object(target: Image, source: Image, asset_id: String, bottom_center: Vector2i) -> void:
     var sprite := source.duplicate()
-    sprite.resize(int(WORLD_TILE_SIZE), int(WORLD_TILE_SIZE), Image.INTERPOLATE_LANCZOS)
-    var top_left := bottom_center - Vector2i(int(WORLD_TILE_SIZE * 0.5), int(WORLD_TILE_SIZE))
-    target.blend_rect(sprite, Rect2i(Vector2i.ZERO, Vector2i(int(WORLD_TILE_SIZE), int(WORLD_TILE_SIZE))), top_left)
+    var size := _asset_world_size_i(asset_id)
+    sprite.resize(size.x, size.y, Image.INTERPOLATE_LANCZOS)
+    var top_left := bottom_center - Vector2i(int(size.x * 0.5), size.y)
+    target.blend_rect(sprite, Rect2i(Vector2i.ZERO, size), top_left)
+
+func _blend_player_reference(target: Image, center: Vector2i) -> void:
+    var size := Vector2i(int(PLAYER_REFERENCE_SIZE.x), int(PLAYER_REFERENCE_SIZE.y))
+    var rect := Rect2i(center - Vector2i(int(size.x * 0.5), int(size.y * 0.5)), size)
+    target.fill_rect(rect, Color(0.37, 0.64, 1.0))
+
+func _asset_world_size(asset_id: String) -> Vector2:
+    var asset := DataRegistry.get_generated_asset(asset_id)
+    var size: Dictionary = asset.get("world_size", {})
+    return Vector2(
+        float(size.get("x", WORLD_TILE_SIZE)),
+        float(size.get("y", WORLD_TILE_SIZE))
+    )
+
+func _asset_world_size_i(asset_id: String) -> Vector2i:
+    var size := _asset_world_size(asset_id)
+    return Vector2i(maxi(1, int(size.x)), maxi(1, int(size.y)))
 
 func _image_size(path: String) -> Vector2i:
     var image := _load_image(path)

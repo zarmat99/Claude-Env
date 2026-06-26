@@ -1,10 +1,14 @@
 extends Node2D
 
-const WORLD_TILE_SIZE := 64.0
-const SOURCE_TILE_SIZE := 128.0
+const WorldScale := preload("res://scripts/core/WorldScale.gd")
+
+const WORLD_TILE_SIZE := WorldScale.TILE_SIZE
+const SOURCE_TILE_SIZE := WorldScale.SOURCE_TILE_SIZE
 const MAP_SIZE := Vector2(512, 320)
 const WALL := 16.0
 const ASSET_SET_ID := "asset_generated_m10r_dev"
+const CHEST_ASSET_ID := "asset_sprite_chest_closed_a"
+const LEVER_ASSET_ID := "asset_sprite_lever_switch_a"
 const TILE_IDS := {
     "stone": "tile_generated_stone_floor_a",
     "dirt": "tile_generated_dirt_path_a",
@@ -41,8 +45,8 @@ func _draw() -> void:
         for x in range(row.size()):
             _draw_tile(String(row[x]), origin + Vector2(x, y) * WORLD_TILE_SIZE)
 
-    _draw_sprite(_chest, origin + Vector2(2.5, 2.75) * WORLD_TILE_SIZE)
-    _draw_sprite(_lever, origin + Vector2(4.55, 2.0) * WORLD_TILE_SIZE)
+    _draw_sprite(_chest, CHEST_ASSET_ID, origin + Vector2(2.5, 2.75) * WORLD_TILE_SIZE)
+    _draw_sprite(_lever, LEVER_ASSET_ID, origin + Vector2(4.55, 2.0) * WORLD_TILE_SIZE)
 
 func _draw_tile(layout_key: String, top_left: Vector2) -> void:
     var tile_id := String(TILE_IDS.get(layout_key, ""))
@@ -60,12 +64,20 @@ func _draw_tile(layout_key: String, top_left: Vector2) -> void:
         source
     )
 
-func _draw_sprite(texture: Texture2D, bottom_center: Vector2) -> void:
+func _draw_sprite(texture: Texture2D, asset_id: String, bottom_center: Vector2) -> void:
     if texture == null:
         return
-    var size := Vector2(WORLD_TILE_SIZE, WORLD_TILE_SIZE)
+    var size := _asset_world_size(asset_id)
     var rect := Rect2(bottom_center - Vector2(size.x * 0.5, size.y), size)
     draw_texture_rect(texture, rect, false)
+
+func _asset_world_size(asset_id: String) -> Vector2:
+    var asset := DataRegistry.get_generated_asset(asset_id)
+    var size: Dictionary = asset.get("world_size", {})
+    return Vector2(
+        float(size.get("x", WORLD_TILE_SIZE)),
+        float(size.get("y", WORLD_TILE_SIZE))
+    )
 
 func _build_bounds() -> void:
     var body := StaticBody2D.new()

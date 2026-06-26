@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://scripts/player/PlayerCombat.gd" id="5_cmb"]
 
 [sub_resource type="RectangleShape2D" id="rect_player"]
-size = Vector2(14, 14)
+size = Vector2(18, 18)
 
 [sub_resource type="CircleShape2D" id="circle_inter"]
 radius = 22.0
@@ -21,7 +21,7 @@ script = ExtResource("1_pc")
 
 [node name="Body" type="Polygon2D" parent="."]
 color = Color(0.4, 0.65, 1, 1)
-polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+polygon = PackedVector2Array(-18, -30, 18, -30, 18, 14, -18, 14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("rect_player")
