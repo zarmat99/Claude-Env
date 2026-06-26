@@ -13,7 +13,15 @@
     "display_name": "Whispering Forest",
     "region": "region_dev_sandbox",
     "dev_role": "vertical_slice",
-    "spawn_points": ["spawn_from_village", "spawn_from_cave"]
+    "spawn_points": ["spawn_from_village", "spawn_from_cave", "spawn_from_asset_probe"]
+  },
+  "map_m10r_asset_playground": {
+    "id": "map_m10r_asset_playground",
+    "scene": "res://scenes/maps/M10RAssetPlayground.tscn",
+    "display_name": "M10R Asset Playground",
+    "region": "region_dev_sandbox",
+    "dev_role": "asset_pipeline_probe",
+    "spawn_points": ["spawn_from_forest"]
   },
   "map_cave_01": {
     "id": "map_cave_01",
