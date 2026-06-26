@@ -124,6 +124,14 @@ All generated art must be judged against the same fundamental unit:
 - One-tile object sprites use a 64x64 world render envelope by default.
 - Player/NPC visuals are larger than the old debug square: the current placeholder target is
   36x44 world pixels, with a smaller collision footprint.
+- Humanoid collision footprint is 18x18 world pixels unless a final actor asset proves otherwise.
+- Small enemies use a larger-than-debug footprint; the current slime placeholder is 36x30 visual,
+  22x18 collision, and 18px hurt radius.
+- Player interaction and attack ranges are scaled to the new actor size: 40px interaction radius
+  and 44px attack radius.
+- World-object placeholder interaction radius is around 48px for one-tile props.
+- Pickup placeholders are intentionally small, but still scaled up from the old debug diamond:
+  20px visual diameter and 12px pickup collision radius.
 - Visual size, collision footprint, and gameplay footprint are separate concepts.
 - Do not fix proportion problems by shrinking every object below the tile unit. First check the
   player/actor visual scale, then object metadata, then collision/footprint.

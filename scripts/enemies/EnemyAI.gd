@@ -4,11 +4,12 @@ extends CharacterBody2D
 ## sibling components (Health/Stats/Loot/Hurtbox). No combat numbers are hardcoded here.
 
 const PersistentWorldObject = preload("res://scripts/world/PersistentWorldObject.gd")
+const WorldScale := preload("res://scripts/core/WorldScale.gd")
 
 @export var enemy_id: String = ""
 @export var persistent_id: String = ""
 @export var aggro_range: float = 160.0
-@export var attack_range: float = 18.0
+@export var attack_range: float = WorldScale.ENEMY_ATTACK_RANGE
 
 var _data: Dictionary = {}
 var _player: Node2D = null

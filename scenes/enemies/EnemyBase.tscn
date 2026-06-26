@@ -7,10 +7,10 @@
 [ext_resource type="Script" path="res://scripts/combat/Hurtbox.gd" id="5_hb"]
 
 [sub_resource type="RectangleShape2D" id="rect_body"]
-size = Vector2(14, 14)
+size = Vector2(22, 18)
 
 [sub_resource type="CircleShape2D" id="circle_hurt"]
-radius = 11.0
+radius = 18.0
 
 [node name="EnemyBase" type="CharacterBody2D"]
 motion_mode = 1
@@ -18,7 +18,7 @@ script = ExtResource("1_ai")
 
 [node name="Body" type="Polygon2D" parent="."]
 color = Color(0.45, 0.75, 0.4, 1)
-polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+polygon = PackedVector2Array(-16, -12, 16, -12, 18, 8, 8, 16, -8, 16, -18, 8)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("rect_body")

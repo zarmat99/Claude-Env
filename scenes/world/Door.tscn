@@ -4,17 +4,17 @@
 [ext_resource type="Script" path="res://scripts/components/InteractionComponent.gd" id="2_ic"]
 
 [sub_resource type="RectangleShape2D" id="rect_body"]
-size = Vector2(18, 40)
+size = Vector2(32, 56)
 
 [sub_resource type="CircleShape2D" id="circle_interaction"]
-radius = 32.0
+radius = 48.0
 
 [node name="Door" type="StaticBody2D"]
 script = ExtResource("1_door")
 
 [node name="Body" type="Polygon2D" parent="."]
 color = Color(0.48, 0.26, 0.12, 1)
-polygon = PackedVector2Array(-9, -20, 9, -20, 9, 20, -9, 20)
+polygon = PackedVector2Array(-16, -28, 16, -28, 16, 28, -16, 28)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("rect_body")

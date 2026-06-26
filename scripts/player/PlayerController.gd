@@ -4,7 +4,9 @@ class_name PlayerController
 ## move_and_slide against StaticBody2D walls. Deliberately tiny: no combat / inventory / quest
 ## logic here (those live in their own components/systems).
 
-@export var speed: float = 110.0  # pixels per second
+const WorldScale := preload("res://scripts/core/WorldScale.gd")
+
+@export var speed: float = WorldScale.PLAYER_MOVE_SPEED
 
 func _ready() -> void:
     add_to_group("player")  # so PickupItem (and future systems) can identify the player

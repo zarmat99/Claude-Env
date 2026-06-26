@@ -5,6 +5,7 @@ class_name LootComponent
 
 const PickupItemScene := preload("res://scenes/items/PickupItem.tscn")
 const PersistentWorldObject = preload("res://scripts/world/PersistentWorldObject.gd")
+const WorldScale := preload("res://scripts/core/WorldScale.gd")
 
 var loot_table: Array = []
 
@@ -30,7 +31,8 @@ func drop(at: Vector2, into: Node, source_persistent_id: String = "") -> void:
         if final_count <= 0:
             continue
         var persistent_id := _dynamic_pickup_id(source_persistent_id, drop_index)
-        var drop_position := at + Vector2(randf_range(-12, 12), randf_range(-12, 12))
+        var jitter := WorldScale.LOOT_DROP_JITTER
+        var drop_position := at + Vector2(randf_range(-jitter, jitter), randf_range(-jitter, jitter))
         PersistentWorldObject.register_dynamic_pickup(
             persistent_id,
             item_id,

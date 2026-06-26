@@ -4,26 +4,26 @@
 [ext_resource type="Script" path="res://scripts/components/InteractionComponent.gd" id="2_ic"]
 
 [sub_resource type="RectangleShape2D" id="rect_body"]
-size = Vector2(14, 16)
+size = Vector2(18, 18)
 
 [sub_resource type="CircleShape2D" id="circle_int"]
-radius = 26.0
+radius = 42.0
 
 [node name="NPCBase" type="StaticBody2D"]
 script = ExtResource("1_npc")
 
 [node name="Body" type="Polygon2D" parent="."]
 color = Color(0.85, 0.55, 0.25, 1)
-polygon = PackedVector2Array(-7, -8, 7, -8, 7, 8, -7, 8)
+polygon = PackedVector2Array(-18, -30, 18, -30, 18, 14, -18, 14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("rect_body")
 
 [node name="NameLabel" type="Label" parent="."]
 offset_left = -40.0
-offset_top = -34.0
+offset_top = -60.0
 offset_right = 40.0
-offset_bottom = -18.0
+offset_bottom = -44.0
 horizontal_alignment = 1
 text = "NPC"
 

@@ -10,10 +10,10 @@
 size = Vector2(18, 18)
 
 [sub_resource type="CircleShape2D" id="circle_inter"]
-radius = 22.0
+radius = 40.0
 
 [sub_resource type="CircleShape2D" id="circle_attack"]
-radius = 26.0
+radius = 44.0
 
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
