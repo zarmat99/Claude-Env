@@ -160,3 +160,18 @@
 - **Post-decision correction**: the direct Imagen atlas approach failed visual review. It produced a
   collage, not a serious tileset. Generated art may still be used for concepts or per-asset
   experiments, but M10R must choose a reliable tile-source strategy before SR2/M11.
+
+## Decision 14 - Image Gen remains the primary asset source, governed by atomic generation rules
+- **Date**: 2026-06-26
+- **Context**: The user confirmed that the real asset source should remain Image Gen. The M10
+  failure came from generating a full atlas/map-like collage, not from using generated assets at all.
+- **Decision**: Keep Image Gen as the primary real-asset source, but only through the workflow in
+  `docs/architecture/IMAGE_GEN_ASSET_RULES.md`: one atomic asset at a time, terrain separate from
+  object sprites, generated originals preserved, processed assets packed by tooling, metadata
+  recorded, and an in-Godot screenshot approved before acceptance.
+- **Motivation**: Preserve the desired AI-assisted art workflow while preventing generated images
+  from entering the game as unusable atlases, framed tiles, scale-inconsistent props, or maps that
+  only look plausible before slicing.
+- **Consequences**: Direct generated atlases, complete map images, and mixed object sheets are
+  concept-only. M10R is not complete until Image Gen produces a small approved asset set under these
+  rules.

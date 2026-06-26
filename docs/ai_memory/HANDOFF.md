@@ -41,13 +41,13 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 
 ## Last thing done
 Completed the **M10 world-authoring code path**, then failed the visual review of the generated
-asset probe. The important outcome is that direct Imagen atlas generation is not a reliable
-tileset pipeline.
+asset probe. The important correction is now documented: Image Gen remains the primary asset
+source, but direct generated atlases/maps are forbidden for gameplay assets.
 
 ## Next thing to do
-Begin **M10R - Asset-pipeline remediation gate** before SR2/M11: choose a real tile-source
-strategy, replace/quarantine the failed generated atlas, separate tileable terrain from object
-sprites, define import/scale/pivot/collision rules, and require an approved Godot screenshot.
+Begin **M10R-T6 - Generate first governed Image Gen asset set** before SR2/M11: use
+`docs/architecture/IMAGE_GEN_ASSET_RULES.md` to generate at least 3 seamless terrain tiles and
+2 transparent object sprites, process/metadata them, and produce one approved Godot screenshot.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -91,8 +91,9 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 ## Key files to read (in order)
 1. `docs/ai_memory/PROJECT_MEMORY.md` · 2. this file · 3. `docs/architecture/ARCHITECTURE.md` ·
 4. `docs/architecture/DATA_SCHEMAS.md` · 5. `docs/architecture/SYSTEMS.md` ·
-6. `docs/ai_memory/DECISIONS.md` · `docs/ai_memory/TASKS.md`.
+6. `docs/architecture/IMAGE_GEN_ASSET_RULES.md` · 7. `docs/ai_memory/DECISIONS.md` ·
+`docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, SR2 map
-  scalability review before M11.
+- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, M10R
+  governed Image Gen asset set before SR2/M11.

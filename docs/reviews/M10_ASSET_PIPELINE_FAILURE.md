@@ -25,15 +25,14 @@ is wrong. A usable tile pipeline needs explicit source constraints and review:
 - technical validation is not the same as art-pipeline validation.
 
 ## Required Remediation Before SR2
-1. Choose the tile-source strategy:
-   - curated licensed/CC0 asset pack;
-   - hand-authored proxy tiles;
-   - generated-per-tile assets plus post-processing;
-   - hybrid.
-2. Replace or quarantine `assets/tilesets/proxy_dark_fantasy_atlas.png`.
-3. Separate terrain tile layers from object sprites/scenes.
-4. Define import presets, scale, pivots, collision, and y-sort/layering rules.
-5. Capture a Godot screenshot and require human approval before marking M10R complete.
+1. Keep Image Gen as the primary real-asset source, per user decision on 2026-06-26.
+2. Follow `docs/architecture/IMAGE_GEN_ASSET_RULES.md`.
+3. Replace or quarantine `assets/tilesets/proxy_dark_fantasy_atlas.png`.
+4. Generate atomic assets one by one: terrain tiles, transition tiles, object sprites, actor
+   sprites.
+5. Separate terrain tile layers from object sprites/scenes.
+6. Define import presets, scale, pivots, collision, and y-sort/layering rules.
+7. Capture a Godot screenshot and require human approval before marking M10R complete.
 
 ## Acceptance Criteria
 - One small test map looks coherent in-game at normal camera scale.

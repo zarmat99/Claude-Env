@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-06-26 - Session 017 - Image Gen asset rules
+
+- **Goal**: keep Image Gen as the real asset source while preventing another generated-atlas failure.
+- **User decision**: Image Gen remains the asset source; the fix is to create strict generation
+  rules and generate assets one by one when needed.
+- **Files created**: `docs/architecture/IMAGE_GEN_ASSET_RULES.md`.
+- **Files modified**: `docs/architecture/{ROADMAP,ARCHITECTURE}.md`,
+  `docs/reviews/M10_ASSET_PIPELINE_FAILURE.md`,
+  `docs/ai_memory/{PROJECT_MEMORY,HANDOFF,TASKS,DECISIONS,SESSION_LOG}.md`.
+- **Rules added**: no direct generated atlases/maps for gameplay; generate atomic terrain tiles,
+  transition tiles, object sprites, and actor sprites; keep originals; process and pack assets with
+  tooling; require metadata and approved in-Godot screenshots.
+- **Next**: M10R-T6 - generate the first governed Image Gen asset set: at least 3 seamless terrain
+  tiles and 2 transparent object sprites, then produce an approved Godot screenshot.
+
+---
+
 ## 2026-06-25 - Session 016 - M10 visual asset probe failure
 
 - **Goal**: respond to the failed M10 in-game screenshot and prevent the project from continuing on

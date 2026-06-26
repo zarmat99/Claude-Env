@@ -25,8 +25,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - Engine: **Godot 4.x**, GDScript.
 - Rendering: **2D, top-down**.
 - Data: **data-driven via JSON** under `res://data/` (loaded by `DataRegistry`).
-- Graphics: **simple placeholders only** in early phases (ColorRects / simple shapes / tiny
-  generated textures). No heavy external assets yet.
+- Graphics: **Image Gen is the primary real-asset source**, but generated assets must follow
+  `docs/architecture/IMAGE_GEN_ASSET_RULES.md`. Direct generated atlases/maps are concept-only;
+  gameplay art must be generated as atomic terrain tiles or sprites, processed, metadata-tracked,
+  and approved in a Godot screenshot.
 - Persistence: JSON save file under `user://`.
 
 ## 4. Architectural rules (hard constraints)
@@ -72,6 +74,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   collage in grid form: not tileable, visibly framed/guttered, inconsistent in scale, and produces
   bad maps when sliced into cells. Treat it as a failed probe, not a production or production-proxy
   asset.
+- User decision (2026-06-26): Image Gen remains the source of real assets. The corrected pipeline
+  is documented in `docs/architecture/IMAGE_GEN_ASSET_RULES.md`: generate one atomic asset at a
+  time, process/pack by tooling, separate terrain from sprites, and require screenshot approval.
 - Verified: Godot headless import and `.\test.bat` pass. The command now runs M9 regression plus
   M10 world-authoring regression.
 - Note: player death is still a placeholder (respawn full HP).
@@ -160,9 +165,10 @@ world-object library, validation, dev sandbox map, and M10 regression suite pass
 but the generated atlas/map screenshot is not acceptable. M10R must run before SR2/M11.
 
 ## 12. Recommended next step
-Begin **M10R - Asset-pipeline remediation gate**: choose a real tile-source strategy, replace or
-quarantine the failed Imagen atlas, separate tileable terrain from object sprites, define import/
-scale/pivot/collision rules, and require an approved Godot screenshot before SR2.
+Begin **M10R-T6 - Generate first governed Image Gen asset set**: use
+`docs/architecture/IMAGE_GEN_ASSET_RULES.md` to create at least 3 seamless terrain tiles and 2
+transparent object sprites, process/metadata them, and capture an approved Godot screenshot before
+SR2.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
@@ -170,7 +176,7 @@ GDScript, designed to scale. **M10's code path is verified but its visual asset 
 Village/Forest/Cave remain the playable dev slice, `map_probe_ruins` proves data-authored map
 generation mechanically, but the generated atlas is not a serious tileset. Save/load, progression,
 quest flow, dynamic pickups, and world-object states are covered by `.\test.bat`. The next milestone
-is **M10R asset-pipeline remediation**, then SR2.
+is **M10R-T6 governed Image Gen asset generation**, then SR2.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

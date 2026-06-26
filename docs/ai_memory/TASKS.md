@@ -8,21 +8,20 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- **M10R-T1 · Asset-pipeline remediation gate** · in_progress: fix the failed M10 visual asset
-  probe before SR2/M11.
+- (none - M10R-T6 is ready to start)
 
 ## Backlog
 
 ### M10R - Asset-pipeline remediation gate
-- **M10R-T2 · Choose tile-source strategy** · backlog: compare curated licensed packs,
-  hand-authored proxy tiles, generated-per-tile assets with post-processing, or a hybrid.
 - **M10R-T3 · Replace or quarantine failed Imagen atlas** · backlog: stop using the generated atlas
-  as a serious tileset; keep it only as a failed-probe reference if useful.
+  as a serious tileset; generate atomic replacement assets under `IMAGE_GEN_ASSET_RULES.md`.
 - **M10R-T4 · Separate terrain tiles from object sprites** · backlog: tileable floors/walls belong
   in terrain layers; chests, doors, switches, barrels, props, enemies, and pickups are sprites or
   scenes with pivots/scale rules.
 - **M10R-T5 · Visual approval gate** · backlog: capture an in-Godot screenshot and require human
   approval before marking the asset pipeline acceptable.
+- **M10R-T6 · Generate first governed Image Gen asset set** · backlog: produce at least 3 approved
+  seamless terrain tiles and 2 approved object sprites, then build one coherent Godot screenshot.
 
 ### SR2 - Map scalability review
 - **SR2-T1 · Review M10 world authoring scalability** · backlog: test whether five more maps could
@@ -34,6 +33,14 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M10R-T2 · Choose tile-source strategy** · M10R · files:
+  `docs/architecture/IMAGE_GEN_ASSET_RULES.md`, `docs/ai_memory/DECISIONS.md` · **done**
+  (2026-06-26): user confirmed Image Gen remains the primary real-asset source; the fix is atomic
+  generation plus processing/review rules, not switching to external packs.
+- **M10R-T1 · Write Image Gen asset generation rules** · M10R · files:
+  `docs/architecture/IMAGE_GEN_ASSET_RULES.md` · **done** (2026-06-26): added mandatory rules for
+  terrain tiles, transition tiles, object sprites, actor sprites, metadata, prompt templates,
+  failure conditions, processing, and visual approval gates.
 - **M10-T5 · Tileset/asset scalability probe** · M10 · files:
   `assets/tilesets/proxy_dark_fantasy_atlas.png`, `data/assets/asset_sets.json`,
   `tests/headless/M10WorldAuthoringRunner.{gd,tscn}` · **done with failure finding** (2026-06-25):

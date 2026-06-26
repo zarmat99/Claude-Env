@@ -94,13 +94,14 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
 
 ## M10R — Asset-pipeline remediation gate
 - **Goal**: fix the failed M10 visual asset probe before any more systems/content expansion.
-- **Scope**: choose a real tile-source strategy; stop treating generated atlas images as production
-  tilesets; separate tileable floors/walls from object sprites; define scale, pivots, collision,
-  import presets, and visual-review gates; replace or quarantine the failed proxy map.
+- **Source decision**: Image Gen remains the primary real-asset source. The fix is procedural:
+  generate atomic assets under strict rules, not complete atlases/maps.
+- **Scope**: define and enforce Image Gen asset rules; stop treating generated atlas images as
+  production tilesets; separate tileable floors/walls from object sprites; define scale, pivots,
+  collision, import presets, and visual-review gates; replace or quarantine the failed proxy map.
 - **Exit criteria**: one small map renders with coherent tileable art, no atlas-cell gutters, no
   oversized props, no placeholder object overlays, and an approved screenshot captured from Godot.
-  M10R must identify whether the preferred source is curated licensed asset packs, hand-authored
-  proxy tiles, generated-per-tile assets with post-processing, or a hybrid.
+  M10R must use Image Gen through `docs/architecture/IMAGE_GEN_ASSET_RULES.md`.
 
 ## SR2 — Map scalability review
 - **Goal**: prove that the world can grow without architectural drift.

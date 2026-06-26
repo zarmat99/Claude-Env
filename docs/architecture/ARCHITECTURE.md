@@ -68,8 +68,9 @@ This follows the requested structure. Deliberate clarifications/changes:
    **from** the JSON — they are not the data itself. JSON in `data/` is the source of truth.
 3. **Manager singletons** (`QuestManager`, `DialogueManager`, `InventoryManager`, `MapManager`)
    are **autoloads** (global game systems). Other `scripts/*` are attached to scenes/components.
-4. **`assets/` may contain lightweight proxy assets** once they validate a pipeline. M10 adds a
-   generated technical proxy atlas; final art direction and production assets remain M17/M18 work.
+4. **`assets/` may contain generated assets only after they pass the Image Gen asset workflow** in
+   `IMAGE_GEN_ASSET_RULES.md`. Direct generated atlases/maps are concept-only and must not be used
+   as gameplay tilesets.
 5. **`.godot/` is git-ignored** (editor cache) when the skeleton is created.
 Any further change to this structure must be explained in `DECISIONS.md` and reflected here.
 
