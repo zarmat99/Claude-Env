@@ -7,6 +7,8 @@ const SwitchScene := preload("res://scenes/world/Switch.tscn")
 const PersistentWorldObject := preload("res://scripts/world/PersistentWorldObject.gd")
 const WorldScale := preload("res://scripts/core/WorldScale.gd")
 
+const SPAWN_TRANSITION_MARGIN := 8.0
+
 var _failures: Array[String] = []
 
 func _ready() -> void:
@@ -16,6 +18,7 @@ func _run() -> void:
     print("[M10] World authoring quarantine runner starting")
     _test_failed_probe_is_not_active()
     _test_placeholder_collision_scale()
+    _test_transition_spawns_are_clear()
     await _test_world_objects_still_work()
     await _frames(2)
 
@@ -53,6 +56,29 @@ func _test_placeholder_collision_scale() -> void:
     var chest_rect := chest_collision.shape as RectangleShape2D
     _assert(chest_rect.size.x >= 40.0 and chest_rect.size.y >= 30.0, "Chest collision should block its visible placeholder body")
     chest.free()
+
+func _test_transition_spawns_are_clear() -> void:
+    for raw_map_id in DataRegistry.all("maps").keys():
+        var map_id := String(raw_map_id)
+        var map := DataRegistry.get_map(map_id)
+        var packed := load(String(map.get("scene", ""))) as PackedScene
+        if packed == null:
+            _failures.append("Map %s scene should load for spawn-clearance validation" % map_id)
+            continue
+        var instance := packed.instantiate()
+        var spawns := instance.find_children("*", "SpawnPoint", true, false)
+        var transitions := instance.find_children("*", "AreaTransition", true, false)
+        for spawn in spawns:
+            var spawn_id := String(spawn.get("spawn_id"))
+            var player_rect := _player_collision_rect_at(spawn.global_position)
+            for transition in transitions:
+                var transition_rect := _transition_rect(transition).grow(SPAWN_TRANSITION_MARGIN)
+                _assert(
+                    not player_rect.intersects(transition_rect),
+                    "Spawn %s/%s is too close to transition %s for the current player collider" %
+                    [map_id, spawn_id, transition.name]
+                )
+        instance.free()
 
 func _test_world_objects_still_work() -> void:
     GameState.reset_to_new_game()
@@ -99,3 +125,13 @@ func _assert(condition: bool, message: String) -> void:
 
 func _near_vec(a: Vector2, b: Vector2, epsilon: float = 0.01) -> bool:
     return a.distance_to(b) <= epsilon
+
+func _player_collision_rect_at(origin: Vector2) -> Rect2:
+    return Rect2(
+        origin + WorldScale.PLAYER_COLLISION_OFFSET - WorldScale.PLAYER_COLLISION_SIZE * 0.5,
+        WorldScale.PLAYER_COLLISION_SIZE
+    )
+
+func _transition_rect(transition: Node) -> Rect2:
+    var size: Vector2 = transition.get("size")
+    return Rect2(transition.global_position - size * 0.5, size)

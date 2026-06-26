@@ -24,6 +24,8 @@ func _draw() -> void:
     draw_rect(Rect2(-size * 0.5, size), color, true)
 
 func _on_body_entered(body: Node) -> void:
+    if SceneLoader.is_transition_locked():
+        return
     if not body.is_in_group("player"):
         return
     if required_flag != "" and not bool(GameState.flags.get(required_flag, false)):

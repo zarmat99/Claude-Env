@@ -6,10 +6,13 @@ extends Node
 const PickupItemScene := preload("res://scenes/items/PickupItem.tscn")
 const PersistentWorldObject = preload("res://scripts/world/PersistentWorldObject.gd")
 
+const TRANSITION_COOLDOWN_MSEC := 250
+
 var _world: Node = null
 var _player: Node2D = null
 var _current_map: Node = null
 var _loading := false
+var _transition_locked_until_msec := 0
 
 func bind(world_root: Node, player: Node2D) -> void:
     _world = world_root
@@ -27,6 +30,7 @@ func change_map(map_id: String, spawn_point_id: String = "", emit_event: bool = 
         push_error("SceneLoader: map '%s' has no valid scene" % map_id)
         return
     _loading = true
+    _transition_locked_until_msec = Time.get_ticks_msec() + TRANSITION_COOLDOWN_MSEC
 
     if _current_map and is_instance_valid(_current_map):
         _current_map.queue_free()
@@ -54,6 +58,9 @@ func change_map(map_id: String, spawn_point_id: String = "", emit_event: bool = 
 
 func is_bound() -> bool:
     return _world != null and _player != null
+
+func is_transition_locked() -> bool:
+    return _loading or Time.get_ticks_msec() < _transition_locked_until_msec
 
 func get_player() -> Node2D:
     return _player

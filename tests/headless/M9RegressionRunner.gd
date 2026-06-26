@@ -19,6 +19,7 @@ func _run() -> void:
     print("[M9] Regression runner starting")
     _test_data_validation()
     await _test_boot_and_map_transitions()
+    await _test_walk_on_transition_triggers()
     await _test_first_quest_flow()
     await _test_save_load()
     await _test_progression()
@@ -50,12 +51,30 @@ func _test_boot_and_map_transitions() -> void:
     SceneLoader.change_map("map_forest", "spawn_from_village")
     await _frames(2)
     _assert(GameState.current_map == "map_forest", "SceneLoader should switch to map_forest")
-    _assert(_near(SceneLoader.get_player().global_position, Vector2(70, 200)), "Player should use forest spawn_from_village")
+    _assert(_near(SceneLoader.get_player().global_position, Vector2(96, 200)), "Player should use forest spawn_from_village")
 
     SceneLoader.change_map("map_cave_01", "spawn_from_forest")
     await _frames(2)
     _assert(GameState.current_map == "map_cave_01", "SceneLoader should switch to map_cave_01")
     _assert(_near(SceneLoader.get_player().global_position, Vector2(80, 160)), "Player should use cave spawn_from_forest")
+
+func _test_walk_on_transition_triggers() -> void:
+    await _new_game()
+    await _wait_transition_ready()
+    _trigger_current_transition("ToForest")
+    await _wait_transition_ready()
+    _assert(GameState.current_map == "map_forest", "Village transition should enter forest and not bounce back")
+    _assert(_near(SceneLoader.get_player().global_position, Vector2(96, 200)), "Village transition should use forest spawn_from_village")
+
+    _trigger_current_transition("ToAssetProbe")
+    await _wait_transition_ready()
+    _assert(GameState.current_map == "map_m10r_asset_playground", "Forest asset probe transition should enter the M10R playground")
+    _assert(_near(SceneLoader.get_player().global_position, Vector2(72, 160)), "Asset probe transition should use playground spawn_from_forest")
+
+    _trigger_current_transition("ToForest")
+    await _wait_transition_ready()
+    _assert(GameState.current_map == "map_forest", "M10R playground transition should return to forest")
+    _assert(_near(SceneLoader.get_player().global_position, Vector2(320, 330)), "M10R playground transition should use forest spawn_from_asset_probe")
 
 func _test_first_quest_flow() -> void:
     await _new_game()
@@ -170,6 +189,17 @@ func _find_by_persistent_id(root: Node, persistent_id: String) -> Node:
 func _frames(count: int) -> void:
     for _i in range(count):
         await get_tree().process_frame
+
+func _wait_transition_ready() -> void:
+    await get_tree().create_timer(0.3).timeout
+    await _frames(2)
+
+func _trigger_current_transition(node_name: String) -> void:
+    var map := SceneLoader.get_current_map_node()
+    var transition := map.get_node_or_null(node_name) if map != null else null
+    _assert(transition != null, "Expected transition node '%s' on current map" % node_name)
+    if transition != null:
+        transition.call("_on_body_entered", SceneLoader.get_player())
 
 func _near(a: Vector2, b: Vector2, tolerance: float = 0.1) -> bool:
     return a.distance_to(b) <= tolerance

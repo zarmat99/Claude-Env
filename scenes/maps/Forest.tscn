@@ -11,12 +11,12 @@ ground_color = Color(0.12, 0.2, 0.12, 1)
 wall_color = Color(0.18, 0.26, 0.16, 1)
 
 [node name="SpawnFromVillage" type="Marker2D" parent="."]
-position = Vector2(70, 200)
+position = Vector2(96, 200)
 script = ExtResource("2_sp")
 spawn_id = "spawn_from_village"
 
 [node name="SpawnFromCave" type="Marker2D" parent="."]
-position = Vector2(560, 200)
+position = Vector2(536, 200)
 script = ExtResource("2_sp")
 spawn_id = "spawn_from_cave"
 
