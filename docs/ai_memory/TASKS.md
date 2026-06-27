@@ -1,4 +1,4 @@
-# Valdombra — TASKS
+﻿# Valdombra — TASKS
 
 > Task tracker. Each task: `ID · description · milestone · files · dependencies · status`.
 > Move tasks between sections as state changes. IDs are stable.
@@ -8,29 +8,54 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none - M10R-T6 is ready to start)
+- **M11-T1 - Production dialogue actions** - in_progress: implement and validate dialogue actions
+  needed by real questlines (`give_item`, `take_item`, and reward/flag flows).
 
 ## Backlog
 
 ### M10R - Asset-pipeline remediation gate
-- **M10R-T4 · Separate terrain tiles from object sprites** · backlog: tileable floors/walls belong
-  in terrain layers; chests, doors, switches, barrels, props, enemies, and pickups are sprites or
-  scenes with pivots/scale rules.
-- **M10R-T5 · Visual approval gate** · backlog: capture an in-Godot screenshot and require human
-  approval before marking the asset pipeline acceptable.
-- **M10R-T6 · Generate first governed Image Gen asset set** · backlog: produce at least 3 approved
-  seamless terrain tiles and 2 approved object sprites, then build one coherent Godot screenshot.
+- (none)
 
 ### SR2 - Map scalability review
-- **SR2-T1 · Review M10 world authoring scalability** · backlog: test whether five more maps could
-  be added with data/scene authoring only; check spawn/transition/object validation, dev sandbox
-  isolation, and asset-proxy assumptions before M11. Depends on M10R.
+- (none)
+
+### M11 - Quest & dialogue production pipeline
+- **M11-T2 - Branching quest authoring conventions** - backlog: define/verify alternate outcomes,
+  flags, and condition/action patterns for real questlines.
+- **M11-T3 - Quest/dialogue regression fixtures** - backlog: add headless coverage for a branching
+  multi-stage quest with item rewards/removals and flag consequences.
+- **M11-T4 - Journal/debug authoring tools** - backlog: improve quest inspection/debug helpers enough
+  to author and verify production questlines without manual guesswork.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **SR2-T1 - Review M10 world authoring scalability** - SR2 - files:
+  `docs/reviews/SR2_MAP_SCALABILITY_REVIEW.md`, `docs/architecture/ROADMAP.md` - **done**
+  (2026-06-27): reviewed map authoring, transitions/spawns, persistent objects, dev sandbox
+  isolation, and governed asset assumptions. Verdict: proceed to M11; no blocking fixes before
+  narrative systems.
+- **M10R-T5 - Visual approval gate** - M10R - files:
+  `data/assets/generated_assets.json`, `docs/architecture/IMAGE_GEN_ASSET_RULES.md`,
+  `docs/ai_memory/DECISIONS.md` - **done** (2026-06-27): user approved the corrected generated
+  terrain/prop set after house scale and tree trunk-only collision fixes; generated assets are now
+  marked `approved: true`.
+- **M10R-T6 - Generate first governed Image Gen asset set** - M10R - files:
+  `assets/source/image_gen/`, `assets/{tilesets,sprites}/generated/`,
+  `data/assets/{generated_assets,asset_sets}.json`, `scenes/maps/{Village,Forest,Cave}.tscn`,
+  `scripts/world/{GeneratedPropSprite,Village,PlaceholderMap,M10RAssetPlayground}.gd`,
+  `tests/headless/M10RAssetPreviewRunner.gd` - **done technically / pending visual approval**
+  (2026-06-27): generated governed terrain/object candidates with Image Gen, including multi-tile
+  prop candidates, processed chroma-key sprites, rebuilt the dev atlas, registered metadata, and
+  placed candidates in the current test maps. All new generated assets remain `approved: false`
+  until visual review.
+- **M10R-T4 - Separate terrain tiles from object sprites** - M10R - files:
+  `docs/architecture/IMAGE_GEN_ASSET_RULES.md`, `scripts/world/GeneratedPropSprite.gd`,
+  `data/assets/generated_assets.json` - **done** (2026-06-27): terrain candidates live in the
+  generated terrain atlas, object candidates are processed transparent sprites with bottom-center
+  pivot, `world_size`, and `footprint_tiles` metadata.
 - **M10R-T3 · Quarantine failed M10 probe content** · M10R · files:
   `assets/tilesets/proxy_dark_fantasy_atlas.png`, `scenes/maps/ProbeRuins.tscn`,
   `data/{assets,world}/`, `data/maps/maps.json`, `scenes/maps/Forest.tscn`,

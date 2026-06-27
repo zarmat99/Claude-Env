@@ -12,13 +12,15 @@ const LEVER_ASSET_ID := "asset_sprite_lever_switch_a"
 const TILE_IDS := {
     "stone": "tile_generated_stone_floor_a",
     "dirt": "tile_generated_dirt_path_a",
-    "moss": "tile_generated_moss_grass_a"
+    "moss": "tile_generated_moss_grass_a",
+    "village": "tile_generated_village_grass_a",
+    "cave": "tile_generated_cave_floor_a"
 }
 const LAYOUT := [
-    ["moss", "moss", "moss", "moss", "moss", "moss", "moss"],
-    ["moss", "stone", "stone", "stone", "dirt", "dirt", "moss"],
-    ["moss", "stone", "stone", "dirt", "dirt", "stone", "moss"],
-    ["moss", "moss", "dirt", "dirt", "stone", "stone", "moss"]
+    ["moss", "village", "village", "stone", "stone", "cave", "cave"],
+    ["moss", "village", "stone", "stone", "dirt", "cave", "cave"],
+    ["moss", "stone", "stone", "dirt", "dirt", "stone", "cave"],
+    ["moss", "moss", "dirt", "dirt", "stone", "stone", "cave"]
 ]
 
 var _asset_set: Dictionary = {}

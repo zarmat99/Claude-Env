@@ -175,3 +175,20 @@
 - **Consequences**: Direct generated atlases, complete map images, and mixed object sheets are
   concept-only. M10R is not complete until Image Gen produces a small approved asset set under these
   rules.
+
+## Decision 15 - Generated map art separates visual size, footprint, collision, and layering
+- **Date**: 2026-06-27
+- **Context**: M10R visual review showed that good-looking generated props still fail if their
+  visual bounds, gameplay footprint, and collision are treated as the same rectangle. Trees need
+  canopy overlap with trunk-only collision; buildings need controlled `world_size`; old placeholder
+  walls/blocks must not remain visible under approved art.
+- **Decision**: Generated object sprites use explicit metadata for `world_size`, `footprint_tiles`,
+  optional `collision_size`, optional `collision_offset`, and optional `visual_z_index`. Overhead
+  props may be visually large while blocking only a small physical area. Placeholder geometry must
+  be hidden or removed once governed art replaces it.
+- **Motivation**: Keep Image Gen viable as the asset source without baking gameplay assumptions into
+  bitmap dimensions. This lets the same art pipeline support houses, trees, boulders, foliage,
+  cave props, and later production objects without per-scene scale hacks.
+- **Consequences**: New props must be reviewed in-game against the player, not only in contact
+  sheets. Collision bugs are fixed in metadata/pipeline first, not by shrinking art or accepting
+  full-sprite blockers.

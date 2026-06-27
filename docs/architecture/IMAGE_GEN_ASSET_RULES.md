@@ -68,6 +68,16 @@ Rules:
 - Store pivot and gameplay footprint in metadata.
 - Object sprites belong in scenes or sprite/object layers, not terrain tile layers.
 - Runtime placeholder geometry must be hidden/replaced when a real sprite is used.
+- Large props should be single atomic multi-tile sprites when they are visually one object
+  (tree, cottage, boulder cluster, stalagmite barricade). Do not force them into 1 tile.
+- If a large object must be modular, generate named atomic pieces (`base`, `middle`, `cap`,
+  `edge_n`, `corner_ne`, etc.) and assemble them with map tooling. Do not generate a whole room or
+  mixed object sheet as the final in-game source.
+- Use `pivot: bottom_center` for placed world props unless a specific gameplay reason says
+  otherwise. The visible alpha bounds should support the declared footprint; reject candidates
+  whose object is too narrow/tall for the intended tile footprint.
+- If direct alpha output is unavailable, generate on a flat chroma-key background and remove it
+  locally before the asset enters `assets/sprites/generated/`.
 
 Prompt template:
 ```text
@@ -106,7 +116,8 @@ Rules:
 4. Select one candidate or reject all.
 5. Process the selected asset:
    - terrain: crop square, downsample to source tile size, verify 3x3 repeat;
-   - sprites: remove/verify transparency, trim/crop with padding, set pivot/footprint metadata;
+   - sprites: remove/verify transparency, trim/crop with controlled padding, check the visible
+     alpha bounds against the intended footprint, set pivot/footprint/world-size metadata;
    - atlas packing: done by tooling from approved individual assets, never by Image Gen.
 6. Save processed assets under:
    - `assets/tilesets/generated/` for terrain;
@@ -122,6 +133,9 @@ All generated art must be judged against the same fundamental unit:
 - 1 gameplay tile = 64x64 world pixels.
 - Terrain sources are processed to 128x128 and rendered as one 64x64 tile.
 - One-tile object sprites use a 64x64 world render envelope by default.
+- Multi-tile object sprites use a declared `world_size` render envelope and `footprint_tiles`
+  placement footprint. The processed PNG canvas may be larger than the visible alpha bounds, but
+  that padding must be intentional and stable.
 - Player/NPC visuals are larger than the old debug square: the current placeholder target is
   36x44 world pixels.
 - Placeholder actors do not have y-sort or final top-down sprites yet, so their collision must
@@ -135,6 +149,9 @@ All generated art must be judged against the same fundamental unit:
   20px visual diameter and 12px pickup collision radius.
 - Visual size, collision footprint, and gameplay footprint are separate concepts, but only split
   them after the render order, pivot, and y-sort rules make visual overlap intentional.
+- Large overhead props may use a smaller `collision_size` and `collision_offset` than their
+  visible `world_size`. Example: trees block only the trunk/roots while the canopy stays in a
+  foreground visual layer that the player can pass beneath.
 - Do not fix proportion problems by shrinking every object below the tile unit. First check the
   player/actor visual scale, then object metadata, then collision/footprint.
 - Every visual gate must include a player-scale reference next to props and terrain.
@@ -164,7 +181,10 @@ Object sprites additionally need:
 {
   "pivot": "bottom_center",
   "footprint_tiles": { "x": 1, "y": 1 },
-  "collision_shape": "rectangle"
+  "collision_shape": "rectangle",
+  "collision_size": { "x": 36, "y": 44 },
+  "collision_offset": { "x": 0, "y": -22 },
+  "visual_z_index": 20
 }
 ```
 
@@ -177,6 +197,7 @@ Before accepting an asset or map:
 - Props are separate sprites, not painted inside terrain cells.
 - Sprites have transparent backgrounds.
 - Object scale fits the 64px world grid.
+- Multi-tile props have visible alpha bounds that match their declared footprint.
 - Collision footprint matches the visible sprite.
 - Placeholder polygons are hidden/replaced for approved art.
 - A Godot screenshot exists and has been approved by the user.

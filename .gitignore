@@ -7,5 +7,7 @@ export_presets.cfg
 
 # OS / editor noise
 *.log
+*.tmp
+tests/headless/M10RMapPreviewRunner.*
 .DS_Store
 Thumbs.db

@@ -1,14 +1,31 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/PlaceholderMap.gd" id="1_map"]
 [ext_resource type="Script" path="res://scripts/world/SpawnPoint.gd" id="2_sp"]
 [ext_resource type="Script" path="res://scripts/world/AreaTransition.gd" id="3_tr"]
+[ext_resource type="Script" path="res://scripts/world/GeneratedPropSprite.gd" id="4_prop"]
 
 [node name="Forest" type="Node2D"]
 script = ExtResource("1_map")
 map_size = Vector2(640, 400)
 ground_color = Color(0.12, 0.2, 0.12, 1)
 wall_color = Color(0.18, 0.26, 0.16, 1)
+ground_asset_id = "asset_tile_moss_grass_a"
+
+[node name="OakLeftVisual" type="Node2D" parent="."]
+position = Vector2(160, 360)
+script = ExtResource("4_prop")
+generated_asset_id = "asset_sprite_oak_tree_large_a"
+
+[node name="OakRightVisual" type="Node2D" parent="."]
+position = Vector2(500, 360)
+script = ExtResource("4_prop")
+generated_asset_id = "asset_sprite_oak_tree_large_a"
+
+[node name="BoulderVisual" type="Node2D" parent="."]
+position = Vector2(330, 150)
+script = ExtResource("4_prop")
+generated_asset_id = "asset_sprite_mossy_boulder_a"
 
 [node name="SpawnFromVillage" type="Marker2D" parent="."]
 position = Vector2(96, 200)

@@ -49,8 +49,7 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **Milestone 10 systems are implemented and verified in Godot 4.3, but the asset-proxy visual
-  review failed.** M0-M9 and SR1 complete before it.
+- **M10R and SR2 are complete; M11 is active.** M0-M10, M10R, SR1, and SR2 are complete.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
   `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
@@ -76,8 +75,16 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - User decision (2026-06-26): Image Gen remains the source of real assets. The corrected pipeline
   is documented in `docs/architecture/IMAGE_GEN_ASSET_RULES.md`: generate one atomic asset at a
   time, process/pack by tooling, separate terrain from sprites, and require screenshot approval.
+- M10R generated and integrated the first governed candidate batch: five terrain tiles and six
+  object sprites total in `generated_assets.json`, including multi-tile tree/cottage/stalagmite/
+  boulder props. Village/Forest/Cave now render generated terrain/prop candidates for review.
+  Generated props build footprint collisions from metadata, and old placeholder wall visuals are
+  hidden. The corrected set is approved as the base Image Gen asset-pipeline rule set.
+- SR2 passed in `docs/reviews/SR2_MAP_SCALABILITY_REVIEW.md`: the map pipeline can proceed to M11
+  with no blocking fixes. Real production maps should use the data-authored/governed-asset path,
+  not placeholder scene shortcuts.
 - Verified: Godot headless import and `.\test.bat` pass. The command now runs M9 regression plus
-  M10 quarantine/world-object smoke coverage.
+  M10 quarantine/world-object smoke coverage plus the M10R asset preview runner.
 - Note: player death is still a placeholder (respawn full HP).
 - Next: M10R (Asset-pipeline remediation gate), then SR2.
 
@@ -112,8 +119,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   save F5 · load F9. Code now reads input action names for journal/inventory/attack/save/load.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
-- M8 Progression, SR1 Core scalability review, M9 Data & tooling hardening, and M10 reusable
-  world-authoring systems are complete; M10R is active for the visual asset pipeline.
+- M8 Progression, SR1 Core scalability review, M9 Data & tooling hardening, M10 reusable
+  world-authoring systems, M10R governed asset generation/approval, and SR2 map scalability review
+  are complete. M11 quest/dialogue production pipeline is active.
 - M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
   dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
@@ -158,23 +166,20 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M10 - World authoring systems: CODE VERIFIED, VISUAL ASSET PROBE FAILED.** Authored map builder,
-world-object library, validation, dev sandbox map, and M10 regression suite pass with `.\test.bat`,
-but the generated atlas/map screenshot is not acceptable. M10R must run before SR2/M11.
+**M11 - Quest & dialogue production pipeline: ACTIVE.** M10R approved the atomic Image Gen asset
+workflow, including separate visual size, footprint, collision, and layering metadata. SR2 cleared
+the map pipeline to proceed to narrative systems.
 
 ## 12. Recommended next step
-Begin **M10R-T6 - Generate first governed Image Gen asset set**: use
-`docs/architecture/IMAGE_GEN_ASSET_RULES.md` to create at least 3 seamless terrain tiles and 2
-transparent object sprites, process/metadata them, and capture an approved Godot screenshot before
-SR2.
+Implement **M11-T1 - Production dialogue actions**: add and validate dialogue actions needed by real
+questlines (`give_item`, `take_item`, and reward/flag flows).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M10's reusable code path is verified but its visual asset probe
-failed and was removed from active content**. Village/Forest/Cave remain the playable dev slice.
-Save/load, progression, quest flow, dynamic pickups, quarantine checks, and world-object states are
-covered by `.\test.bat`. The next milestone is **M10R-T6 governed Image Gen asset generation**,
-then SR2.
+GDScript, designed to scale. **M10R and SR2 are complete; M11 is active**. Village/Forest/Cave
+remain the playable dev slice and now show approved generated terrain/prop candidates. Save/load,
+progression, quest flow, dynamic pickups, quarantine checks, world-object states, and M10R asset
+preview are covered by `.\test.bat`. The next step is **M11-T1 production dialogue actions**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

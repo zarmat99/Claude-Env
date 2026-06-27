@@ -4,6 +4,39 @@
 
 ---
 
+## 2026-06-27 - Session 019 - Governed map asset candidates
+
+- **Goal**: create serious Image Gen test assets before the next milestone and place them into the
+  current test maps without breaking the scalable asset rules.
+- **Assets generated**: new village grass and cave floor terrain tiles; multi-tile oak tree,
+  village cottage, cave stalagmite barricade, and mossy boulder object sprites. Chroma-key sources
+  were preserved under `assets/source/image_gen/`; processed assets live under
+  `assets/{tilesets,sprites}/generated/`.
+- **Integration**: rebuilt `m10r_dev_tileset.png` as a 5-column terrain atlas, expanded
+  `generated_assets.json` metadata with `world_size`, bottom-center pivots, and footprints, added
+  `GeneratedPropSprite.gd`, and placed generated candidates in Village/Forest/Cave. Placeholder
+  map floors can now draw generated terrain while collision remains unchanged.
+- **Follow-up fix**: generated props now create `StaticBody2D` footprint collisions from
+  `footprint_tiles`; old placeholder wall visuals are hidden; the old internal Village rectangle
+  obstacle blocks were removed from collision/visuals.
+- **Second review fix**: replaced the cottage candidate with a cleaner top-down cottage and reduced
+  its world render size; trees now use trunk-only collision via `collision_size`/`collision_offset`
+  and a foreground `visual_z_index` so the canopy can remain in front while the player passes
+  underneath.
+- **Approval**: user approved the corrected visual/collision direction. All generated asset entries
+  are now marked `approved: true`; M10R is complete.
+- **SR2**: completed `docs/reviews/SR2_MAP_SCALABILITY_REVIEW.md`. Verdict: map architecture can
+  proceed to M11 with no blocking fixes; keep real map production on the data-authored/governed
+  asset path.
+- **Next**: M11-T1 - production dialogue actions (`give_item`, `take_item`, reward/flag flows).
+- **Review state**: all generated assets remain `approved: false`; the next step is human visual
+  approval inside the game before any candidate is treated as production-safe.
+- **Validation**: `.\test.bat` passed once after the asset integration and M10R preview runner
+  update. A later experimental map-preview runner hung in headless and was removed from
+  `test.bat`; its untracked local files were not included in the intended change set.
+
+---
+
 ## 2026-06-26 - Session 018 - Remove failed M10 probe files
 
 - **Goal**: remove the failed old asset/map files from active content before generating governed

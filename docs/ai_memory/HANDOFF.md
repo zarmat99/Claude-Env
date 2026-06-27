@@ -10,8 +10,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **M10 world-authoring code is verified, but the asset-proxy visual review failed.** M0-M9 and
-  SR1 complete before it.
+- **M10R asset-pipeline remediation and SR2 map scalability review are complete. M11 is active.**
+  M0-M10, M10R, SR1, and SR2 are complete.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
   entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
@@ -33,18 +33,24 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - M10 added `asset_sets.json`, `world_objects.json`, persistent chest/door/switch objects,
   authored-map validation, and `tests/headless/M10WorldAuthoringRunner`. The runner now verifies
   the failed probe is not active and smoke-tests the useful world-object library.
-- Verified with Godot headless import and `.\test.bat` (runs M9 + M10).
+- M10R now has governed Image Gen terrain/object candidates: five terrain tiles and six object
+  sprites total in `generated_assets.json`, including multi-tile tree/cottage/stalagmite/boulder
+  props. Village/Forest/Cave render generated terrain/prop candidates for in-game review. Generated
+  props create footprint collisions from metadata; placeholder wall visuals are hidden. The set is
+  approved as the base asset-pipeline rule set.
+- SR2 map scalability review passed in `docs/reviews/SR2_MAP_SCALABILITY_REVIEW.md`; no blocking
+  fixes are required before narrative systems.
+- Verified with Godot headless import and `.\test.bat` (runs M9 + M10 + M10R asset preview).
 - On `master`, pushed.
 
 ## Last thing done
-Completed the **M10 world-authoring code path**, then failed the visual review of the generated
-asset probe. The important correction is now documented: Image Gen remains the primary asset
-source, but direct generated atlases/maps are forbidden for gameplay assets.
+Completed M10R and SR2. Generated assets are approved, the base Image Gen rules now include
+separate visual size / footprint / collision / layering metadata, and SR2 cleared the project to
+start M11.
 
 ## Next thing to do
-Begin **M10R-T6 - Generate first governed Image Gen asset set** before SR2/M11: use
-`docs/architecture/IMAGE_GEN_ASSET_RULES.md` to generate at least 3 seamless terrain tiles and
-2 transparent object sprites, process/metadata them, and produce one approved Godot screenshot.
+Start **M11-T1 - Production dialogue actions**: implement and validate dialogue actions needed by
+real questlines (`give_item`, `take_item`, and reward/flag flows).
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -92,5 +98,5 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, M10R
-  governed Image Gen asset set before SR2/M11.
+- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, pre-M17
+  approved data-authored map fixture using governed assets.

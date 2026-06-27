@@ -177,6 +177,36 @@ Validated by `DataRegistry`: atlas path exists and loads as `Texture2D`; dimensi
 `source_tile_size * columns/rows`; tile IDs use `tile_`; atlas coordinates are in bounds;
 `collision` is `none | solid | water`.
 
+## assets/generated_assets.json (M10R)
+```json
+{
+  "asset_sprite_oak_tree_large_a": {
+    "id": "asset_sprite_oak_tree_large_a",
+    "source": "image_gen",
+    "class": "object_sprite",
+    "prompt": "...",
+    "original_file": "res://assets/source/image_gen/asset_sprite_oak_tree_large_a/original_chromakey.png",
+    "processed_file": "res://assets/sprites/generated/oak_tree_large_a.png",
+    "source_size": { "x": 256, "y": 256 },
+    "world_size": { "x": 160, "y": 160 },
+    "pivot": "bottom_center",
+    "footprint_tiles": { "x": 2, "y": 2 },
+    "collision_shape": "rectangle",
+    "collision_size": { "x": 36, "y": 44 },
+    "collision_offset": { "x": 0, "y": -22 },
+    "visual_z_index": 20,
+    "approved": true,
+    "approval_screenshot": "res://assets/previews/generated/m11_test_asset_contact_sheet.png"
+  }
+}
+```
+Validated by `DataRegistry`: generated asset IDs use `asset_`; `source` is `image_gen`;
+`class` is `terrain_tile | transition_tile | object_sprite | actor_sprite`; original and
+processed files exist; source/world sizes are positive; terrain collisions use
+`none | solid | water`; object/actor sprites declare `pivot`, `footprint_tiles`, and
+`collision_shape`. `collision_size`, `collision_offset`, and `visual_z_index` are optional
+runtime metadata used when visual bounds and physical blocking differ.
+
 ## world/world_objects.json (M10)
 ```json
 {

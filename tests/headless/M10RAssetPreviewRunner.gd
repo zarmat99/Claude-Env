@@ -13,13 +13,15 @@ const LEVER_ASSET_ID := "asset_sprite_lever_switch_a"
 const TILE_IDS := {
     "stone": "tile_generated_stone_floor_a",
     "dirt": "tile_generated_dirt_path_a",
-    "moss": "tile_generated_moss_grass_a"
+    "moss": "tile_generated_moss_grass_a",
+    "village": "tile_generated_village_grass_a",
+    "cave": "tile_generated_cave_floor_a"
 }
 const MAP_LAYOUT := [
-    ["moss", "moss", "moss", "moss", "moss", "moss", "moss"],
-    ["moss", "stone", "stone", "stone", "dirt", "dirt", "moss"],
-    ["moss", "stone", "stone", "dirt", "dirt", "stone", "moss"],
-    ["moss", "moss", "dirt", "dirt", "stone", "stone", "moss"]
+    ["moss", "village", "village", "stone", "stone", "cave", "cave"],
+    ["moss", "village", "stone", "stone", "dirt", "cave", "cave"],
+    ["moss", "stone", "stone", "dirt", "dirt", "stone", "cave"],
+    ["moss", "moss", "dirt", "dirt", "stone", "stone", "cave"]
 ]
 
 var _failures: Array[String] = []
@@ -107,9 +109,15 @@ func _validate_processed_images() -> void:
     _assert(_image_size("res://assets/tilesets/generated/stone_floor_a.png") == Vector2i(128, 128), "Stone tile must be 128x128")
     _assert(_image_size("res://assets/tilesets/generated/dirt_path_a.png") == Vector2i(128, 128), "Dirt tile must be 128x128")
     _assert(_image_size("res://assets/tilesets/generated/moss_grass_a.png") == Vector2i(128, 128), "Moss tile must be 128x128")
-    _assert(_image_size("res://assets/tilesets/generated/m10r_dev_tileset.png") == Vector2i(384, 128), "Terrain atlas must be 384x128")
+    _assert(_image_size("res://assets/tilesets/generated/village_grass_a.png") == Vector2i(128, 128), "Village grass tile must be 128x128")
+    _assert(_image_size("res://assets/tilesets/generated/cave_floor_a.png") == Vector2i(128, 128), "Cave floor tile must be 128x128")
+    _assert(_image_size("res://assets/tilesets/generated/m10r_dev_tileset.png") == Vector2i(640, 128), "Terrain atlas must be 640x128")
     _assert(_alpha_stats("res://assets/sprites/generated/chest_closed_a.png")["transparent"] > 0, "Chest sprite should have transparent pixels")
     _assert(_alpha_stats("res://assets/sprites/generated/lever_switch_a.png")["transparent"] > 0, "Lever sprite should have transparent pixels")
+    _assert(_alpha_stats("res://assets/sprites/generated/oak_tree_large_a.png")["transparent"] > 0, "Oak sprite should have transparent pixels")
+    _assert(_alpha_stats("res://assets/sprites/generated/village_cottage_a.png")["transparent"] > 0, "Cottage sprite should have transparent pixels")
+    _assert(_alpha_stats("res://assets/sprites/generated/cave_stalagmites_a.png")["transparent"] > 0, "Stalagmites sprite should have transparent pixels")
+    _assert(_alpha_stats("res://assets/sprites/generated/mossy_boulder_a.png")["transparent"] > 0, "Boulder sprite should have transparent pixels")
 
 func _save_review_screenshot() -> void:
     var image := _compose_review_image()

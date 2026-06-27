@@ -102,9 +102,10 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
 - **Exit criteria**: one small map renders with coherent tileable art, no atlas-cell gutters, no
   oversized props, no placeholder object overlays, and an approved screenshot captured from Godot.
   M10R must use Image Gen through `docs/architecture/IMAGE_GEN_ASSET_RULES.md`.
-- **Status 2026-06-26**: first governed candidate batch generated from atomic Image Gen outputs:
-  three terrain tiles, two object sprites, metadata validation, and a Godot-generated review
-  screenshot. Assets remain `approved: false` until visual approval.
+- **Status 2026-06-27**: complete. Governed Image Gen candidate batch approved after in-game
+  review: five terrain tiles and six object sprites total, including multi-tile tree/cottage/
+  stalagmite/boulder props. Village/Forest/Cave render generated terrain/prop candidates; props use
+  metadata-driven collision/visual scale rules.
 
 ## SR2 — Map scalability review
 - **Goal**: prove that the world can grow without architectural drift.
@@ -113,6 +114,8 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
   - Are transitions, spawn points, and persistent objects validated?
   - Is placeholder/dev content isolated from production content?
 - **Exit criteria**: blockers are fixed before narrative/content production expands.
+- **Status 2026-06-27**: complete. `docs/reviews/SR2_MAP_SCALABILITY_REVIEW.md` approves
+  proceeding to M11. No blocking fixes required before narrative systems.
 
 ## M11 — Quest & dialogue production pipeline
 - **Goal**: make story and quest authoring robust enough for real questlines.

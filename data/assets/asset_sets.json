@@ -5,7 +5,7 @@
     "atlas": "res://assets/tilesets/generated/m10r_dev_tileset.png",
     "source_tile_size": 128,
     "world_tile_size": 64,
-    "columns": 3,
+    "columns": 5,
     "rows": 1,
     "tiles": {
       "tile_generated_stone_floor_a": {
@@ -29,6 +29,22 @@
         "name": "Generated Moss Grass A",
         "kind": "floor",
         "col": 2,
+        "row": 0,
+        "collision": "none"
+      },
+      "tile_generated_village_grass_a": {
+        "id": "tile_generated_village_grass_a",
+        "name": "Generated Village Grass A",
+        "kind": "floor",
+        "col": 3,
+        "row": 0,
+        "collision": "none"
+      },
+      "tile_generated_cave_floor_a": {
+        "id": "tile_generated_cave_floor_a",
+        "name": "Generated Cave Floor A",
+        "kind": "floor",
+        "col": 4,
         "row": 0,
         "collision": "none"
       }
