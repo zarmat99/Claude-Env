@@ -33,8 +33,7 @@ func _refresh() -> void:
         child.queue_free()
 
     var stats: Dictionary = GameState.player.get("stats", {})
-    _add("Quest Debug", 16, Color(1, 1, 1))
-    _add("Map: %s" % String(GameState.current_map), 12, Color(0.8, 0.85, 1.0))
+    _add("Map: %s" % String(GameState.current_map), 8, Color(0.8, 0.85, 1.0))
     _add(
         "LV %d  XP %d/%d  Gold %d" %
         [
@@ -43,7 +42,7 @@ func _refresh() -> void:
             ProgressionManager.xp_to_next_level(),
             int(GameState.player.get("gold", 0)),
         ],
-        12,
+        8,
         Color(0.95, 0.85, 0.5)
     )
 
@@ -52,46 +51,47 @@ func _refresh() -> void:
     var active_ids := active.keys()
     active_ids.sort()
     if active_ids.is_empty():
-        _add("none", 12, Color(0.65, 0.65, 0.65))
+        _add("none", 7, Color(0.65, 0.65, 0.65))
     for qid in active_ids:
         var quest_id := String(qid)
         var quest := DataRegistry.get_quest(quest_id)
         var stage := int(active[quest_id].get("stage", -1))
-        _add("%s  stage %d" % [String(quest.get("title", quest_id)), stage], 13, Color(0.95, 0.85, 0.5))
-        _add(QuestManager.stage_desc(quest_id, stage), 12, Color(0.82, 0.82, 0.82))
+        _add("%s  stage %d" % [String(quest.get("title", quest_id)), stage], 8, Color(0.95, 0.85, 0.5))
+        _add(QuestManager.stage_desc(quest_id, stage), 7, Color(0.82, 0.82, 0.82))
 
     _add_section("Completed Quests")
     var completed: Array = GameState.quests.get("completed", [])
     if completed.is_empty():
-        _add("none", 12, Color(0.65, 0.65, 0.65))
+        _add("none", 7, Color(0.65, 0.65, 0.65))
     for qid in completed:
         var quest_id := String(qid)
         var quest := DataRegistry.get_quest(quest_id)
-        _add(String(quest.get("title", quest_id)), 12, Color(0.55, 0.8, 0.55))
+        _add(String(quest.get("title", quest_id)), 7, Color(0.55, 0.8, 0.55))
 
     _add_section("Flags")
     var flag_names := GameState.flags.keys()
     flag_names.sort()
     if flag_names.is_empty():
-        _add("none", 12, Color(0.65, 0.65, 0.65))
+        _add("none", 7, Color(0.65, 0.65, 0.65))
     for flag in flag_names:
-        _add("%s = %s" % [String(flag), str(GameState.flags[flag])], 11, Color(0.78, 0.78, 0.9))
+        _add("%s = %s" % [String(flag), str(GameState.flags[flag])], 7, Color(0.78, 0.78, 0.9))
 
     _add_section("Inventory")
     var items := InventoryManager.get_items()
     if items.is_empty():
-        _add("none", 12, Color(0.65, 0.65, 0.65))
+        _add("none", 7, Color(0.65, 0.65, 0.65))
     for slot in items:
         var item_id := String(slot.get("id", ""))
-        _add("%s x%d" % [item_id, int(slot.get("count", 0))], 12, Color(0.85, 0.85, 0.85))
+        _add("%s x%d" % [item_id, int(slot.get("count", 0))], 7, Color(0.85, 0.85, 0.85))
 
 func _add_section(text: String) -> void:
-    _add(text, 14, Color(1.0, 1.0, 1.0))
+    _add(text, 8, Color(1.0, 1.0, 1.0))
 
 func _add(text: String, size: int, color: Color) -> void:
     var label := Label.new()
     label.text = text
     label.add_theme_font_size_override("font_size", size)
     label.add_theme_color_override("font_color", color)
-    label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    label.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+    label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     _list.add_child(label)
