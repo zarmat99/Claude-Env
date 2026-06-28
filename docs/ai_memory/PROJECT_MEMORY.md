@@ -168,18 +168,20 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 ## 11. Current milestone state
 **M11 - Quest & dialogue production pipeline: ACTIVE.** M10R approved the atomic Image Gen asset
 workflow, including separate visual size, footprint, collision, and layering metadata. SR2 cleared
-the map pipeline to proceed to narrative systems.
+the map pipeline to proceed to narrative systems. M11-T1 completed the production dialogue action
+set: dialogues can now set/clear flags, start/advance quests, give/take items, and grant rewards.
 
 ## 12. Recommended next step
-Implement **M11-T1 - Production dialogue actions**: add and validate dialogue actions needed by real
-questlines (`give_item`, `take_item`, and reward/flag flows).
+Proceed with **M11-T2 - Branching quest authoring conventions**: define and verify alternate
+outcomes, flags, and condition/action patterns for real questlines before expanding content.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
 GDScript, designed to scale. **M10R and SR2 are complete; M11 is active**. Village/Forest/Cave
 remain the playable dev slice and now show approved generated terrain/prop candidates. Save/load,
-progression, quest flow, dynamic pickups, quarantine checks, world-object states, and M10R asset
-preview are covered by `.\test.bat`. The next step is **M11-T1 production dialogue actions**.
+progression, quest flow, dynamic pickups, quarantine checks, world-object states, M10R asset
+preview, and M11 dialogue actions are covered by `.\test.bat`. The next step is **M11-T2 branching
+quest authoring conventions**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

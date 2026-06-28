@@ -8,8 +8,8 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- **M11-T1 - Production dialogue actions** - in_progress: implement and validate dialogue actions
-  needed by real questlines (`give_item`, `take_item`, and reward/flag flows).
+- **M11-T2 - Branching quest authoring conventions** - in_progress: define/verify alternate
+  outcomes, flags, and condition/action patterns for real questlines.
 
 ## Backlog
 
@@ -20,8 +20,6 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none)
 
 ### M11 - Quest & dialogue production pipeline
-- **M11-T2 - Branching quest authoring conventions** - backlog: define/verify alternate outcomes,
-  flags, and condition/action patterns for real questlines.
 - **M11-T3 - Quest/dialogue regression fixtures** - backlog: add headless coverage for a branching
   multi-stage quest with item rewards/removals and flag consequences.
 - **M11-T4 - Journal/debug authoring tools** - backlog: improve quest inspection/debug helpers enough
@@ -32,6 +30,13 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M11-T1 - Production dialogue actions** - M11 - files:
+  `scripts/dialogue/DialogueManager.gd`, `scripts/core/DataRegistry.gd`,
+  `scripts/quest/QuestManager.gd`, `data/dialogues/dialogues.json`,
+  `tests/headless/M11DialogueActionsRunner.gd`, `test.bat` - **done** (2026-06-28): implemented
+  and validated `give_item`, `take_item`, `give_reward`, `clear_flag`, and existing quest/flag
+  actions as the production dialogue action set. Added a headless M11 fixture to keep the contract
+  under regression.
 - **SR2-T1 - Review M10 world authoring scalability** - SR2 - files:
   `docs/reviews/SR2_MAP_SCALABILITY_REVIEW.md`, `docs/architecture/ROADMAP.md` - **done**
   (2026-06-27): reviewed map authoring, transitions/spawns, persistent objects, dev sandbox

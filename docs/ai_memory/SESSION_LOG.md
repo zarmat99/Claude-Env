@@ -4,6 +4,21 @@
 
 ---
 
+## 2026-06-28 - Session 020 - Production dialogue actions
+
+- **Goal**: complete M11-T1 so real questlines can use validated dialogue actions instead of
+  one-off code paths.
+- **Implementation**: expanded `DialogueManager` and `DataRegistry` to support `clear_flag`,
+  `give_item`, `take_item`, and `give_reward` alongside the existing quest/flag actions.
+  `QuestManager.grant_rewards()` is now the shared reward application path for quest completion
+  and dialogue reward actions.
+- **Regression**: added `dialogue_m11_action_fixture` and `tests/headless/M11DialogueActionsRunner`
+  to verify data validation, item add/remove, reward XP/gold/item grants, flag cleanup, and dialogue
+  unpause behavior. `test.bat` now runs the M11 dialogue action regression after M9/M10/M10R.
+- **Next**: M11-T2 - branching quest authoring conventions.
+
+---
+
 ## 2026-06-27 - Session 019 - Governed map asset candidates
 
 - **Goal**: create serious Image Gen test assets before the next milestone and place them into the
@@ -29,8 +44,8 @@
   proceed to M11 with no blocking fixes; keep real map production on the data-authored/governed
   asset path.
 - **Next**: M11-T1 - production dialogue actions (`give_item`, `take_item`, reward/flag flows).
-- **Review state**: all generated assets remain `approved: false`; the next step is human visual
-  approval inside the game before any candidate is treated as production-safe.
+- **Review state**: generated assets were approved by the user after the visual/collision fixes and
+  are marked `approved: true`.
 - **Validation**: `.\test.bat` passed once after the asset integration and M10R preview runner
   update. A later experimental map-preview runner hung in headless and was removed from
   `test.bat`; its untracked local files were not included in the intended change set.

@@ -96,9 +96,9 @@ func _complete(quest_id: String, stage_def: Dictionary) -> void:
     if not GameState.quests["completed"].has(quest_id):
         GameState.quests["completed"].append(quest_id)
     EventBus.quest_completed.emit(quest_id)
-    _grant_rewards(stage_def.get("rewards", {}))
+    grant_rewards(stage_def.get("rewards", {}))
 
-func _grant_rewards(rewards: Dictionary) -> void:
+func grant_rewards(rewards: Dictionary) -> void:
     if rewards.is_empty():
         return
     var xp := int(rewards.get("xp", 0))

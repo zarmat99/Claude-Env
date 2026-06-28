@@ -48,5 +48,30 @@
         "choices": [ { "text": "I will. Farewell.", "next": null } ]
       }
     }
+  },
+  "dialogue_m11_action_fixture": {
+    "id": "dialogue_m11_action_fixture",
+    "entry": "start",
+    "nodes": {
+      "start": {
+        "speaker": "player",
+        "text": "M11 action fixture.",
+        "actions": [
+          { "type": "set_flag", "flag": "m11_fixture_running" },
+          { "type": "give_item", "id": "item_health_potion", "count": 2 },
+          { "type": "take_item", "id": "item_health_potion", "count": 1 },
+          {
+            "type": "give_reward",
+            "rewards": {
+              "xp": 10,
+              "gold": 7,
+              "items": [ { "id": "item_ancient_iron_fragment", "count": 1 } ]
+            }
+          },
+          { "type": "clear_flag", "flag": "m11_fixture_running" }
+        ],
+        "choices": [ { "text": "Done.", "next": null } ]
+      }
+    }
   }
 }

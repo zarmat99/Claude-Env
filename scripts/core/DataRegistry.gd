@@ -47,8 +47,12 @@ const CONDITION_TYPES := [
 
 const DIALOGUE_ACTION_TYPES := [
     "set_flag",
+    "clear_flag",
     "start_quest",
     "advance_quest",
+    "give_item",
+    "take_item",
+    "give_reward",
 ]
 
 const ASSET_TILE_COLLISIONS := ["none", "solid", "water"]
@@ -689,10 +693,16 @@ func _validate_actions(actions, path: String) -> void:
             _error("%s has unsupported dialogue action type '%s'" % [action_path, action_type])
             continue
         match action_type:
-            "set_flag":
+            "set_flag", "clear_flag":
                 _require_string(action, action_path, "flag")
             "start_quest", "advance_quest":
                 _require_ref("quests", String(action.get("quest", "")), "%s.quest" % action_path)
+            "give_item", "take_item":
+                _require_ref("items", String(action.get("id", "")), "%s.id" % action_path)
+                if int(action.get("count", 1)) <= 0:
+                    _error("%s.count must be positive" % action_path)
+            "give_reward":
+                _validate_rewards(action.get("rewards", null), "%s.rewards" % action_path)
 
 func _validate_rewards(rewards, path: String) -> void:
     if not (rewards is Dictionary):

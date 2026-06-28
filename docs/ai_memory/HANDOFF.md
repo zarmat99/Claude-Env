@@ -40,17 +40,19 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   approved as the base asset-pipeline rule set.
 - SR2 map scalability review passed in `docs/reviews/SR2_MAP_SCALABILITY_REVIEW.md`; no blocking
   fixes are required before narrative systems.
-- Verified with Godot headless import and `.\test.bat` (runs M9 + M10 + M10R asset preview).
+- M11-T1 production dialogue actions are implemented: `set_flag`, `clear_flag`, `start_quest`,
+  `advance_quest`, `give_item`, `take_item`, and `give_reward` are runtime-supported and validated.
+- Verified with Godot headless import and `.\test.bat` (runs M9 + M10 + M10R asset preview + M11
+  dialogue action regression).
 - On `master`, pushed.
 
 ## Last thing done
-Completed M10R and SR2. Generated assets are approved, the base Image Gen rules now include
-separate visual size / footprint / collision / layering metadata, and SR2 cleared the project to
-start M11.
+Completed M11-T1. Dialogue actions now support production reward/item/flag flows and have a headless
+fixture wired into `test.bat`.
 
 ## Next thing to do
-Start **M11-T1 - Production dialogue actions**: implement and validate dialogue actions needed by
-real questlines (`give_item`, `take_item`, and reward/flag flows).
+Start **M11-T2 - Branching quest authoring conventions**: define and verify alternate outcomes,
+flags, and condition/action patterns for real questlines.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

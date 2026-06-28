@@ -87,11 +87,12 @@ current codebase, so it should avoid "current milestone" language that can go st
 
 ## DialogueManager (autoload) — `scripts/dialogue/*`
 - **Role**: run a dialogue graph; evaluate node/choice `conditions`; execute `actions`
-  (start/advance quest, give/take item, set flag); drive `DialogueBox`. Model: `DialogueData`.
+  (start/advance quest, give/take item, reward grants, set/clear flag); drive `DialogueBox`.
+  Model: `DialogueData`.
 - **Depends on**: DataRegistry, GameState, EventBus, QuestManager/InventoryManager (for actions).
-- **Implementation**: dialogue graph, conditional choices, pause handling, and implemented actions
-  (`set_flag`, `start_quest`, `advance_quest`) are live. M9 validation rejects unsupported action
-  types until M11 implements the production dialogue action set.
+- **Implementation**: dialogue graph, conditional choices, pause handling, and the M11 production
+  action set (`set_flag`, `clear_flag`, `start_quest`, `advance_quest`, `give_item`, `take_item`,
+  `give_reward`) are live. Validation rejects unsupported action types.
 
 ## InventoryManager (autoload) + InventoryComponent — `scripts/inventory/*`, `scripts/components/InventoryComponent.gd`
 - **Role**: add/remove/query items, stacking, weight (later); `InventoryComponent` is the

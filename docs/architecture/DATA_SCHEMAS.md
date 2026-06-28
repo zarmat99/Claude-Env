@@ -94,10 +94,10 @@ in their milestone.
   }
 }
 ```
-**Implemented action types (M9 validator accepts these)**: `start_quest{quest}` ·
-`advance_quest{quest}` · `set_flag{flag}`. `next: null` ends dialogue.
-**Planned for M11**: `give_item{id,count}` · `take_item{id,count}` · `give_reward{...}`. Until
-implemented, validation rejects them so authoring mistakes do not silently do nothing.
+**Implemented action types (M11 validator accepts these)**: `start_quest{quest}` ·
+`advance_quest{quest}` · `set_flag{flag}` · `clear_flag{flag}` · `give_item{id,count}` ·
+`take_item{id,count}` · `give_reward{rewards}`. `give_reward.rewards` uses the same reward object
+shape as quest stages (`xp`, `gold`, `items`). `next: null` ends dialogue.
 
 ## npcs/npcs.json
 ```json

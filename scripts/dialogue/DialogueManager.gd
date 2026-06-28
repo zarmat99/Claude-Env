@@ -74,13 +74,41 @@ func _run_actions(actions: Array) -> void:
     for a in actions:
         match String(a.get("type", "")):
             "set_flag":
-                GameState.flags[String(a.get("flag", ""))] = true
+                _set_flag(String(a.get("flag", "")), true)
+            "clear_flag":
+                _clear_flag(String(a.get("flag", "")))
             "start_quest":
                 QuestManager.start_quest(String(a.get("quest", "")))
             "advance_quest":
                 QuestManager.advance_quest(String(a.get("quest", "")))
+            "give_item":
+                _give_item(String(a.get("id", "")), int(a.get("count", 1)))
+            "take_item":
+                _take_item(String(a.get("id", "")), int(a.get("count", 1)))
+            "give_reward":
+                QuestManager.grant_rewards(a.get("rewards", {}))
             _:
                 push_error("DialogueManager: unsupported action type '%s'" % a.get("type", ""))
+
+func _set_flag(flag: String, value: bool) -> void:
+    if flag == "":
+        push_error("DialogueManager: set_flag requires a non-empty flag")
+        return
+    GameState.flags[flag] = value
+
+func _clear_flag(flag: String) -> void:
+    if flag == "":
+        push_error("DialogueManager: clear_flag requires a non-empty flag")
+        return
+    GameState.flags.erase(flag)
+
+func _give_item(item_id: String, count: int) -> void:
+    if not InventoryManager.add(item_id, count):
+        push_error("DialogueManager: give_item failed for '%s' x%d" % [item_id, count])
+
+func _take_item(item_id: String, count: int) -> void:
+    if not InventoryManager.remove(item_id, count):
+        push_error("DialogueManager: take_item failed for '%s' x%d" % [item_id, count])
 
 func _speaker_name(speaker_id: String) -> String:
     if speaker_id == "" or speaker_id == "player":
