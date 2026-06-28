@@ -15,9 +15,11 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   complete; **M13 (items/equipment/economy/merchants) is the next milestone**. M12 was verified
   (`.\test.bat` green: Godot import + M9/M10/M10R/M11/M12 runners) and is committed and pushed on
   `master`.
-- **SR3 follow-ups (tracked in `TASKS.md`)**: SR3-F1 eliminate the dialogue soft-lock (a node with
-  zero visible choices leaves the paused game with no exit) — near-term hardening; SR3-F2
-  multi-condition quest objectives and SR3-F3 state-reactive dialogue — before M18. None block M13.
+- **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
+  (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
+  multi-condition `advance_on` (array AND / `any_of` / `all_of`, with `talked_to` kept momentary),
+  SR3-F3 `entry_rules` state-reactive opening node. All validated and covered by
+  `tests/headless/SR3NarrativeHardeningRunner`.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
   entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
@@ -70,17 +72,16 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, M12 is committed and pushed.
 
 ## Last thing done
-Completed **SR3 - Narrative scalability review** (`docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`):
-verdict proceed to M13, no blocking rewrite. Confirmed the narrative systems are data-driven with
-strong boot validation and adequate debug/regression tooling. Found one near-term safety gap (dialogue
-soft-lock on a choice-less node, SR3-F1) and two pre-M18 expressiveness follow-ups (multi-condition
-quest objectives SR3-F2, state-reactive dialogue SR3-F3). No engine code changed (review-only, per
-SR1/SR2 precedent); findings promoted to `TASKS.md`.
+Completed **SR3 - Narrative scalability review** (verdict: proceed to M13, no blocking rewrite) **and
+immediately resolved its three promoted follow-ups**: SR3-F1 dialogue soft-lock guard, SR3-F2
+multi-condition `advance_on` (array / `any_of` / `all_of`), and SR3-F3 `entry_rules` state-reactive
+dialogue. Added `tests/headless/SR3NarrativeHardeningRunner`; `.\test.bat` passes (Godot import +
+M9/M10/M10R/M11/M12/SR3 runners, exit 0). `DATA_SCHEMAS.md` and `QUEST_DIALOGUE_AUTHORING.md` updated.
 
 ## Next thing to do
 Start **M13 - items, equipment, economy & merchants** (see `ROADMAP.md`): equipment slots/stats,
-merchants, containers, prices, sell/buy, loot tables, item-use effects. Before authoring real
-branching dialogue, do **SR3-F1** (dialogue soft-lock guard); schedule **SR3-F2/F3** before M18.
+merchants, containers, prices, sell/buy, loot tables, item-use effects. The SR3 narrative-hardening
+follow-ups (F1/F2/F3) are already done, so narrative authoring runs on safe, expressive systems.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -108,7 +109,7 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 regression suites
 ```
 Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
 attack = left mouse | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.

@@ -230,5 +230,49 @@
         ]
       }
     }
+  },
+  "dialogue_sr3_guard_fixture": {
+    "id": "dialogue_sr3_guard_fixture",
+    "entry": "intro",
+    "nodes": {
+      "intro": {
+        "speaker": "player",
+        "text": "This line has no choices; it continues to the dead-end node.",
+        "next": "deadend"
+      },
+      "deadend": {
+        "speaker": "player",
+        "text": "Every choice here is gated off, so the continue guard must end the dialogue.",
+        "choices": [
+          {
+            "text": "Unreachable choice.",
+            "next": null,
+            "conditions": [ { "type": "flag_set", "flag": "sr3_guard_never_set" } ]
+          }
+        ]
+      }
+    }
+  },
+  "dialogue_sr3_reactive_fixture": {
+    "id": "dialogue_sr3_reactive_fixture",
+    "entry": "stranger",
+    "entry_rules": [
+      {
+        "conditions": [ { "type": "flag_set", "flag": "sr3_reactive_known" } ],
+        "node": "friend"
+      }
+    ],
+    "nodes": {
+      "stranger": {
+        "speaker": "player",
+        "text": "Who are you, stranger?",
+        "choices": [ { "text": "(Leave)", "next": null } ]
+      },
+      "friend": {
+        "speaker": "player",
+        "text": "Good to see you again, friend.",
+        "choices": [ { "text": "(Leave)", "next": null } ]
+      }
+    }
   }
 }

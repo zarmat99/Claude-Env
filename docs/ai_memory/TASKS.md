@@ -25,20 +25,29 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none)
 
 ### SR3 follow-ups - narrative hardening (from SR3 review)
-- **SR3-F1 - Eliminate dialogue soft-lock** - backlog (recommended near-term, before real branching
-  dialogue): auto-exit and/or a guaranteed "Leave" affordance when a dialogue node has zero visible
-  choices, plus validation for an unconditional fallback choice. See
-  `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`.
-- **SR3-F2 - Multi-condition quest objectives** - backlog (before M18): allow `advance_on` to be an
-  AND array (and optional `any_of` for OR) so one stage can require several objectives at once.
-- **SR3-F3 - State-reactive dialogue** - backlog (before M18): per-node conditions / state-selected
-  entry node or NPC dialogue selection so NPCs can vary greetings by quest/reputation/flags.
+- (none - SR3-F1/F2/F3 done; see Done)
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **SR3-F1 - Eliminate dialogue soft-lock** - SR3 - files:
+  `scripts/dialogue/DialogueManager.gd`, `scripts/ui/DialogueBox.gd`, `scripts/core/DataRegistry.gd`,
+  `data/dialogues/dialogues.json`, `tests/headless/SR3NarrativeHardeningRunner.{gd,tscn}` - **done**
+  (2026-06-28): added `DialogueManager.advance()` + a default Continue/Leave affordance so a
+  choiceless or fully-gated node ends or follows a node-level `next` instead of soft-locking the
+  paused tree; node `next` is validated.
+- **SR3-F2 - Multi-condition quest objectives** - SR3 - files:
+  `scripts/quest/QuestManager.gd`, `scripts/core/DataRegistry.gd`, `data/quests/quests.json`,
+  `tests/headless/SR3NarrativeHardeningRunner.{gd,tscn}` - **done** (2026-06-28): `advance_on` now
+  accepts a single condition, an array (AND), or `any_of`/`all_of`; `talked_to` stays momentary
+  inside a set; validated by `DataRegistry`.
+- **SR3-F3 - State-reactive dialogue** - SR3 - files:
+  `scripts/dialogue/DialogueManager.gd`, `scripts/core/DataRegistry.gd`,
+  `data/dialogues/dialogues.json`, `tests/headless/SR3NarrativeHardeningRunner.{gd,tscn}` - **done**
+  (2026-06-28): dialogues accept `entry_rules` to pick the opening node by state, with `entry` as the
+  guaranteed fallback; validated by `DataRegistry`.
 - **SR3-T1 - Narrative scalability review** - SR3 - files:
   `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`, `docs/architecture/ROADMAP.md` - **done**
   (2026-06-28): reviewed quest/dialogue/NPC/faction systems, validation coverage, and debug tooling.

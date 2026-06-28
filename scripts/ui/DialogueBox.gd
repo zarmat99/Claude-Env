@@ -24,10 +24,21 @@ func _on_line_changed(speaker: String, text: String, choices: Array) -> void:
         b.add_theme_font_size_override("font_size", 13)
         b.pressed.connect(_on_choice_pressed.bind(i))
         _choices.add_child(b)
+    if choices.is_empty():
+        # SR3-F1: a node with no visible choices must still be dismissible, or the paused game
+        # soft-locks. Always offer a default continue/leave affordance.
+        var cont := Button.new()
+        cont.text = "Continue"
+        cont.add_theme_font_size_override("font_size", 13)
+        cont.pressed.connect(_on_continue_pressed)
+        _choices.add_child(cont)
     show()
 
 func _on_choice_pressed(index: int) -> void:
     DialogueManager.choose(index)
+
+func _on_continue_pressed() -> void:
+    DialogueManager.advance()
 
 func _on_dialogue_ended(_id: String) -> void:
     hide()

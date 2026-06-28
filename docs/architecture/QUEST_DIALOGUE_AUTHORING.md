@@ -86,6 +86,46 @@ Use positive conditions wherever possible:
 Avoid relying on dialogue node order to hide invalid choices. Every consequential choice should have
 conditions that explain why it is available.
 
+## Multi-Condition Objectives (SR3-F2)
+
+A stage's `advance_on` can require more than one thing at once:
+
+- A single condition object — advance when it holds (the default).
+- An **array** of conditions — advance when **all** hold (AND), e.g. "carry three pelts AND talk to
+  the tanner".
+- An `{ "any_of": [ ... ] }` object — advance when **any** holds (OR), e.g. "kill the guard OR bribe
+  him". `{ "all_of": [ ... ] }` is the explicit AND form.
+
+A `talked_to` condition inside a set is satisfied only at the moment of talking, so a delivery stage
+advances when the player talks while already meeting the rest — it never auto-completes from an
+earlier conversation. Prefer a multi-condition stage over chaining throwaway stages when the
+objectives are genuinely simultaneous.
+
+## Reactive Greetings (SR3-F3)
+
+To make one NPC greet differently by state, give its dialogue `entry_rules` instead of duplicating
+dialogues:
+
+```json
+"entry_rules": [
+  { "conditions": [ { "type": "quest_completed", "quest": "quest_example" } ], "node": "after" },
+  { "conditions": [ { "type": "quest_active",    "quest": "quest_example" } ], "node": "during" }
+],
+"entry": "before"
+```
+
+The first rule whose conditions all hold selects the opening node; `entry` is the guaranteed fallback
+when none match (and is still required). Keep the reactive split at the entry; deeper reactions can
+use condition-gated choices.
+
+## Never Soft-Lock A Node (SR3-F1)
+
+The game is paused during dialogue, so a reachable node must always offer a way out. The engine now
+guarantees this: a node with no `choices` (or whose every choice is gated out) shows a single
+**Continue** affordance that follows a node-level `"next"` or ends the dialogue. Use a choiceless
+node with `"next"` for linear narration, and still give branching nodes one unconditional fallback
+choice (e.g. `"(Leave)"`) where the conversation is meant to continue.
+
 ## Test Fixtures
 
 Fixture content may live in `data/dialogues/dialogues.json` and `data/quests/quests.json` only when

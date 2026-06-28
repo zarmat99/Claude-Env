@@ -73,8 +73,9 @@ func _on_npc_talked(npc_id: String) -> void:
     # "return to X" stage isn't auto-completed by an earlier conversation.
     for quest_id in GameState.quests["active"].keys():
         var sd := _current_stage_def(quest_id)
-        var cond = sd.get("advance_on", null)
-        if cond and String(cond.get("type", "")) == "talked_to" and String(cond.get("target", "")) == npc_id:
+        if sd.is_empty() or sd.get("completes", false) or not sd.has("advance_on"):
+            continue
+        if _advance_satisfied(sd, npc_id):
             _advance(quest_id)
     _recheck_active()
 
@@ -86,15 +87,50 @@ func _recheck_active() -> void:
 
 func _try_advance(quest_id: String) -> void:
     var sd := _current_stage_def(quest_id)
-    if sd.is_empty() or sd.get("completes", false):
+    if sd.is_empty() or sd.get("completes", false) or not sd.has("advance_on"):
         return
-    var cond = sd.get("advance_on", null)
-    if cond == null:
-        return
-    if String(cond.get("type", "")) == "talked_to":
-        return  # handled momentarily in _on_npc_talked
-    if Conditions.met(cond):
+    # talk_npc = "" => pure state recheck; talked_to conditions are met only at the talk moment.
+    if _advance_satisfied(sd, ""):
         _advance(quest_id)
+
+## Evaluates a stage's `advance_on`, supporting a single condition dict, an array (AND), or an
+## {"any_of"|"all_of": [...]} object (SR3-F2). `talk_npc` carries the NPC just talked to ("" during a
+## pure state recheck); `talked_to` conditions are satisfied only at that talk moment, preserving the
+## momentary semantics that keep "return to X" stages from auto-completing on an earlier conversation.
+func _advance_satisfied(sd: Dictionary, talk_npc: String) -> bool:
+    var raw = sd.get("advance_on", null)
+    var mode := "all"
+    var conds: Array = []
+    if raw is Array:
+        conds = raw
+    elif raw is Dictionary:
+        if raw.has("any_of"):
+            mode = "any"
+            conds = raw.get("any_of", [])
+        elif raw.has("all_of"):
+            conds = raw.get("all_of", [])
+        else:
+            conds = [raw]
+    else:
+        return false
+    if not (conds is Array) or conds.is_empty():
+        return false
+    if mode == "any":
+        for c in conds:
+            if _single_advance_met(c, talk_npc):
+                return true
+        return false
+    for c in conds:
+        if not _single_advance_met(c, talk_npc):
+            return false
+    return true
+
+func _single_advance_met(cond, talk_npc: String) -> bool:
+    if not (cond is Dictionary):
+        return false
+    if String(cond.get("type", "")) == "talked_to":
+        return talk_npc != "" and String(cond.get("target", "")) == talk_npc
+    return Conditions.met(cond)
 
 func _advance(quest_id: String) -> void:
     var sd := _current_stage_def(quest_id)

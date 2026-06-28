@@ -4,6 +4,31 @@
 
 ---
 
+## 2026-06-28 - Session 026 - Resolve SR3 narrative-hardening follow-ups
+
+- **Goal**: implement the three SR3 follow-ups (F1/F2/F3) before M13 so narrative authoring runs on
+  safe, expressive systems.
+- **SR3-F1 (dialogue soft-lock guard)**: added `DialogueManager.advance()` and a default
+  Continue/Leave button in `DialogueBox` so a node with no visible choices (authored empty or fully
+  gated out) follows a node-level `next` or ends instead of soft-locking the paused tree. Node `next`
+  is validated by `DataRegistry`.
+- **SR3-F2 (multi-condition objectives)**: `QuestManager` now evaluates `advance_on` as a single
+  condition, an array (AND), or an `any_of`/`all_of` object via `_advance_satisfied`/
+  `_single_advance_met`; `talked_to` inside a set stays momentary (only at the talk moment).
+  `DataRegistry._validate_advance_on` validates all forms.
+- **SR3-F3 (state-reactive dialogue)**: dialogues accept `entry_rules` (first matching rule selects
+  the opening node; `entry` is the guaranteed fallback); resolved in `DialogueManager._resolve_entry`
+  and validated by `DataRegistry`.
+- **Tests**: added `tests/headless/SR3NarrativeHardeningRunner.{gd,tscn}` covering the soft-lock
+  guard, AND + any_of (item and kill paths) advancement with the momentary-talk rule, and reactive
+  entry selection. Wired into `test.bat`. Full `.\test.bat` passed (Godot import + M9/M10/M10R/M11/
+  M12/SR3, exit 0) — no regressions.
+- **Docs**: updated `DATA_SCHEMAS.md`, `QUEST_DIALOGUE_AUTHORING.md`, `SYSTEMS.md`, the SR3 review
+  (resolution note), and the ai_memory tracker (F1/F2/F3 moved to Done).
+- **Next**: M13 - items, equipment, economy & merchants.
+
+---
+
 ## 2026-06-28 - Session 025 - SR3 narrative scalability review
 
 - **Goal**: run the SR3 gate — decide whether the M11/M12 narrative systems can support real story

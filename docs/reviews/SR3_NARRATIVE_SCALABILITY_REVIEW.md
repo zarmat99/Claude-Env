@@ -152,7 +152,20 @@ follow-up tasks.
 - **Low / note-only**: OR/range/economy condition primitives, distinct quest failure state, and
   data-defined reputation thresholds — revisit when the first real region needs them (SR4).
 
+### Resolution (2026-06-28)
+SR3-F1, SR3-F2, and SR3-F3 were implemented immediately after this review (review and fixes shipped
+together), so the narrative systems are already hardened before M13:
+- **F1** — `DialogueManager.advance()` plus a default Continue/Leave affordance in `DialogueBox`
+  guarantee a choiceless or fully-gated node ends or follows a node-level `next` instead of
+  soft-locking; node `next` is validated.
+- **F2** — `advance_on` now accepts a single condition, an array (AND), or `any_of`/`all_of`;
+  `talked_to` keeps its momentary semantics inside a set; validated by `DataRegistry`.
+- **F3** — dialogues accept `entry_rules` to pick the opening node by state, with `entry` as the
+  guaranteed fallback; validated by `DataRegistry`.
+Covered by `tests/headless/SR3NarrativeHardeningRunner` and documented in `DATA_SCHEMAS.md` /
+`QUEST_DIALOGUE_AUTHORING.md`. The Low/note-only items remain deferred to SR4.
+
 ## Decision
-Proceed to M13 (items/equipment/economy/merchants). SR3 requires no blocking rewrite. Schedule
-SR3-F1 as near-term narrative hardening and SR3-F2/F3 before M18 so the first real story act is
-authored on safe, expressive narrative systems.
+Proceed to M13 (items/equipment/economy/merchants). SR3 requires no blocking rewrite; the promoted
+narrative-hardening follow-ups (F1/F2/F3) were completed in the same change cycle, so the first real
+story act (M18) can be authored on safe, expressive narrative systems.

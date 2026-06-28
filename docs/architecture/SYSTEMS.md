@@ -90,7 +90,8 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Depends on**: DataRegistry, GameState, EventBus.
 - **Implementation**: M3 done and exercised by the M6 vertical slice. M11 adds explicit
   `set_quest_stage` branching support through dialogue actions while keeping completion rewards on
-  quest stages.
+  quest stages. SR3-F2 lets a stage's `advance_on` be a single condition, an array (AND), or an
+  `any_of`/`all_of` object; `talked_to` inside a set stays momentary.
 
 ## DialogueManager (autoload) — `scripts/dialogue/*`
 - **Role**: run a dialogue graph; evaluate node/choice `conditions`; execute `actions`
@@ -103,6 +104,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   `give_item`, `take_item`, `give_reward`) are live. M12 adds `change_reputation` and
   `set_reputation`. Branching authoring conventions are documented in
   `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`; validation rejects unsupported action types.
+  SR3 adds a soft-lock guard (a choiceless or fully-gated node offers a Continue/Leave affordance via
+  `advance()` and optional node-level `next`) and `entry_rules` for state-reactive opening nodes.
 
 ## InventoryManager (autoload) + InventoryComponent — `scripts/inventory/*`, `scripts/components/InventoryComponent.gd`
 - **Role**: add/remove/query items, stacking, weight (later); `InventoryComponent` is the

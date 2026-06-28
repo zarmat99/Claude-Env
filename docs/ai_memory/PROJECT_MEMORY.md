@@ -91,9 +91,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - M12 adds `FactionManager`, reputation conditions/actions, NPC role/service/quest-offer metadata,
   the in-game Reputation Tester fixture, faction state in Quest Debug, and faction-aware enemy
   hostility.
-- M12 verification passed: JSON parses, `git diff --check` is clean, and `.\test.bat` runs green
-  (Godot import plus M9 regression, M10 quarantine/world-object smoke, M10R asset preview, M11
-  dialogue/branching regression, and M12 faction reputation regression). M12 is committed and pushed.
+- Verification: JSON parses, `git diff --check` is clean, and `.\test.bat` runs green (Godot import
+  plus M9 regression, M10 quarantine/world-object smoke, M10R asset preview, M11 dialogue/branching
+  regression, M12 faction reputation regression, and SR3 narrative-hardening regression).
 - Note: player death is still a placeholder (respawn full HP).
 - Next: SR3 (Narrative scalability review), then M13.
 
@@ -127,6 +127,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **M12**: `FactionManager` initializes/clamps/saves faction reputation, dialogue can change or set
   reputation, conditions can gate on reputation, NPCs declare validated role metadata, Quest Debug
   shows faction state, and enemies respect faction hostility before chasing.
+- **SR3 hardening**: dialogue soft-lock guard (`DialogueManager.advance()` + Continue/Leave
+  affordance + node-level `next`), multi-condition quest `advance_on` (single / array AND /
+  `any_of` / `all_of`, `talked_to` kept momentary), and `entry_rules` state-reactive opening nodes;
+  validated by `DataRegistry` and covered by `SR3NarrativeHardeningRunner`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
   DialogueManager, FactionManager, SceneLoader, SaveManager, ProgressionManager.
 - **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse ·
@@ -183,9 +187,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 ## 11. Current milestone state
 **SR3 - Narrative scalability review: COMPLETE.** Verdict: proceed to M13, no blocking rewrite
 (`docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`). The quest/dialogue/NPC/faction systems are
-data-driven with strong boot validation and adequate debug/regression tooling. Promoted follow-ups:
-SR3-F1 (dialogue soft-lock guard, near-term) and SR3-F2/F3 (multi-condition quest objectives,
-state-reactive dialogue) before M18. M0-M12 plus SR1/SR2/SR3 are complete; **M13
+data-driven with strong boot validation and adequate debug/regression tooling. The promoted
+follow-ups SR3-F1 (dialogue soft-lock guard), SR3-F2 (multi-condition `advance_on`), and SR3-F3
+(`entry_rules` state-reactive dialogue) were resolved in the same change cycle and are covered by
+`tests/headless/SR3NarrativeHardeningRunner`. M0-M12 plus SR1/SR2/SR3 are complete; **M13
 (items/equipment/economy/merchants) is the next milestone**.
 
 ## 12. Recommended next step

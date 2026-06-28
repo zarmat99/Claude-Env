@@ -23,7 +23,7 @@ func start(dialogue_id: String) -> void:
         push_error("DialogueManager: unknown dialogue '%s'" % dialogue_id)
         return
     _id = dialogue_id
-    _node_id = String(_dialogue.get("entry", "start"))
+    _node_id = _resolve_entry()
     get_tree().paused = true
     EventBus.dialogue_started.emit(_id)
     _show_node()
@@ -39,6 +39,34 @@ func choose(index: int) -> void:
     else:
         _node_id = String(nxt)
         _show_node()
+
+## Called by the DialogueBox "Continue" affordance when the current node has no visible choices
+## (authored with none, or all gated out by conditions). Advances to the node-level `next` when
+## present, otherwise ends the dialogue. Guarantees a reachable node can never soft-lock the paused
+## tree (SR3-F1).
+func advance() -> void:
+    if not is_active():
+        return
+    var node := _current_node()
+    var nxt = node.get("next", null)
+    if nxt != null and _dialogue.get("nodes", {}).has(String(nxt)):
+        _node_id = String(nxt)
+        _show_node()
+    else:
+        _finish()
+
+## Picks the entry node. If the dialogue declares `entry_rules`, the first rule whose conditions are
+## all met selects the node (state-reactive greetings, SR3-F3); otherwise the static `entry` node is
+## the guaranteed fallback.
+func _resolve_entry() -> String:
+    var rules = _dialogue.get("entry_rules", [])
+    if rules is Array:
+        for rule in rules:
+            if rule is Dictionary:
+                var conds = rule.get("conditions", [])
+                if conds is Array and Conditions.all_met(conds):
+                    return String(rule.get("node", _dialogue.get("entry", "start")))
+    return String(_dialogue.get("entry", "start"))
 
 func _show_node() -> void:
     var node := _current_node()

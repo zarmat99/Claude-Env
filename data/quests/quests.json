@@ -109,5 +109,38 @@
         "completes": true
       }
     ]
+  },
+  "quest_sr3_multicond_fixture": {
+    "id": "quest_sr3_multicond_fixture",
+    "title": "SR3 Multi-Condition Fixture",
+    "giver": "npc_m11_branch_tester",
+    "stages": [
+      {
+        "stage": 0,
+        "desc": "Carry two potions and report to the blacksmith.",
+        "advance_on": [
+          { "type": "has_item", "target": "item_health_potion", "count": 2 },
+          { "type": "talked_to", "target": "npc_blacksmith_valdombra" }
+        ],
+        "next": 10
+      },
+      {
+        "stage": 10,
+        "desc": "Either slay a slime or acquire an iron sword.",
+        "advance_on": {
+          "any_of": [
+            { "type": "killed_enemy", "target": "enemy_slime", "count": 1 },
+            { "type": "has_item", "target": "item_iron_sword", "count": 1 }
+          ]
+        },
+        "next": 20
+      },
+      {
+        "stage": 20,
+        "desc": "Multi-condition outcome recorded.",
+        "completes": true,
+        "rewards": { "xp": 9, "gold": 2 }
+      }
+    ]
   }
 }

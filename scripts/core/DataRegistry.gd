@@ -372,7 +372,7 @@ func _validate_quests() -> void:
             stage_ids.append(stage_id)
             _require_string(stage, "quests/%s.stage_%d" % [quest_id, stage_id], "desc")
             if stage.has("advance_on"):
-                _validate_condition(stage.get("advance_on", {}), "quests/%s.stage_%d.advance_on" % [quest_id, stage_id])
+                _validate_advance_on(stage.get("advance_on"), "quests/%s.stage_%d.advance_on" % [quest_id, stage_id])
             if stage.has("next") and stage.get("next", null) != null:
                 var next_stage := int(stage.get("next", -2147483648))
                 if not _quest_has_stage(quest_id, next_stage):
@@ -391,6 +391,21 @@ func _validate_dialogues() -> void:
         var entry := String(dialogue.get("entry", ""))
         if entry == "" or not nodes.has(entry):
             _error("dialogues/%s.entry references missing node '%s'" % [dialogue_id, entry])
+        var entry_rules = dialogue.get("entry_rules", null)
+        if entry_rules != null:
+            if not (entry_rules is Array):
+                _error("dialogues/%s.entry_rules must be an array" % dialogue_id)
+            else:
+                for rule_index in range(entry_rules.size()):
+                    var rule = entry_rules[rule_index]
+                    var rule_path := "dialogues/%s.entry_rules[%d]" % [dialogue_id, rule_index]
+                    if not (rule is Dictionary):
+                        _error("%s must be an object" % rule_path)
+                        continue
+                    var rule_node := String(rule.get("node", ""))
+                    if rule_node == "" or not nodes.has(rule_node):
+                        _error("%s.node references missing node '%s'" % [rule_path, rule_node])
+                    _validate_conditions(rule.get("conditions", []), "%s.conditions" % rule_path)
         for node_id in nodes.keys():
             var node = nodes[node_id]
             var path := "dialogues/%s.nodes.%s" % [dialogue_id, node_id]
@@ -402,6 +417,9 @@ func _validate_dialogues() -> void:
                 _require_ref("npcs", speaker, "%s.speaker" % path)
             _require_string(node, path, "text")
             _validate_actions(node.get("actions", []), "%s.actions" % path)
+            var node_next = node.get("next", null)
+            if node_next != null and not nodes.has(String(node_next)):
+                _error("%s.next references missing node '%s'" % [path, node_next])
             var choices = node.get("choices", [])
             if not (choices is Array):
                 _error("%s.choices must be an array" % path)
@@ -657,6 +675,26 @@ func _validate_scene_world_objects(root: Node, map_id: String, persistent_ids: D
         if persistent_ids.has(pid):
             _error("Duplicate persistent_id '%s' in %s and %s" % [pid, persistent_ids[pid], "maps/%s node %s" % [map_id, node.name]])
         persistent_ids[pid] = "maps/%s node %s" % [map_id, node.name]
+
+## Validates a quest stage `advance_on`: a single condition dict, an array of conditions (AND), or an
+## {"any_of"|"all_of": [...]} object (SR3-F2).
+func _validate_advance_on(value, path: String) -> void:
+    if value is Array:
+        if value.is_empty():
+            _error("%s must be a non-empty array of conditions" % path)
+            return
+        for index in range(value.size()):
+            _validate_condition(value[index], "%s[%d]" % [path, index])
+    elif value is Dictionary and (value.has("any_of") or value.has("all_of")):
+        var key := "any_of" if value.has("any_of") else "all_of"
+        var arr = value.get(key, [])
+        if not (arr is Array) or arr.is_empty():
+            _error("%s.%s must be a non-empty array of conditions" % [path, key])
+            return
+        for index in range(arr.size()):
+            _validate_condition(arr[index], "%s.%s[%d]" % [path, key, index])
+    else:
+        _validate_condition(value, path)
 
 func _validate_conditions(conditions, path: String) -> void:
     if not (conditions is Array):

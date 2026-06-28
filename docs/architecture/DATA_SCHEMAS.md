@@ -67,6 +67,13 @@ in their milestone.
 `GameState`/manager state. Branching authoring conventions live in
 `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
 
+**`advance_on` forms (SR3-F2)**: a stage's `advance_on` may be a single condition object (as above),
+an **array** of conditions that must all hold (AND), or an `{ "any_of": [ ... ] }` /
+`{ "all_of": [ ... ] }` object. `talked_to` inside a multi-condition set is satisfied only at the
+moment of talking, so "carry X and report to NPC" advances when the player talks while already
+holding X — it never auto-completes from an earlier conversation. Example:
+`"advance_on": [ { "type": "has_item", "target": "item_herb", "count": 3 }, { "type": "talked_to", "target": "npc_healer" } ]`.
+
 ## dialogues/dialogues.json (conditional node graph)
 ```json
 {
@@ -103,6 +110,19 @@ in their milestone.
 `give_reward{rewards}` · `change_reputation{faction,amount}` ·
 `set_reputation{faction,value}`. `give_reward.rewards` uses the same reward object shape as quest
 stages (`xp`, `gold`, `items`). `next: null` ends dialogue.
+
+**Node `next` + soft-lock guard (SR3-F1)**: a node may declare a node-level `"next": "node_id"` and
+omit `choices`; the DialogueBox then shows a single **Continue** affordance that advances to `next`,
+or ends the dialogue if `next` is absent. A node that has choices but where **every** choice is gated
+out by conditions falls back to the same Continue/Leave affordance — so a reachable node can never
+soft-lock the paused game. Authors should still give branching nodes an unconditional fallback choice
+where the conversation is meant to continue.
+
+**`entry_rules` — state-reactive greetings (SR3-F3)**: a dialogue may declare
+`"entry_rules": [ { "conditions": [ ... ], "node": "node_id" }, ... ]`. On start, the first rule
+whose conditions are all met selects the opening node; if none match, the static `entry` node is the
+guaranteed fallback. This lets one NPC vary its greeting by quest/reputation/flags without authoring
+separate dialogues. `entry` remains required.
 
 ## npcs/npcs.json
 ```json
