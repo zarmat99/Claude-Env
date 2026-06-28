@@ -24,8 +24,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   equipped-slot unequip buttons. It remains a passive UI layer: equipment and consumables are still
   handled by `EquipmentManager` / `InventoryManager`. `M13EconomyEquipmentRunner` covers the UI
   button flow.
-- M0-M13, M10R, SR1, SR2, and SR3 are complete. **M14 (combat, skills & magic) is the next
-  milestone** (it also picks up armor-based damage mitigation, deferred from M13).
+- M0-M13, M10R, SR1, SR2, and SR3 are complete. **MV1 (shared visible in-game verification) is the
+  active gate before M14**. M14 (combat, skills & magic) starts only after this manual pass.
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
   (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
   multi-condition `advance_on` (array AND / `any_of` / `all_of`, with `talked_to` kept momentary),
@@ -84,15 +84,14 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, M13 and the post-M13 fixes are committed and pushed.
 
 ## Last thing done
-Made the inventory usable in game: press `I`, click `Equip` on weapons/armor, click an equipped slot
-to unequip it, and click `Use` on consumables. Added the equip/unequip/use UI regression to
-`M13EconomyEquipmentRunner`.
-`.\test.bat` passes (import + M9/M10/M10R/M11/M12/SR3/M13, exit 0).
+Added MV1, a shared visible in-game verification gate before M14. The rule is: open the game window
+where the user can see it, narrate each intended action before doing it, and fix or promote every
+player-facing issue before moving to the next milestone.
 
 ## Next thing to do
-Start **M14 - combat, skills & magic** (see `ROADMAP.md`): enemy archetypes, damage rules, combat
-abilities, skill growth, magic/spell data, AI variants — and fold in armor-based damage mitigation
-(equipped armor stats are authorable now but mitigation was deferred from M13).
+Run **MV1 - shared visible in-game verification**: play the current slice on-screen and check
+movement/collisions, NPC dialogue, quest flow, transitions, combat/loot, inventory equip/use/unequip,
+merchant browsing, save/load, and F10 debug readability. Then start **M14 - combat, skills & magic**.
 - ⚠️ **Economy UX gaps for M16**: the HUD has no gold readout, the merchant gives no "can't afford"
   feedback, and starting gold is 0 (gold comes from quests/selling). The merchant now always shows
   its wares (Session 029). A real shop UI is M16.

@@ -7,6 +7,11 @@ Status note: this file is the milestone sequence and design intent, not the live
 Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`, and
 `SESSION_LOG.md`.
 
+Manual verification rule: every playable milestone or UX-sensitive fix must include a visible
+in-game pass before moving on. Codex opens the game window, narrates the intended action before
+doing it, and records/fixes/promotes every issue found. Automated tests are required but not enough
+when the feature is player-facing.
+
 ---
 
 ## M0 — Foundations & memory
@@ -160,6 +165,17 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
   village merchant (`merchants.json` + `npc_merchant_valdombra`) are live, save-aware, and covered by
   `M13EconomyEquipmentRunner`. Deferred to later: full merchant/equipment UI (M16) and armor damage
   mitigation (M14).
+
+## MV1 — Shared in-game verification gate
+- **Goal**: verify the current playable slice together, on-screen, before starting M14.
+- **Scope**: open the game in a visible window (`play.bat` / Godot play), then walk through the
+  player-facing loop while stating each intended action before doing it: movement/collisions, NPC
+  interaction, quest start/progress, map transitions, combat/loot, inventory equip/use/unequip,
+  merchant browsing, save/load, and F10 debug readability.
+- **Exit criteria**: user-visible session completed; any player-facing regression is either fixed
+  immediately or promoted as a blocking task; user confirms the project may proceed to M14.
+- **Status 2026-06-28**: added at user request after the inventory UX fix; pending shared manual
+  pass.
 
 ## M14 — Combat, skills & magic
 - **Goal**: expand combat from a simple test loop into a scalable ruleset.

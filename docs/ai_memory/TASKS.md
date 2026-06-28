@@ -8,7 +8,10 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none)
+- **MV1-T1 - Shared visible in-game verification before M14** - MV1 - files:
+  `docs/architecture/ROADMAP.md`, `docs/ai_memory/*` - **in_progress** (2026-06-28): open the game
+  visibly, narrate each action before doing it, test the current slice manually with the user, and
+  fix or promote any player-facing issue before starting M14.
 
 ## Backlog
 
@@ -39,7 +42,8 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
-  SR2-SR5). Add detailed tasks here when each milestone becomes current.
+  SR2-SR5, plus manual verification gates such as MV1). Add detailed tasks here when each milestone
+  becomes current.
 
 ## Done
 - **M13-F2 - Inventory UI item actions** - M13 follow-up - files:

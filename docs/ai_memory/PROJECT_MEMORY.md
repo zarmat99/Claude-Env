@@ -103,7 +103,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   regression, M12 faction reputation regression, SR3 narrative-hardening regression, and M13
   economy/equipment/inventory UI regression).
 - Note: player death is still a placeholder (respawn full HP).
-- Next: M14 (Combat, skills & magic).
+- Next gate: MV1 shared visible in-game verification. M14 starts only after the manual on-screen pass
+  is completed or any player-facing blockers are fixed/promoted.
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -165,6 +166,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   expansion, and alpha stabilization.
 - Scalability reviews are explicit milestones: SR1 after M8, SR2 after world authoring, SR3 after
   narrative systems, SR4 before production region work, and SR5 before broad world/story expansion.
+- Manual verification gates are required for player-facing work. MV1 sits between M13 and M14:
+  Codex opens the visible game window, narrates each intended action before doing it, and records/
+  fixes/promotes every issue found before proceeding.
 - Strategic rule: keep the current Village/Forest/Cave content as dev sandbox/regression content
   until a real production region exists; do not let test content become a hidden dependency of core
   systems.
@@ -203,17 +207,21 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
+**MV1 - shared visible in-game verification: IN PROGRESS.** It gates M14. The current slice must be
+played in a visible window with each action narrated before execution, and any player-facing issue
+must be fixed or promoted before M14 begins.
+
 **M13 - items, equipment, economy & merchants: COMPLETE.** Equipment + derived combat stats,
 consumable item use, buy/sell with merchant stock/pricing, a reusable container `InventoryComponent`,
 clickable inventory equip/use/unequip actions, and a data-authored village merchant are live,
 save-aware, and covered by
 `tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete; **M14 (combat,
-skills & magic) is the next milestone** (it picks up armor-based damage mitigation, deferred from
-M13).
+skills & magic) follows MV1** (it picks up armor-based damage mitigation, deferred from M13).
 
 ## 12. Recommended next step
-Proceed with **M14 - combat, skills & magic**: enemy archetypes, damage rules, combat abilities,
-skill growth, magic/spell data, AI variants, and armor-based damage mitigation (deferred from M13).
+Proceed with **MV1 - shared visible in-game verification**, then **M14 - combat, skills & magic**:
+enemy archetypes, damage rules, combat abilities, skill growth, magic/spell data, AI variants, and
+armor-based damage mitigation (deferred from M13).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
@@ -223,7 +231,7 @@ candidates. Save/load, progression, quest flow, dynamic pickups, quarantine chec
 states, M10R asset preview, M11 dialogue actions/branching, M12 faction reputation, SR3 hardening,
 and M13 equipment/economy/container/merchant coverage are all in `.\test.bat`. Quest/faction
 authoring can be inspected in game with the F10 Quest Debug overlay. M13 includes the post-review
-armor save/load fix; the next step is **M14 - combat, skills & magic**.
+armor save/load fix; the next step is **MV1 visible manual verification**, then M14.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

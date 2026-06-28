@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-06-28 - Session 032 - Add visible manual verification gate
+
+- **Request**: before continuing to the next milestone, add an intermediate verification where the
+  game is opened visibly for the user and every manual test action is narrated before execution.
+- **Change**: added MV1 between M13 and M14 in `ROADMAP.md` and made it the active gate in
+  `HANDOFF.md`, `TASKS.md`, and `PROJECT_MEMORY.md`.
+- **Rule**: automated tests remain necessary, but player-facing work must also pass a shared
+  visible in-game check: movement/collisions, NPC/dialogue, quest flow, transitions, combat/loot,
+  inventory equip/use/unequip, merchant browsing, save/load, and F10 debug readability.
+- **Next**: run the visible game session and record/fix/promote any issues before M14.
+
+---
+
 ## 2026-06-28 - Session 031 - Make inventory items actionable
 
 - **Report**: the inventory opened with `I`, but weapons, armor, and consumables were only listed as
