@@ -45,11 +45,11 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 7. **Quests are staged** with abstract conditions.
 8. **Dialogue supports conditions** (even if first dialogue is simple).
 9. **World = connected maps** (separate scenes + transitions), not one giant open world.
-10. **Modular UI** (HUD / DialogueBox / InventoryUI / QuestJournalUI as separate scenes).
+10. **Modular UI** (HUD / DialogueBox / InventoryUI / QuestJournalUI / QuestDebugUI as separate scenes).
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **M10R and SR2 are complete; M11 is active.** M0-M10, M10R, SR1, and SR2 are complete.
+- **M10R, SR2, and M11 are complete; M12 is active next.** M0-M11, M10R, SR1, and SR2 are complete.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
   `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
@@ -116,12 +116,14 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
   DialogueManager, SceneLoader, SaveManager, ProgressionManager.
 - **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse ·
-  save F5 · load F9. Code now reads input action names for journal/inventory/attack/save/load.
+  save F5 · load F9 · quest debug F10. Code now reads input action names for
+  journal/inventory/attack/save/load/debug.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M8 Progression, SR1 Core scalability review, M9 Data & tooling hardening, M10 reusable
-  world-authoring systems, M10R governed asset generation/approval, and SR2 map scalability review
-  are complete. M11 quest/dialogue production pipeline is active.
+  world-authoring systems, M10R governed asset generation/approval, SR2 map scalability review, and
+  M11 quest/dialogue production pipeline are complete. M12 NPC/faction/reputation work is active
+  next.
 - M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
   dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
@@ -166,25 +168,23 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M11 - Quest & dialogue production pipeline: ACTIVE.** M10R approved the atomic Image Gen asset
-workflow, including separate visual size, footprint, collision, and layering metadata. SR2 cleared
-the map pipeline to proceed to narrative systems. M11-T1 completed the production dialogue action
-set: dialogues can now set/clear flags, start/advance quests, give/take items, and grant rewards.
-M11-T2 added the quest/dialogue branching convention, `set_quest_stage`, and `flag_not_set`, with a
-two-outcome fixture covering branch flags and stage-completion rewards.
+**M11 - Quest & dialogue production pipeline: COMPLETE. M12 is active next.** M11 now has the
+production dialogue action set, branching conventions, `set_quest_stage`, `flag_not_set`, a
+multi-stage branching regression fixture, and the F10 Quest Debug overlay for authoring checks.
+The Branch Tester NPC runs the richer regression fixture in game.
 
 ## 12. Recommended next step
-Proceed with **M11-T3 - Quest/dialogue regression fixtures**: expand from the small branch fixture
-to a multi-stage branching quest regression with item removals, rewards, and persistent
-consequences.
+Proceed with **M12-T1 - Faction reputation state and actions**: add data-backed faction reputation
+changes and authorable reputation effects/gates without hardcoded story logic.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M10R and SR2 are complete; M11 is active**. Village/Forest/Cave
+GDScript, designed to scale. **M10R, SR2, and M11 are complete; M12 is active next**. Village/Forest/Cave
 remain the playable dev slice and now show approved generated terrain/prop candidates. Save/load,
 progression, quest flow, dynamic pickups, quarantine checks, world-object states, M10R asset
-preview, M11 dialogue actions, and the first branching fixture are covered by `.\test.bat`. The
-next step is **M11-T3 quest/dialogue regression fixtures**.
+preview, M11 dialogue actions, and the multi-stage branching regression fixture are covered by
+`.\test.bat`. Quest authoring can be inspected in game with the F10 Quest Debug overlay. The next
+step is **M12-T1 faction reputation state and actions**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

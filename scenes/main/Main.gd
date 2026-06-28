@@ -8,6 +8,7 @@ const HUDScene := preload("res://scenes/ui/HUD.tscn")
 const DialogueBoxScene := preload("res://scenes/ui/DialogueBox.tscn")
 const QuestJournalScene := preload("res://scenes/ui/QuestJournalUI.tscn")
 const InventoryUIScene := preload("res://scenes/ui/InventoryUI.tscn")
+const QuestDebugScene := preload("res://scenes/ui/QuestDebugUI.tscn")
 
 const START_MAP := "map_village"
 const START_SPAWN := "spawn_default"
@@ -27,3 +28,4 @@ func _ready() -> void:
     _ui.add_child(DialogueBoxScene.instantiate())
     _ui.add_child(QuestJournalScene.instantiate())
     _ui.add_child(InventoryUIScene.instantiate())
+    _ui.add_child(QuestDebugScene.instantiate())

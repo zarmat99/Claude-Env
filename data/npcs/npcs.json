@@ -10,7 +10,7 @@
     "id": "npc_m11_branch_tester",
     "name": "Branch Tester",
     "faction": "faction_valdombra_village",
-    "dialogue": "dialogue_m11_branch_fixture",
+    "dialogue": "dialogue_m11_regression_fixture",
     "home_map": "map_village"
   }
 }

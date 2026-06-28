@@ -92,3 +92,7 @@ Fixture content may live in `data/dialogues/dialogues.json` and `data/quests/que
 it is named with an obvious fixture ID, for example `dialogue_m11_branch_fixture` or
 `quest_m11_branch_fixture`. These fixtures should not be referenced by NPC data or maps unless the
 task explicitly needs an in-game debug probe.
+
+Use `tests/headless/M11DialogueActionsRunner.gd` for regression coverage and the in-game Quest
+Debug overlay (`quest_debug_toggle`, F10 by default) for manual authoring checks. The overlay is a
+read-only view of quest stages, completed quests, flags, inventory, and player reward state.

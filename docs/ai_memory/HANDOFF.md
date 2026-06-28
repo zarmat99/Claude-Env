@@ -10,8 +10,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **M10R asset-pipeline remediation and SR2 map scalability review are complete. M11 is active.**
-  M0-M10, M10R, SR1, and SR2 are complete.
+- **M10R asset-pipeline remediation, SR2 map review, and M11 quest/dialogue production are
+  complete. M12 is active next.** M0-M11, M10R, SR1, and SR2 are complete.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
   entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
@@ -46,18 +46,23 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   can call `set_quest_stage`, and `flag_not_set` is available for consequence gates. The contract is
   documented in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
 - The M11 branch fixture is also reachable in game through the `Branch Tester` NPC placed in the
-  Village near the starting area. It is a debug probe, not story content.
+  Village near the starting area. It is a debug probe, not story content. M11-T3 upgraded that
+  probe to a multi-stage regression fixture with item grants/removals, two final outcomes, branch
+  rewards, and persistent consequence flags.
+- M11-T4 added `QuestDebugUI`, toggled by `quest_debug_toggle` / F10. It shows map, LV/XP/gold,
+  active quest stage IDs/descriptions, completed quests, flags, and inventory for authoring checks.
 - Verified with Godot headless import and `.\test.bat` (runs M9 + M10 + M10R asset preview + M11
   dialogue action/branching regression).
 - On `master`, pushed.
 
 ## Last thing done
-Completed M11-T2. Quest/dialogue branching now has authoring conventions, a specific stage-jump
-action, negative flag gates, and a two-outcome headless fixture.
+Completed all of M11. The project now has production dialogue actions, branching quest conventions,
+a multi-stage branch regression fixture, an in-game Branch Tester probe, and the F10 Quest Debug
+overlay for authoring verification.
 
 ## Next thing to do
-Start **M11-T3 - Quest/dialogue regression fixtures**: expand coverage to a multi-stage branching
-quest with item rewards/removals and flag consequences.
+Start **M12-T1 - Faction reputation state and actions**: add data-backed faction reputation changes
+and authorable reputation effects/gates without hardcoded story logic.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -85,10 +90,10 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 regression suites
 ```
-Controls: move = WASD/arrows · talk = E/Space · journal = J · inventory = I · attack = left mouse ·
-save = F5 · load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
+Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
+attack = left mouse | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
 Maps connect via walk-on pads (the colored rectangles near map edges).
 
 ## Screenshot trick (visual checks; delete temp files + clear .godot after)

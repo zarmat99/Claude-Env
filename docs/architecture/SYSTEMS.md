@@ -130,11 +130,12 @@ current codebase, so it should avoid "current milestone" language that can go st
 
 ## UI — `scripts/ui/*`, `scenes/ui/*`
 - **Role**: `HUD` (health/level/active quest), `DialogueBox` (dialogue runner view),
-  `InventoryUI`, `QuestJournalUI`. UIs are passive views that subscribe to EventBus and query
-  managers; they never own game logic.
+  `InventoryUI`, `QuestJournalUI`, and `QuestDebugUI`. UIs are passive views that subscribe to
+  EventBus and query managers; they never own game logic.
 - **Depends on**: EventBus + managers (read-only).
-- **Implementation**: HUD (M1), DialogueBox (M2), QuestJournalUI (M3), InventoryUI (M4) are live.
-  M9 routes journal/inventory toggles through input actions.
+- **Implementation**: HUD (M1), DialogueBox (M2), QuestJournalUI (M3), InventoryUI (M4), and the
+  M11 QuestDebugUI authoring overlay are live. M9 routes journal/inventory toggles through input
+  actions; M11 adds `quest_debug_toggle` for quest authoring state inspection.
 
 ## Testing / checks - `tests/headless/*`
 - **Role**: persistent regression coverage for milestone-critical flows.
@@ -142,4 +143,5 @@ current codebase, so it should avoid "current milestone" language that can go st
   covers data validation, boot, map transitions, first quest completion, save/load, progression,
   and dynamic pickup persistence. M10 adds `M10WorldAuthoringRunner`, and `test.bat` now runs both
   M9 and M10. The M10 runner validates proxy atlas import, authored map generation, object
-  placement, chest loot persistence, and switch/door persistence across map reloads.
+  placement, chest loot persistence, and switch/door persistence across map reloads. M11 adds
+  `M11DialogueActionsRunner` for production dialogue actions and branching quest fixtures.

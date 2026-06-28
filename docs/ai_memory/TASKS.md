@@ -8,8 +8,8 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- **M11-T3 - Quest/dialogue regression fixtures** - in_progress: add headless coverage for a
-  branching multi-stage quest with item rewards/removals and flag consequences.
+- **M12-T1 - Faction reputation state and actions** - in_progress: add data-backed faction
+  reputation state changes and authorable reputation effects/gates without hardcoded story logic.
 
 ## Backlog
 
@@ -20,14 +20,32 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none)
 
 ### M11 - Quest & dialogue production pipeline
-- **M11-T4 - Journal/debug authoring tools** - backlog: improve quest inspection/debug helpers enough
-  to author and verify production questlines without manual guesswork.
+- (none)
+
+### M12 - NPCs, factions & reputation
+- **M12-T2 - Reputation-gated dialogue/quest fixtures** - backlog: prove reputation can alter
+  dialogue availability and quest outcomes through data.
+- **M12-T3 - NPC role metadata and debug coverage** - backlog: define NPC role fields and add
+  enough validation/debug visibility for production NPC authoring.
+- **M12-T4 - Hostility/friendliness foundations** - backlog: connect faction relationships to actor
+  hostility decisions without special-case map scripts.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M11-T4 - Journal/debug authoring tools** - M11 - files:
+  `scripts/ui/QuestDebugUI.gd`, `scenes/ui/QuestDebugUI.tscn`, `scenes/main/Main.gd`,
+  `project.godot`, `tests/headless/M9RegressionRunner.gd` - **done** (2026-06-28): added an
+  authoring overlay toggled by `quest_debug_toggle` / F10 that shows map, level/XP/gold, active
+  quest stages, completed quests, flags, and inventory for in-game questline verification.
+- **M11-T3 - Quest/dialogue regression fixtures** - M11 - files:
+  `data/{quests,dialogues,npcs}.json`, `tests/headless/M11DialogueActionsRunner.gd`,
+  `scenes/npcs/BranchTester.tscn` - **done** (2026-06-28): added a multi-stage branching
+  regression quest with item grants/removals, branch rewards, and persistent flag consequences.
+  The M11 runner now verifies both final outcomes, and the Branch Tester NPC uses the richer
+  in-game fixture.
 - **M11-T2 - Branching quest authoring conventions** - M11 - files:
   `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`, `docs/architecture/DATA_SCHEMAS.md`,
   `docs/architecture/SYSTEMS.md`, `scripts/quest/QuestManager.gd`,

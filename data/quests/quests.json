@@ -52,5 +52,36 @@
         "rewards": { "xp": 8, "gold": 4, "items": [ { "id": "item_health_potion", "count": 1 } ] }
       }
     ]
+  },
+  "quest_m11_regression_fixture": {
+    "id": "quest_m11_regression_fixture",
+    "title": "M11 Regression Fixture",
+    "giver": "npc_m11_branch_tester",
+    "stages": [
+      {
+        "stage": 0,
+        "desc": "Accept the test delivery."
+      },
+      {
+        "stage": 10,
+        "desc": "Pay the road toll with one potion."
+      },
+      {
+        "stage": 20,
+        "desc": "Choose whether to deliver or keep the remaining potion."
+      },
+      {
+        "stage": 100,
+        "desc": "Delivery outcome recorded.",
+        "completes": true,
+        "rewards": { "xp": 15, "gold": 3, "items": [ { "id": "item_iron_sword", "count": 1 } ] }
+      },
+      {
+        "stage": 200,
+        "desc": "Keep outcome recorded.",
+        "completes": true,
+        "rewards": { "xp": 12, "gold": 5 }
+      }
+    ]
   }
 }

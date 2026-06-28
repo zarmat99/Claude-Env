@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-06-28 - Session 022 - Complete M11 quest pipeline
+
+- **Goal**: complete the entire M11 quest/dialogue production milestone, not just the next task.
+- **M11-T3**: added `quest_m11_regression_fixture` and `dialogue_m11_regression_fixture`, a
+  multi-stage branching quest that gives/removes potions, gates choices by stage/items/flags,
+  completes through two outcome stages, and grants branch-specific rewards. `Branch Tester` now
+  uses this richer in-game probe.
+- **M11-T4**: added `QuestDebugUI` and `QuestDebugUI.tscn`, wired into `Main` and toggled by
+  `quest_debug_toggle` / F10. It shows map, LV/XP/gold, active quest stage IDs/descriptions,
+  completed quests, flags, and inventory for authoring verification.
+- **Validation**: M9 input validation now checks `quest_debug_toggle`; the M11 runner verifies both
+  final paths of the multi-stage regression fixture. `.\test.bat` passed.
+- **Milestone**: M11 is complete. Next milestone is M12 - NPCs, factions & reputation.
+
+---
+
 ## 2026-06-28 - Session 021 - Branching quest conventions
 
 - **Goal**: complete M11-T2 by turning branching quest/dialogue design into an authoring contract

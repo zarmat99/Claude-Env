@@ -111,5 +111,72 @@
         ]
       }
     }
+  },
+  "dialogue_m11_regression_fixture": {
+    "id": "dialogue_m11_regression_fixture",
+    "entry": "start",
+    "nodes": {
+      "start": {
+        "speaker": "npc_m11_branch_tester",
+        "text": "Courier test ready.",
+        "actions": [ { "type": "start_quest", "quest": "quest_m11_regression_fixture" } ],
+        "choices": [
+          {
+            "text": "Begin delivery.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 0 },
+              { "type": "flag_not_set", "flag": "quest_m11_regression_fixture_decision_started" }
+            ],
+            "actions": [
+              { "type": "set_flag", "flag": "quest_m11_regression_fixture_decision_started" },
+              { "type": "give_item", "id": "item_health_potion", "count": 2 },
+              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 10 }
+            ]
+          },
+          {
+            "text": "Pay the toll.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 10 },
+              { "type": "has_item", "target": "item_health_potion", "count": 2 }
+            ],
+            "actions": [
+              { "type": "set_flag", "flag": "quest_m11_regression_fixture_decision_toll_paid" },
+              { "type": "take_item", "id": "item_health_potion", "count": 1 },
+              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 20 }
+            ]
+          },
+          {
+            "text": "Deliver the remaining potion.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 20 },
+              { "type": "has_item", "target": "item_health_potion", "count": 1 },
+              { "type": "flag_not_set", "flag": "quest_m11_regression_fixture_outcome_keep" }
+            ],
+            "actions": [
+              { "type": "set_flag", "flag": "quest_m11_regression_fixture_outcome_deliver" },
+              { "type": "take_item", "id": "item_health_potion", "count": 1 },
+              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 100 }
+            ]
+          },
+          {
+            "text": "Keep the remaining potion.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 20 },
+              { "type": "has_item", "target": "item_health_potion", "count": 1 },
+              { "type": "flag_not_set", "flag": "quest_m11_regression_fixture_outcome_deliver" }
+            ],
+            "actions": [
+              { "type": "set_flag", "flag": "quest_m11_regression_fixture_outcome_keep" },
+              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 200 }
+            ]
+          },
+          { "text": "(Leave)", "next": null }
+        ]
+      }
+    }
   }
 }
