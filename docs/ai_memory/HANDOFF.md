@@ -20,6 +20,10 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   is equipped and restores the live player health component with equipment-derived effective max
   health. `M13EconomyEquipmentRunner` covers armor save/load (`base max 30`, leather armor effective
   max 40, current health 35).
+- **Post-M13 inventory UX fix complete**: `InventoryUI` now has clickable `Equip`, `Use`, and
+  equipped-slot unequip buttons. It remains a passive UI layer: equipment and consumables are still
+  handled by `EquipmentManager` / `InventoryManager`. `M13EconomyEquipmentRunner` covers the UI
+  button flow.
 - M0-M13, M10R, SR1, SR2, and SR3 are complete. **M14 (combat, skills & magic) is the next
   milestone** (it also picks up armor-based damage mitigation, deferred from M13).
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
@@ -77,12 +81,12 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - F10 Quest Debug now also shows faction reputation, hostile, and friendly state.
 - M12 verification passed: JSON parses, `git diff --check` is clean, and `.\test.bat` runs green
   (Godot import + M9/M10/M10R/M11/M12 headless runners all OK, exit 0).
-- On `master`, M12 is committed and pushed.
+- On `master`, M13 and the post-M13 fixes are committed and pushed.
 
 ## Last thing done
-Fixed the M13 equipment save/load bug found in review: derived armor max health is no longer baked
-into the saved base `stats.max_health`, and live player health loads using the effective
-equipment-derived max. Added the armor save/load regression to `M13EconomyEquipmentRunner`.
+Made the inventory usable in game: press `I`, click `Equip` on weapons/armor, click an equipped slot
+to unequip it, and click `Use` on consumables. Added the equip/unequip/use UI regression to
+`M13EconomyEquipmentRunner`.
 `.\test.bat` passes (import + M9/M10/M10R/M11/M12/SR3/M13, exit 0).
 
 ## Next thing to do

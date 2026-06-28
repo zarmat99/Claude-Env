@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-06-28 - Session 031 - Make inventory items actionable
+
+- **Report**: the inventory opened with `I`, but weapons, armor, and consumables were only listed as
+  text, so the player could not equip, unequip, or use them in game.
+- **Fix**: `InventoryUI` now renders action buttons for inventory entries: `Equip` for weapons/armor,
+  `Use` for consumables with `use_effect`, and equipped-slot buttons under `Equipped` to unequip.
+  The UI still delegates state changes to `EquipmentManager` and `InventoryManager`.
+- **Regression**: extended `M13EconomyEquipmentRunner` with a headless UI probe that clicks the
+  generated equip, unequip, and use buttons and verifies equipment state, inventory counts, and
+  potion healing.
+- **Tests**: `M13EconomyEquipmentRunner` passed; full `.\test.bat` passed (import +
+  M9/M10/M10R/M11/M12/SR3/M13, exit 0).
+- **Next**: M14 - combat, skills & magic.
+
+---
+
 ## 2026-06-28 - Session 030 - Fix equipment save/load derived health
 
 - **Report**: review found that `SaveManager._sync_player_from_world()` copied the live

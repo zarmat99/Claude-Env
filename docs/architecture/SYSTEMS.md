@@ -14,7 +14,9 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Signals (contract — emit through here, never invent ad-hoc cross-tree calls)**:
   - Quests: `quest_started(quest_id)` · `quest_stage_updated(quest_id, stage)` ·
     `quest_completed(quest_id)`
-  - Inventory: `item_added(item_id, count)` · `item_removed(item_id, count)`
+  - Inventory: `item_added(item_id, count)` · `item_removed(item_id, count)` ·
+    `item_used(item_id)`
+  - Equipment: `equipment_changed(slot, item_id)`
   - Combat/actors: `actor_damaged(actor, amount, source)` · `actor_died(actor)`
   - Dialogue: `dialogue_started(dialogue_id)` · `dialogue_ended(dialogue_id)`
   - World: `map_changed(map_id)` · `world_object_state_changed(persistent_id, state)`
@@ -174,11 +176,13 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Role**: `HUD` (health/level/active quest), `DialogueBox` (dialogue runner view),
   `InventoryUI`, `QuestJournalUI`, and `QuestDebugUI`. UIs are passive views that subscribe to
   EventBus and query managers; they never own game logic.
-- **Depends on**: EventBus + managers (read-only).
+- **Depends on**: EventBus + managers (queries and delegated commands).
 - **Implementation**: HUD (M1), DialogueBox (M2), QuestJournalUI (M3), InventoryUI (M4), and the
   M11 QuestDebugUI authoring overlay are live. M9 routes journal/inventory toggles through input
   actions; M11 adds `quest_debug_toggle` for quest authoring state inspection; M12 extends the
-  overlay with faction reputation/friendly/hostile state.
+  overlay with faction reputation/friendly/hostile state. M13 makes InventoryUI actionable: it
+  renders `Equip`, `Use`, and equipped-slot unequip buttons, while the actual state changes stay in
+  `EquipmentManager` and `InventoryManager`.
 
 ## Testing / checks - `tests/headless/*`
 - **Role**: persistent regression coverage for milestone-critical flows.

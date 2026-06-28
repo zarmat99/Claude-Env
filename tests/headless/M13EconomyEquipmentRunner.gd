@@ -16,6 +16,7 @@ func _run() -> void:
     _test_data_validation()
     _test_equipment()
     _test_equipment_save_load_with_armor()
+    _test_inventory_ui_actions()
     _test_item_use()
     _test_economy()
     _test_merchant_dialogue()
@@ -95,6 +96,41 @@ func _test_equipment_save_load_with_armor() -> void:
 
     _cleanup_save_slot(EQUIPMENT_SAVE_SLOT)
     player.queue_free()
+
+func _test_inventory_ui_actions() -> void:
+    get_tree().paused = false
+    GameState.reset_to_new_game()
+    GameState.player["stats"]["health"] = 5
+    InventoryManager.add("item_iron_sword", 1)
+    InventoryManager.add("item_health_potion", 1)
+
+    var ui: Control = load("res://scenes/ui/InventoryUI.tscn").instantiate() as Control
+    add_child(ui)
+    ui.show()
+    ui.call("_refresh")
+
+    var equip_sword := _find_button(ui, "Equip Iron Sword")
+    _assert(equip_sword != null, "Inventory UI should expose an Equip button for weapons")
+    if equip_sword:
+        equip_sword.pressed.emit()
+    _assert(EquipmentManager.get_equipped("main_hand") == "item_iron_sword", "Inventory UI equip should equip the sword")
+    _assert(InventoryManager.get_count("item_iron_sword") == 0, "Inventory UI equip should remove the sword from inventory")
+
+    var unequip_sword := _find_button(ui, "main_hand: Iron Sword")
+    _assert(unequip_sword != null, "Inventory UI should expose equipped-slot buttons")
+    if unequip_sword:
+        unequip_sword.pressed.emit()
+    _assert(EquipmentManager.get_equipped("main_hand") == "", "Inventory UI equipped-slot button should unequip")
+    _assert(InventoryManager.get_count("item_iron_sword") == 1, "Inventory UI unequip should return the sword to inventory")
+
+    var use_potion := _find_button(ui, "Use Health Potion")
+    _assert(use_potion != null, "Inventory UI should expose a Use button for consumables")
+    if use_potion:
+        use_potion.pressed.emit()
+    _assert(int(GameState.player["stats"].get("health", 0)) == 30, "Inventory UI use should apply the potion")
+    _assert(InventoryManager.get_count("item_health_potion") == 0, "Inventory UI use should consume the potion")
+
+    ui.queue_free()
 
 func _test_item_use() -> void:
     GameState.reset_to_new_game()
@@ -209,3 +245,14 @@ func _cleanup_save_slot(slot: int) -> void:
     var dir := DirAccess.open("user://saves")
     if dir:
         dir.remove("slot_%d.json" % slot)
+
+func _find_button(root: Node, text_prefix: String) -> Button:
+    if root is Button:
+        var button := root as Button
+        if button.text.begins_with(text_prefix):
+            return button
+    for child in root.get_children():
+        var found := _find_button(child, text_prefix)
+        if found != null:
+            return found
+    return null

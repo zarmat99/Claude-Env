@@ -57,6 +57,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   saves current health separately, and restores live player health with
   `EquipmentManager.get_effective_stat("max_health")`. `M13EconomyEquipmentRunner` covers armored
   save/load so derived max health is not baked into base stats.
+- Post-M13 inventory UX fix: `InventoryUI` now exposes clickable `Equip`, `Use`, and equipped-slot
+  unequip buttons while delegating the actual state changes to `EquipmentManager` and
+  `InventoryManager`. `M13EconomyEquipmentRunner` covers the UI action flow.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
   `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
@@ -97,7 +100,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   hostility.
 - Verification: JSON parses, `git diff --check` is clean, and `.\test.bat` runs green (Godot import
   plus M9 regression, M10 quarantine/world-object smoke, M10R asset preview, M11 dialogue/branching
-  regression, M12 faction reputation regression, and SR3 narrative-hardening regression).
+  regression, M12 faction reputation regression, SR3 narrative-hardening regression, and M13
+  economy/equipment/inventory UI regression).
 - Note: player death is still a placeholder (respawn full HP).
 - Next: M14 (Combat, skills & magic).
 
@@ -141,8 +145,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   both the player inventory and containers (`Chest`); `EconomyManager` derives buy/sell prices from
   item `value` with optional per-merchant stock/multipliers (`merchants.json`). Dialogue
   `buy_item`/`sell_item` (optional `merchant`) and the `gold_at_least` condition author merchants in
-  JSON; `npc_merchant_valdombra` is live in the Village. Save/load carries equipment + gold and
-  keeps equipment-derived max health out of base `stats.max_health`.
+  JSON; `npc_merchant_valdombra` is live in the Village. `InventoryUI` exposes the player-facing
+  equip/use/unequip actions. Save/load carries equipment + gold and keeps equipment-derived max
+  health out of base `stats.max_health`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
   SceneLoader, SaveManager, InventoryManager, EquipmentManager, EconomyManager, QuestManager,
   DialogueManager.
@@ -200,7 +205,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 ## 11. Current milestone state
 **M13 - items, equipment, economy & merchants: COMPLETE.** Equipment + derived combat stats,
 consumable item use, buy/sell with merchant stock/pricing, a reusable container `InventoryComponent`,
-and a data-authored village merchant are live, save-aware, and covered by
+clickable inventory equip/use/unequip actions, and a data-authored village merchant are live,
+save-aware, and covered by
 `tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete; **M14 (combat,
 skills & magic) is the next milestone** (it picks up armor-based damage mitigation, deferred from
 M13).

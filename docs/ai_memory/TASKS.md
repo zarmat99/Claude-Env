@@ -42,6 +42,11 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M13-F2 - Inventory UI item actions** - M13 follow-up - files:
+  `scripts/ui/InventoryUI.gd`, `tests/headless/M13EconomyEquipmentRunner.gd` - **done**
+  (2026-06-28): inventory entries are now actionable in game (`Equip` weapons/armor, `Use`
+  consumables, click equipped slots to unequip); added a headless UI regression and verified full
+  `.\test.bat`.
 - **M13-F1 - Preserve base stats across equipment save/load** - M13 follow-up - files:
   `scripts/core/SaveManager.gd`, `tests/headless/M13EconomyEquipmentRunner.gd` - **done**
   (2026-06-28): fixed save/load so equipped armor does not bake derived max health into
