@@ -30,6 +30,13 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ### M13 - items, equipment, economy & merchants
 - (none - complete)
 
+### Noted early - economy UX (for M16 persistence & UX hardening)
+- Add a **HUD gold readout** (gold is currently only visible via the F10 Quest Debug overlay).
+- Add a **merchant/shop UI** with affordability feedback (the merchant now always shows its wares,
+  but an unaffordable buy is a silent no-op and prices aren't shown beside live gold).
+- **Decision**: starting gold stays **0** for now - the player earns gold from quest rewards and
+  selling, so the economy loop runs without changing the existing gold-based test expectations.
+
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
