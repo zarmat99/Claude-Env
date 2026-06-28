@@ -88,6 +88,9 @@ a validated `merchants.json` (stock + buy/sell multipliers), merchant-aware pric
 Start **M14 - combat, skills & magic** (see `ROADMAP.md`): enemy archetypes, damage rules, combat
 abilities, skill growth, magic/spell data, AI variants — and fold in armor-based damage mitigation
 (equipped armor stats are authorable now but mitigation was deferred from M13).
+- ⚠️ **Economy UX gaps for M16**: the HUD has no gold readout, the merchant gives no "can't afford"
+  feedback, and starting gold is 0 (gold comes from quests/selling). The merchant now always shows
+  its wares (Session 029). A real shop UI is M16.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

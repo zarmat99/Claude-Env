@@ -310,19 +310,17 @@
         "choices": [
           {
             "text": "Buy a health potion (10g).",
-            "next": null,
-            "conditions": [ { "type": "gold_at_least", "value": 10 } ],
+            "next": "start",
             "actions": [ { "type": "buy_item", "id": "item_health_potion", "count": 1, "merchant": "merchant_valdombra_general" } ]
           },
           {
             "text": "Buy leather armor (20g).",
-            "next": null,
-            "conditions": [ { "type": "gold_at_least", "value": 20 } ],
+            "next": "start",
             "actions": [ { "type": "buy_item", "id": "item_leather_armor", "count": 1, "merchant": "merchant_valdombra_general" } ]
           },
           {
-            "text": "Sell the iron sword.",
-            "next": null,
+            "text": "Sell the iron sword (12g).",
+            "next": "start",
             "conditions": [ { "type": "has_item", "target": "item_iron_sword", "count": 1 } ],
             "actions": [ { "type": "sell_item", "id": "item_iron_sword", "count": 1, "merchant": "merchant_valdombra_general" } ]
           },

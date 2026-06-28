@@ -146,13 +146,24 @@ func _test_merchant_stock_pricing() -> void:
 
 func _test_merchant_npc_dialogue() -> void:
     get_tree().paused = false
+    # A broke player can still browse the wares: buy options are always shown (not gold-gated).
     GameState.reset_to_new_game()
-    GameState.player["gold"] = 50
+    GameState.player["gold"] = 0
     DialogueManager.start("dialogue_merchant_valdombra")
-    DialogueManager.choose(0)  # gold >= 10 -> Buy a health potion (via merchant)
-    _assert(InventoryManager.get_count("item_health_potion") == 1, "Merchant NPC dialogue buy should add a potion")
-    _assert(int(GameState.player["gold"]) == 40, "Merchant NPC dialogue buy should spend 10 gold")
-    _assert(not DialogueManager.is_active(), "Buying should end the merchant dialogue")
+    _assert(DialogueManager.is_active(), "Merchant dialogue should open")
+    DialogueManager.choose(0)  # Buy a health potion - refused (no gold), loops back to start
+    _assert(InventoryManager.get_count("item_health_potion") == 0, "A broke buy should not add a potion")
+    _assert(int(GameState.player["gold"]) == 0, "A broke buy should not spend gold")
+    _assert(DialogueManager.is_active(), "Merchant should stay open after a refused buy")
+
+    # With gold, buying works and the merchant stays open to trade again.
+    GameState.player["gold"] = 50
+    DialogueManager.choose(0)  # Buy a health potion
+    _assert(InventoryManager.get_count("item_health_potion") == 1, "Buying with gold should add a potion")
+    _assert(int(GameState.player["gold"]) == 40, "Buying should spend 10 gold")
+    _assert(DialogueManager.is_active(), "Merchant should stay open after a purchase")
+    DialogueManager.choose(2)  # (Leave): visible = [buy potion, buy armor, (Leave)] (no sword to sell)
+    _assert(not DialogueManager.is_active(), "Leaving should end the merchant dialogue")
 
 func _assert(condition: bool, message: String) -> void:
     if not condition:

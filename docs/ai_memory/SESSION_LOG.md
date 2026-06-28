@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-06-28 - Session 029 - Fix merchant UX (always show wares)
+
+- **Report**: talking to the in-village Merchant on a fresh save showed only "(Leave)" - every buy
+  choice was gated by `gold_at_least` and the sell choice by owning the item, so a broke new player
+  with nothing to sell saw an empty shop.
+- **Fix**: `dialogue_merchant_valdombra` now always shows its buy options (with the price in the
+  label), loops after each transaction (`next: "start"`) so the shop stays open, and keeps the sell
+  option gated by ownership plus a "(Leave)". A purchase the player can't afford is still refused by
+  `EconomyManager` (no spend), but the wares are always visible. Gold is earned via quests/selling.
+- **Tests**: updated `M13EconomyEquipmentRunner._test_merchant_npc_dialogue` to cover broke browsing
+  (wares visible, refused buy is a no-op, shop stays open) then an affordable purchase and leave.
+  Full `.\test.bat` passed (exit 0).
+- **Known UX follow-ups (M16)**: no on-screen gold readout in the HUD yet, and no "you can't afford
+  that" feedback; a proper merchant/shop UI is M16. Starting gold is still 0 (gold comes from the
+  first quest reward / selling).
+- **Next**: M14 - combat, skills & magic.
+
+---
+
 ## 2026-06-28 - Session 028 - Close M13 (containers + merchant)
 
 - **Goal**: finish M13 by adding container inventories (T4) and a data-authored in-game merchant (T5).
