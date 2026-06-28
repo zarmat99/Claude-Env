@@ -106,7 +106,8 @@
               { "type": "set_flag", "flag": "quest_m11_branch_fixture_outcome_keep" },
               { "type": "set_quest_stage", "quest": "quest_m11_branch_fixture", "stage": 200 }
             ]
-          }
+          },
+          { "text": "(Leave)", "next": null }
         ]
       }
     }

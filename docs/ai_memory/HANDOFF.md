@@ -45,6 +45,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - M11-T2 branching conventions are implemented: use stage bands plus outcome flags, branch choices
   can call `set_quest_stage`, and `flag_not_set` is available for consequence gates. The contract is
   documented in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
+- The M11 branch fixture is also reachable in game through the `Branch Tester` NPC placed in the
+  Village near the starting area. It is a debug probe, not story content.
 - Verified with Godot headless import and `.\test.bat` (runs M9 + M10 + M10R asset preview + M11
   dialogue action/branching regression).
 - On `master`, pushed.

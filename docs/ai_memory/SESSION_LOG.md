@@ -17,6 +17,8 @@
 - **Regression**: added `quest_m11_branch_fixture` and `dialogue_m11_branch_fixture`; the M11
   headless runner now verifies two alternate outcomes, branch flags, quest completion, and
   branch-specific rewards.
+- **In-game probe**: added `npc_m11_branch_tester` / `BranchTester.tscn` to the Village so the
+  branching fixture can be tried manually in game without attaching it to real story content.
 - **Next**: M11-T3 - expand the small branching fixture into a fuller multi-stage quest/dialogue
   regression with item removals and persistent consequences.
 
