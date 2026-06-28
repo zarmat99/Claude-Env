@@ -84,8 +84,10 @@ Load order matters (later ones may use earlier ones):
 5. **SceneLoader** — async map/scene swapping + spawn-point placement. Uses GameState, EventBus.
 6. **SaveManager** — serializes/deserializes GameState ↔ `user://`; loaded after core state/
    progression/map systems and before gameplay managers.
-7. **QuestManager / DialogueManager / InventoryManager** — gameplay managers; read DataRegistry,
-   mutate GameState, emit via EventBus. (Added per milestone; stubs from M0.)
+7. **InventoryManager / EquipmentManager / EconomyManager / QuestManager / DialogueManager** —
+   gameplay managers; read DataRegistry, mutate GameState, emit via EventBus. EquipmentManager and
+   EconomyManager (M13) load after InventoryManager and before the quest/dialogue managers, since
+   dialogue `buy_item`/`sell_item` actions call EconomyManager. (Added per milestone; stubs from M0.)
 
 `IdUtils` is **not** an autoload (static helper).
 

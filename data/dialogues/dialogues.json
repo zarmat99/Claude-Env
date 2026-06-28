@@ -274,5 +274,30 @@
         "choices": [ { "text": "(Leave)", "next": null } ]
       }
     }
+  },
+  "dialogue_m13_merchant_fixture": {
+    "id": "dialogue_m13_merchant_fixture",
+    "entry": "start",
+    "nodes": {
+      "start": {
+        "speaker": "player",
+        "text": "Trade test counter.",
+        "choices": [
+          {
+            "text": "Buy a health potion.",
+            "next": null,
+            "conditions": [ { "type": "gold_at_least", "value": 10 } ],
+            "actions": [ { "type": "buy_item", "id": "item_health_potion", "count": 1 } ]
+          },
+          {
+            "text": "Sell the iron sword.",
+            "next": null,
+            "conditions": [ { "type": "has_item", "target": "item_iron_sword", "count": 1 } ],
+            "actions": [ { "type": "sell_item", "id": "item_iron_sword", "count": 1 } ]
+          },
+          { "text": "(Leave)", "next": null }
+        ]
+      }
+    }
   }
 }

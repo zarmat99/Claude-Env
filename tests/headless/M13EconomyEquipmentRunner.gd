@@ -1,0 +1,113 @@
+extends Node
+## Headless regression for the M13 item/economy core:
+## equipment + derived stats + save/load, consumable item use, and buy/sell economy (direct and via
+## dialogue actions).
+
+var _failures: Array[String] = []
+
+func _ready() -> void:
+    process_mode = Node.PROCESS_MODE_ALWAYS
+    _run.call_deferred()
+
+func _run() -> void:
+    print("[M13] Economy/equipment runner starting")
+    _test_data_validation()
+    _test_equipment()
+    _test_item_use()
+    _test_economy()
+    _test_merchant_dialogue()
+    await get_tree().process_frame
+
+    if _failures.is_empty():
+        print("[M13] Economy/equipment runner OK")
+        get_tree().quit(0)
+    else:
+        for failure in _failures:
+            push_error("[M13] %s" % failure)
+        print("[M13] Economy/equipment runner FAILED with %d failure(s)" % _failures.size())
+        get_tree().quit(1)
+
+func _test_data_validation() -> void:
+    _assert(DataRegistry.validate_all(), "DataRegistry validation failed: %s" % str(DataRegistry.get_validation_errors()))
+
+func _test_equipment() -> void:
+    GameState.reset_to_new_game()
+    _assert(EquipmentManager.get_effective_stat("damage") == 6, "Base damage should be 6 with nothing equipped")
+
+    InventoryManager.add("item_iron_sword", 1)
+    _assert(EquipmentManager.equip("item_iron_sword"), "Should equip the iron sword from inventory")
+    _assert(EquipmentManager.get_equipped("main_hand") == "item_iron_sword", "Iron sword should occupy main_hand")
+    _assert(InventoryManager.get_count("item_iron_sword") == 0, "Equipping should remove the item from inventory")
+    _assert(EquipmentManager.get_effective_stat("damage") == 12, "Equipped iron sword should add +6 damage")
+    _assert(EquipmentManager.is_equipped("item_iron_sword"), "is_equipped should report the sword")
+
+    InventoryManager.add("item_leather_armor", 1)
+    _assert(EquipmentManager.equip("item_leather_armor"), "Should equip leather armor")
+    _assert(EquipmentManager.get_effective_stat("max_health") == 40, "Leather armor should add +10 max health")
+
+    _assert(EquipmentManager.unequip("chest"), "Should unequip the chest slot")
+    _assert(InventoryManager.get_count("item_leather_armor") == 1, "Unequipping should return the armor to inventory")
+    _assert(EquipmentManager.get_equipped("chest") == "", "Chest slot should be empty after unequip")
+    _assert(EquipmentManager.get_effective_stat("max_health") == 30, "Max health should drop back to base after unequip")
+
+    # Save/load round trip preserves equipment.
+    _assert(SaveManager.save_game(94), "Saving equipped state should succeed")
+    GameState.reset_to_new_game()
+    _assert(EquipmentManager.get_equipped("main_hand") == "", "Reset should clear equipment")
+    _assert(SaveManager.load_game(94), "Loading equipped state should succeed")
+    _assert(EquipmentManager.get_equipped("main_hand") == "item_iron_sword", "Loaded save should restore the equipped sword")
+
+func _test_item_use() -> void:
+    GameState.reset_to_new_game()
+    GameState.player["stats"]["health"] = 10
+    InventoryManager.add("item_health_potion", 1)
+    _assert(InventoryManager.use_item("item_health_potion"), "Using a potion at low health should succeed")
+    _assert(int(GameState.player["stats"]["health"]) == 30, "Healing should clamp to effective max health (30)")
+    _assert(InventoryManager.get_count("item_health_potion") == 0, "Using a potion should consume it")
+
+    InventoryManager.add("item_health_potion", 1)
+    _assert(not InventoryManager.use_item("item_health_potion"), "Using a potion at full health should fail")
+    _assert(InventoryManager.get_count("item_health_potion") == 1, "A wasted use should keep the potion")
+
+func _test_economy() -> void:
+    GameState.reset_to_new_game()
+    GameState.player["gold"] = 100
+    _assert(EconomyManager.buy_price("item_health_potion") == 10, "Potion buy price should be its value")
+    _assert(EconomyManager.sell_price("item_iron_sword") == 12, "Sword sell price should be half value, floored")
+
+    _assert(EconomyManager.buy("item_health_potion", 2), "Should buy two potions with enough gold")
+    _assert(int(GameState.player["gold"]) == 80, "Buying two potions should cost 20 gold")
+    _assert(InventoryManager.get_count("item_health_potion") == 2, "Buying should add the potions")
+
+    GameState.player["gold"] = 5
+    _assert(not EconomyManager.buy("item_health_potion", 1), "Should not buy without enough gold")
+    _assert(int(GameState.player["gold"]) == 5, "A failed buy should not spend gold")
+
+    InventoryManager.add("item_iron_sword", 1)
+    _assert(EconomyManager.sell("item_iron_sword", 1), "Should sell the iron sword")
+    _assert(int(GameState.player["gold"]) == 17, "Selling the sword should credit 12 gold")
+    _assert(InventoryManager.get_count("item_iron_sword") == 0, "Selling should remove the sword")
+
+func _test_merchant_dialogue() -> void:
+    get_tree().paused = false
+    GameState.reset_to_new_game()
+    GameState.player["gold"] = 50
+    DialogueManager.start("dialogue_m13_merchant_fixture")
+    DialogueManager.choose(0)  # gold >= 10 -> Buy a health potion
+    _assert(InventoryManager.get_count("item_health_potion") == 1, "Merchant dialogue buy should add a potion")
+    _assert(int(GameState.player["gold"]) == 40, "Merchant dialogue buy should spend 10 gold")
+    _assert(not DialogueManager.is_active(), "Buying should end the dialogue")
+
+    get_tree().paused = false
+    GameState.reset_to_new_game()
+    GameState.player["gold"] = 0
+    InventoryManager.add("item_iron_sword", 1)
+    DialogueManager.start("dialogue_m13_merchant_fixture")
+    DialogueManager.choose(0)  # buy gated out (no gold) -> Sell the iron sword is first visible
+    _assert(int(GameState.player["gold"]) == 12, "Merchant dialogue sell should credit 12 gold")
+    _assert(InventoryManager.get_count("item_iron_sword") == 0, "Merchant dialogue sell should remove the sword")
+    _assert(not DialogueManager.is_active(), "Selling should end the dialogue")
+
+func _assert(condition: bool, message: String) -> void:
+    if not condition:
+        _failures.append(message)

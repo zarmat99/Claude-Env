@@ -27,6 +27,8 @@ static func met(cond: Dictionary) -> bool:
             return FactionManager.get_reputation(String(cond.get("faction", ""))) >= int(cond.get("value", 0))
         "faction_reputation_below":
             return FactionManager.get_reputation(String(cond.get("faction", ""))) < int(cond.get("value", 0))
+        "gold_at_least":
+            return int(GameState.player.get("gold", 0)) >= int(cond.get("value", 0))
         "flag_set":
             return bool(GameState.flags.get(String(cond.get("flag", "")), false))
         "flag_not_set":

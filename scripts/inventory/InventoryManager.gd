@@ -52,6 +52,40 @@ func remove(item_id: String, count: int = 1) -> bool:
     EventBus.item_removed.emit(item_id, count)
     return true
 
+## Consume one usable item and apply its `use_effect` (M13). Consumables only; no-ops that would
+## waste the item (e.g. healing at full health) return false and keep the item.
+func use_item(item_id: String) -> bool:
+    if item_id == "" or not DataRegistry.has_id("items", item_id):
+        push_error("InventoryManager: cannot use unknown item '%s'" % item_id)
+        return false
+    if get_count(item_id) <= 0:
+        return false
+    var def := DataRegistry.get_item(item_id)
+    var effect = def.get("use_effect", null)
+    if String(def.get("type", "")) != "consumable" or not (effect is Dictionary):
+        push_error("InventoryManager: item '%s' is not usable" % item_id)
+        return false
+    if not _apply_use_effect(effect):
+        return false
+    remove(item_id, 1)
+    EventBus.item_used.emit(item_id)
+    return true
+
+func _apply_use_effect(effect: Dictionary) -> bool:
+    match String(effect.get("type", "")):
+        "heal":
+            var stats: Dictionary = GameState.player.get("stats", {})
+            var effective_max := EquipmentManager.get_effective_stat("max_health")
+            var current := int(stats.get("health", effective_max))
+            if current >= effective_max:
+                return false  # already full; don't waste the item
+            stats["health"] = min(effective_max, current + int(effect.get("amount", 0)))
+            GameState.player["stats"] = stats
+            return true
+        _:
+            push_error("InventoryManager: unsupported use_effect '%s'" % effect.get("type", ""))
+            return false
+
 func get_count(item_id: String) -> int:
     var n := 0
     for slot in GameState.player["inventory"]:

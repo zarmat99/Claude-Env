@@ -10,11 +10,13 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **SR3 - Narrative scalability review is complete: verdict proceed to M13, no blocking rewrite**
-  (`docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`). M0-M12, M10R, SR1, SR2, and SR3 are
-  complete; **M13 (items/equipment/economy/merchants) is the next milestone**. M12 was verified
-  (`.\test.bat` green: Godot import + M9/M10/M10R/M11/M12 runners) and is committed and pushed on
-  `master`.
+- **M13 (items/equipment/economy/merchants) core is in place and verified** (`.\test.bat` green,
+  exit 0; committed/pushed): `EquipmentManager` (equip/unequip + derived combat stats),
+  `InventoryManager.use_item` (consumables), and `EconomyManager` (buy/sell via dialogue actions +
+  `gold_at_least`), all save-aware and covered by `M13EconomyEquipmentRunner`. **Remaining to close
+  M13: M13-T4 container inventories and M13-T5 in-game merchant + data-authored stock.**
+- M0-M12, M10R, SR1, SR2, and SR3 are complete. SR3 verdict was proceed to M13 with no blocking
+  rewrite; its follow-ups SR3-F1/F2/F3 are done.
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
   (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
   multi-condition `advance_on` (array AND / `any_of` / `all_of`, with `talked_to` kept momentary),
@@ -27,8 +29,9 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - **M10 failed probe removed from active content**: the bad `map_probe_ruins` map, failed proxy
   atlas, and proxy asset/world-object data are no longer active. The reusable code (`AuthoredMap`,
   chest/door/switch objects, validation) remains for M10R.
-- Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `FactionManager`, `InventoryManager`,
-  `QuestManager`, `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
+- Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `FactionManager`, `ProgressionManager`,
+  `SceneLoader`, `SaveManager`, `InventoryManager`, `EquipmentManager`, `EconomyManager`,
+  `QuestManager`, `DialogueManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
   map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
   `world_objects`. Pickups stay collected, enemies stay dead, dynamic drops respawn while active,
@@ -72,16 +75,20 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, M12 is committed and pushed.
 
 ## Last thing done
-Completed **SR3 - Narrative scalability review** (verdict: proceed to M13, no blocking rewrite) **and
-immediately resolved its three promoted follow-ups**: SR3-F1 dialogue soft-lock guard, SR3-F2
-multi-condition `advance_on` (array / `any_of` / `all_of`), and SR3-F3 `entry_rules` state-reactive
-dialogue. Added `tests/headless/SR3NarrativeHardeningRunner`; `.\test.bat` passes (Godot import +
-M9/M10/M10R/M11/M12/SR3 runners, exit 0). `DATA_SCHEMAS.md` and `QUEST_DIALOGUE_AUTHORING.md` updated.
+Implemented the **M13 item/economy core**: `EquipmentManager` (equip/unequip from inventory, slot
+swap, derived `damage`/`max_health` feeding `PlayerCombat`, save/load round-trip),
+`InventoryManager.use_item` (consumable `heal`, clamped to effective max, refuses wasted use),
+and `EconomyManager` (value-based buy/sell, gold-checked) with dialogue actions `buy_item`/`sell_item`
+and a `gold_at_least` condition. Added two autoloads, `EventBus` signals `equipment_changed`/
+`item_used`, validation, an armor item + merchant dialogue fixture, and
+`tests/headless/M13EconomyEquipmentRunner`. `.\test.bat` passes (import + M9/M10/M10R/M11/M12/SR3/M13,
+exit 0).
 
 ## Next thing to do
-Start **M13 - items, equipment, economy & merchants** (see `ROADMAP.md`): equipment slots/stats,
-merchants, containers, prices, sell/buy, loot tables, item-use effects. The SR3 narrative-hardening
-follow-ups (F1/F2/F3) are already done, so narrative authoring runs on safe, expressive systems.
+Continue **M13** with **M13-T4 - container inventories** (a reusable non-player `InventoryComponent`
+for chests/containers) and **M13-T5 - in-game merchant NPC + data-authored merchant stock**
+(`merchants.json` or an NPC `merchant` block instead of per-dialogue buy/sell choices). Then close
+M13 and move to M14 (combat/skills/magic).
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -109,7 +116,7 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 regression suites
 ```
 Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
 attack = left mouse | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.

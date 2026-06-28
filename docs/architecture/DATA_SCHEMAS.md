@@ -35,6 +35,12 @@ in their milestone.
   }
 }
 ```
+**Equipment & use (M13)**: items of type `weapon`/`armor` declare a `slot` and may carry a `stats`
+block. `EquipmentManager` brokers `GameState.player.equipment` (slot → item_id) and derives effective
+player stats on demand as base + sum of equipped `stats` (combat/health currently consume `damage`
+and `max_health`). `consumable` items with a `use_effect` are spent via `InventoryManager.use_item`
+(`heal{amount}` is implemented). `value` drives `EconomyManager` buy/sell prices
+(buy = value × 1.0, sell = value × 0.5, floored).
 
 ## quests/quests.json (staged + abstract conditions)
 ```json
@@ -63,6 +69,7 @@ in their milestone.
 `entered_area{target}` · `quest_stage_is{quest,stage}` · `quest_not_started{quest}` ·
 `quest_active{quest}` · `quest_completed{quest}` ·
 `faction_reputation_at_least{faction,value}` · `faction_reputation_below{faction,value}` ·
+`gold_at_least{value}` ·
 `flag_set{flag}` · `flag_not_set{flag}`. Conditions are pure predicates evaluated against
 `GameState`/manager state. Branching authoring conventions live in
 `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
@@ -108,8 +115,10 @@ holding X — it never auto-completes from an earlier conversation. Example:
 `advance_quest{quest}` · `set_quest_stage{quest,stage}` · `set_flag{flag}` ·
 `clear_flag{flag}` · `give_item{id,count}` · `take_item{id,count}` ·
 `give_reward{rewards}` · `change_reputation{faction,amount}` ·
-`set_reputation{faction,value}`. `give_reward.rewards` uses the same reward object shape as quest
-stages (`xp`, `gold`, `items`). `next: null` ends dialogue.
+`set_reputation{faction,value}` · `buy_item{id,count}` · `sell_item{id,count}`. `give_reward.rewards`
+uses the same reward object shape as quest stages (`xp`, `gold`, `items`). `buy_item`/`sell_item`
+trade through `EconomyManager` (gold-checked); pair `buy_item` with a `gold_at_least` choice condition
+so the option only shows when affordable. `next: null` ends dialogue.
 
 **Node `next` + soft-lock guard (SR3-F1)**: a node may declare a node-level `"next": "node_id"` and
 omit `choices`; the DialogueBox then shows a single **Continue** affordance that advances to `next`,

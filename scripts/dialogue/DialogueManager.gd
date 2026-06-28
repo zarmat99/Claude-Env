@@ -121,6 +121,10 @@ func _run_actions(actions: Array) -> void:
                 FactionManager.change_reputation(String(a.get("faction", "")), int(a.get("amount", 0)))
             "set_reputation":
                 FactionManager.set_reputation(String(a.get("faction", "")), int(a.get("value", 0)))
+            "buy_item":
+                EconomyManager.buy(String(a.get("id", "")), int(a.get("count", 1)))
+            "sell_item":
+                EconomyManager.sell(String(a.get("id", "")), int(a.get("count", 1)))
             _:
                 push_error("DialogueManager: unsupported action type '%s'" % a.get("type", ""))
 

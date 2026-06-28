@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-06-28 - Session 027 - M13 item/economy core
+
+- **Goal**: build the M13 systems core (equipment, item use, economy/merchants) data-driven and
+  headless-tested, before the remaining M13 content tasks.
+- **Equipment (M13-T1)**: new `EquipmentManager` autoload brokers `GameState.player.equipment`
+  (equip/unequip from inventory with slot swap) and derives effective combat stats on demand
+  (weapon `damage`, armor `max_health`). `PlayerCombat` now reads
+  `EquipmentManager.get_effective_stat(...)` for attack damage and max health, re-syncing on
+  `equipment_changed` / `item_used`. Equipment persists through the existing save snapshot.
+- **Item use (M13-T2)**: `InventoryManager.use_item` spends a consumable's `use_effect` (`heal`
+  clamped to effective max health), refuses a wasted use at full health, and emits `item_used`.
+- **Economy/merchants (M13-T3)**: new `EconomyManager` autoload derives buy/sell prices from item
+  `value` (buy ×1.0 ceil, sell ×0.5 floor) and brokers gold-checked buy/sell. Dialogue actions
+  `buy_item`/`sell_item` and the new `gold_at_least` condition let merchants be authored in JSON;
+  added a `dialogue_m13_merchant_fixture` and an `item_leather_armor` test item.
+- **Wiring**: registered the two autoloads (after InventoryManager, before the quest/dialogue
+  managers), added `equipment_changed`/`item_used` signals, and extended `DataRegistry` validation
+  for the new condition/actions.
+- **Tests**: added `tests/headless/M13EconomyEquipmentRunner.{gd,tscn}` (equipment + derived stats +
+  save/load, consumable use, direct buy/sell, and merchant-dialogue buy/sell), wired into `test.bat`.
+  Full `.\test.bat` passed (import + M9/M10/M10R/M11/M12/SR3/M13, exit 0) - no regressions.
+- **Docs**: updated `DATA_SCHEMAS`, `SYSTEMS`, `ARCHITECTURE` (autoloads), `ROADMAP` (M13 status),
+  and the ai_memory tracker (M13-T1/T2/T3 to Done; M13-T4/T5 backlog).
+- **Next**: M13-T4 container inventories and M13-T5 in-game merchant + data-authored stock, then M14.
+
+---
+
 ## 2026-06-28 - Session 026 - Resolve SR3 narrative-hardening follow-ups
 
 - **Goal**: implement the three SR3 follow-ups (F1/F2/F3) before M13 so narrative authoring runs on

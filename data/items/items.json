@@ -31,5 +31,17 @@
     "value": 0,
     "weight": 0.5,
     "description": "A shard of strangely old iron. The blacksmith wants it."
+  },
+  "item_leather_armor": {
+    "id": "item_leather_armor",
+    "name": "Leather Armor",
+    "type": "armor",
+    "slot": "chest",
+    "stackable": false,
+    "max_stack": 1,
+    "value": 20,
+    "weight": 4.0,
+    "stats": { "max_health": 10 },
+    "description": "Boiled leather that turns a glancing blow."
   }
 }

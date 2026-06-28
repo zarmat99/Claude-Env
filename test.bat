@@ -23,4 +23,7 @@ if errorlevel 1 exit /b %errorlevel%
 if errorlevel 1 exit /b %errorlevel%
 
 "%GODOT_EXE%" --path "%PROJECT_DIR%" --headless res://tests/headless/SR3NarrativeHardeningRunner.tscn
+if errorlevel 1 exit /b %errorlevel%
+
+"%GODOT_EXE%" --path "%PROJECT_DIR%" --headless res://tests/headless/M13EconomyEquipmentRunner.tscn
 exit /b %errorlevel%

@@ -49,10 +49,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **SR3 - Narrative scalability review is complete (verdict: proceed to M13, no blocking rewrite;
-  `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`).** M0-M12, M10R, SR1, SR2, and SR3 are
-  complete; M13 (items/equipment/economy) is next. M12 was verified (`.\test.bat` green) and is
-  committed/pushed on `master`.
+- **M13 (items/equipment/economy/merchants) core is implemented and verified** (`.\test.bat` green;
+  committed/pushed): equipment with derived combat stats, consumable item use, and value-based
+  buy/sell via dialogue actions. M0-M12, M10R, SR1, SR2, and SR3 are complete. Remaining to close
+  M13: T4 container inventories and T5 in-game merchant + data-authored stock.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
   `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
@@ -131,8 +131,14 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   affordance + node-level `next`), multi-condition quest `advance_on` (single / array AND /
   `any_of` / `all_of`, `talked_to` kept momentary), and `entry_rules` state-reactive opening nodes;
   validated by `DataRegistry` and covered by `SR3NarrativeHardeningRunner`.
-- **Autoloads live**: EventBus, GameState, DataRegistry, InventoryManager, QuestManager,
-  DialogueManager, FactionManager, SceneLoader, SaveManager, ProgressionManager.
+- **M13 (core)**: `EquipmentManager` brokers `GameState.player.equipment` (equip/unequip from
+  inventory, slot swap) and derives effective combat stats (weapon `damage`, armor `max_health`);
+  `InventoryManager.use_item` spends consumables (`heal`); `EconomyManager` derives buy/sell prices
+  from item `value` and brokers gold-checked trade. Dialogue `buy_item`/`sell_item` actions and the
+  `gold_at_least` condition author merchants in JSON. Save/load already carries equipment + gold.
+- **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
+  SceneLoader, SaveManager, InventoryManager, EquipmentManager, EconomyManager, QuestManager,
+  DialogueManager.
 - **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse ·
   save F5 · load F9 · quest debug F10. Code now reads input action names for
   journal/inventory/attack/save/load/debug.
@@ -185,17 +191,16 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**SR3 - Narrative scalability review: COMPLETE.** Verdict: proceed to M13, no blocking rewrite
-(`docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`). The quest/dialogue/NPC/faction systems are
-data-driven with strong boot validation and adequate debug/regression tooling. The promoted
-follow-ups SR3-F1 (dialogue soft-lock guard), SR3-F2 (multi-condition `advance_on`), and SR3-F3
-(`entry_rules` state-reactive dialogue) were resolved in the same change cycle and are covered by
-`tests/headless/SR3NarrativeHardeningRunner`. M0-M12 plus SR1/SR2/SR3 are complete; **M13
-(items/equipment/economy/merchants) is the next milestone**.
+**M13 - items, equipment, economy & merchants: CORE COMPLETE (T1-T3), milestone in progress.**
+`EquipmentManager` (equip/unequip + derived combat stats), `InventoryManager.use_item` (consumables),
+and `EconomyManager` (value-based buy/sell via dialogue actions + `gold_at_least`) are live,
+save-aware, and covered by `tests/headless/M13EconomyEquipmentRunner`. Remaining to close M13: M13-T4
+container inventories and M13-T5 in-game merchant + data-authored stock. M0-M12 plus SR1/SR2/SR3 are
+complete (SR3-F1/F2/F3 resolved).
 
 ## 12. Recommended next step
-Proceed with **M13 - items, equipment, economy & merchants**. Before authoring real branching
-dialogue, address **SR3-F1** (dialogue soft-lock guard); schedule **SR3-F2/F3** before M18.
+Continue **M13**: implement **M13-T4** (container inventories) and **M13-T5** (in-game merchant NPC +
+data-authored merchant stock), then close the milestone and move to M14 (combat/skills/magic).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
@@ -205,8 +210,8 @@ slice and now show
 approved generated terrain/prop candidates. Save/load, progression, quest flow, dynamic pickups,
 quarantine checks, world-object states, M10R asset preview, M11 dialogue actions/branching, and M12
 faction reputation are covered by `.\test.bat` once runnable. Quest/faction authoring can be
-inspected in game with the F10 Quest Debug overlay. The next step is **M13 - items/equipment/economy/
-merchants** (do SR3-F1 dialogue soft-lock guard before authoring real branching dialogue).
+inspected in game with the F10 Quest Debug overlay. The M13 item/economy core (equipment, item use,
+buy/sell) is in; the next step is **M13-T4 container inventories and M13-T5 in-game merchant**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

@@ -35,3 +35,7 @@ signal gold_changed(new_total: int)
 
 # --- Factions ---
 signal faction_reputation_changed(faction_id: String, old_value: int, new_value: int)
+
+# --- Equipment / item use (M13) ---
+signal equipment_changed(slot: String, item_id: String)
+signal item_used(item_id: String)

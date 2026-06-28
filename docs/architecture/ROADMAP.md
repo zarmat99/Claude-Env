@@ -154,6 +154,10 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
   item use effects, basic balance conventions.
 - **Exit criteria**: weapons/armor/consumables/materials/quest items can be authored in data and
   used by merchants, loot, rewards, inventory, and save/load.
+- **Status 2026-06-28**: core in place. `EquipmentManager` (equip/unequip + derived combat stats),
+  `InventoryManager.use_item` (consumables), and `EconomyManager` (buy/sell via dialogue actions +
+  `gold_at_least`) are live, save-aware, and covered by `M13EconomyEquipmentRunner`. Remaining to
+  close the milestone: M13-T4 container inventories and M13-T5 in-game merchant + data-authored stock.
 
 ## M14 — Combat, skills & magic
 - **Goal**: expand combat from a simple test loop into a scalable ruleset.

@@ -11,10 +11,18 @@ extends Node
 var _cooling := false
 
 func _ready() -> void:
-    var st: Dictionary = GameState.player.get("stats", {})
-    _health.setup(int(st.get("max_health", 30)), int(st.get("health", 30)))
+    _sync_health_from_state()
     _health.health_changed.connect(_on_health_changed)
     _health.died.connect(_on_died)
+    # Equipment can change the effective max health (armor); item use can change current health.
+    EventBus.equipment_changed.connect(func(_slot, _item): _sync_health_from_state())
+    EventBus.item_used.connect(func(_item): _sync_health_from_state())
+
+## Mirror GameState health into the live component, using the equipment-derived effective max health.
+func _sync_health_from_state() -> void:
+    var effective_max := EquipmentManager.get_effective_stat("max_health")
+    var current := int(GameState.player.get("stats", {}).get("health", effective_max))
+    _health.setup(effective_max, current)
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_pressed("attack_primary"):
@@ -25,7 +33,7 @@ func attack() -> void:
     if _cooling or not _health.is_alive():
         return
     _cooling = true
-    _hitbox.damage = int(GameState.player.get("stats", {}).get("damage", _hitbox.damage))
+    _hitbox.damage = EquipmentManager.get_effective_stat("damage")
     await _hitbox.strike(get_parent())   # source = the Player root
     await get_tree().create_timer(attack_cooldown).timeout
     _cooling = false

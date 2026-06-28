@@ -113,7 +113,28 @@ current codebase, so it should avoid "current milestone" language that can go st
   Model: `ItemData`.
 - **Depends on**: DataRegistry, GameState, EventBus.
 - **Implementation**: player inventory, stacking, pickups, and inventory UI are live. M9 makes
-  add/remove reject unknown item IDs. Non-player inventory containers remain future work.
+  add/remove reject unknown item IDs. M13 adds `use_item`, which spends a `consumable`'s `use_effect`
+  (`heal` clamps to the equipment-derived max health) and emits `item_used`. Non-player inventory
+  containers remain future work (M13-T4).
+
+## EquipmentManager (autoload) — `scripts/equipment/EquipmentManager.gd`
+- **Role**: broker `GameState.player.equipment` (slot → item_id); equip/unequip weapons/armor from
+  the player inventory; derive effective player stats (base + sum of equipped `stats`).
+- **Depends on**: DataRegistry, GameState, InventoryManager, EventBus.
+- **Implementation**: M13. `equip` moves an item from inventory into its `slot`, returning any prior
+  occupant; `unequip` reverses it; `get_effective_stat(key)` = base stat + equipment bonus
+  (combat reads `damage`, health reads `max_health`). Derived values are computed on demand (never
+  stored), so save/load needs no migration; equipment persists as part of the GameState snapshot.
+  Emits `equipment_changed`.
+
+## EconomyManager (autoload) — `scripts/economy/EconomyManager.gd`
+- **Role**: derive buy/sell prices from item `value` and broker gold-checked buy/sell against the
+  player inventory and `GameState.player.gold`.
+- **Depends on**: DataRegistry, GameState, InventoryManager, EventBus.
+- **Implementation**: M13. `buy_price` = value × 1.0 (ceil), `sell_price` = value × 0.5 (floor);
+  `buy`/`sell` refuse when unaffordable or unowned and emit `gold_changed`. Dialogue `buy_item`/
+  `sell_item` actions and the `gold_at_least` condition let merchants be authored in JSON. Per-merchant
+  stock/pricing is future work (M13-T5).
 
 ## Combat — `scripts/combat/*`, components
 - **Role**: `Hitbox`/`Hurtbox` (Area2D) detect hits; `DamageData` carries amount/type/source;
@@ -121,8 +142,9 @@ current codebase, so it should avoid "current milestone" language that can go st
   combat stats; `CombatSystem` mediates rules. `LootComponent` drops loot on death.
 - **Depends on**: EventBus, GameState (rewards), DataRegistry (enemy/loot defs).
 - **Implementation**: M5 simple combat is live (health, stats, hitbox/hurtbox, enemy AI, loot).
-  M9 loot drops register dynamic pickup persistence state. `DamageData` / `CombatSystem` are still
-  deferred until needed.
+  M9 loot drops register dynamic pickup persistence state. M13 makes the player's melee damage and
+  max health read `EquipmentManager.get_effective_stat(...)` (base + equipped bonuses). `DamageData` /
+  `CombatSystem` and armor-based damage mitigation are still deferred until needed (M14).
 
 ## Progression — `scripts/progression/ProgressionManager.gd`, `StatsComponent`, skills data
 - **Role**: XP gain, level-up curve, stat growth, (later) skills. Reacts to `xp_gained`,

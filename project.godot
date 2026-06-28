@@ -25,6 +25,8 @@ ProgressionManager="*res://scripts/progression/ProgressionManager.gd"
 SceneLoader="*res://scripts/core/SceneLoader.gd"
 SaveManager="*res://scripts/core/SaveManager.gd"
 InventoryManager="*res://scripts/inventory/InventoryManager.gd"
+EquipmentManager="*res://scripts/equipment/EquipmentManager.gd"
+EconomyManager="*res://scripts/economy/EconomyManager.gd"
 QuestManager="*res://scripts/quest/QuestManager.gd"
 DialogueManager="*res://scripts/dialogue/DialogueManager.gd"
 

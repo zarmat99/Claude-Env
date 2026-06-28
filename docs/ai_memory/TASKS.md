@@ -8,7 +8,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- (none)
+- **M13-V1 - Verify, commit, and push M13 core** - in_progress: equipment/item-use/economy core is
+  done, verified by `.\test.bat`, and committed/pushed. Milestone closes after M13-T4 (container
+  inventories) and M13-T5 (in-game merchant + data-authored stock).
 
 ## Backlog
 
@@ -27,11 +29,36 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ### SR3 follow-ups - narrative hardening (from SR3 review)
 - (none - SR3-F1/F2/F3 done; see Done)
 
+### M13 - items, equipment, economy & merchants
+- **M13-T4 - Container inventories** - backlog: a reusable non-player `InventoryComponent` for
+  chests/containers so loot can live in a container the player opens/transfers, not just auto-pickups.
+- **M13-T5 - In-game merchant content + data-authored stock** - backlog: place a real merchant NPC in
+  the village and define merchant stock as data (a `merchants.json` or NPC `merchant` block) instead
+  of hardcoding buy/sell choices per dialogue fixture.
+
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M13-T1 - Equipment & derived stats** - M13 - files:
+  `scripts/equipment/EquipmentManager.gd`, `scripts/player/PlayerCombat.gd`, `project.godot`,
+  `scripts/core/EventBus.gd`, `data/items/items.json`,
+  `tests/headless/M13EconomyEquipmentRunner.{gd,tscn}` - **done** (2026-06-28): `EquipmentManager`
+  brokers `GameState.player.equipment` (equip/unequip from inventory, slot swap), derives combat
+  stats on demand (weapon `damage`, armor `max_health`), feeds `PlayerCombat`, and round-trips
+  through save/load.
+- **M13-T2 - Consumable item use** - M13 - files:
+  `scripts/inventory/InventoryManager.gd`, `scripts/player/PlayerCombat.gd`, `scripts/core/EventBus.gd`,
+  `tests/headless/M13EconomyEquipmentRunner.{gd,tscn}` - **done** (2026-06-28): `InventoryManager.use_item`
+  applies a consumable's `use_effect` (heal, clamped to effective max health), consumes one, refuses a
+  wasted use, and emits `item_used`; the live player health mirrors it.
+- **M13-T3 - Economy & merchant trade** - M13 - files:
+  `scripts/economy/EconomyManager.gd`, `scripts/dialogue/DialogueManager.gd`, `scripts/core/Conditions.gd`,
+  `scripts/core/DataRegistry.gd`, `data/dialogues/dialogues.json`,
+  `tests/headless/M13EconomyEquipmentRunner.{gd,tscn}` - **done** (2026-06-28): `EconomyManager`
+  derives buy/sell prices from item `value`, brokers gold-checked buy/sell; dialogue actions
+  `buy_item`/`sell_item` and the `gold_at_least` condition let merchants be authored in JSON.
 - **SR3-F1 - Eliminate dialogue soft-lock** - SR3 - files:
   `scripts/dialogue/DialogueManager.gd`, `scripts/ui/DialogueBox.gd`, `scripts/core/DataRegistry.gd`,
   `data/dialogues/dialogues.json`, `tests/headless/SR3NarrativeHardeningRunner.{gd,tscn}` - **done**

@@ -43,6 +43,7 @@ const CONDITION_TYPES := [
     "quest_completed",
     "faction_reputation_at_least",
     "faction_reputation_below",
+    "gold_at_least",
     "flag_set",
     "flag_not_set",
 ]
@@ -58,6 +59,8 @@ const DIALOGUE_ACTION_TYPES := [
     "give_reward",
     "change_reputation",
     "set_reputation",
+    "buy_item",
+    "sell_item",
 ]
 
 const NPC_ROLES := ["blacksmith", "debug_tester", "quest_giver", "villager", "merchant", "guard"]
@@ -732,6 +735,9 @@ func _validate_condition(condition, path: String) -> void:
             _require_ref("factions", String(condition.get("faction", "")), "%s.faction" % path)
             if not condition.has("value"):
                 _error("%s.value is required" % path)
+        "gold_at_least":
+            if not condition.has("value"):
+                _error("%s.value is required" % path)
         "flag_set", "flag_not_set":
             _require_string(condition, path, "flag")
 
@@ -777,6 +783,10 @@ func _validate_actions(actions, path: String) -> void:
                 _require_ref("factions", String(action.get("faction", "")), "%s.faction" % action_path)
                 if not action.has("value"):
                     _error("%s.value is required" % action_path)
+            "buy_item", "sell_item":
+                _require_ref("items", String(action.get("id", "")), "%s.id" % action_path)
+                if int(action.get("count", 1)) <= 0:
+                    _error("%s.count must be positive" % action_path)
 
 func _validate_rewards(rewards, path: String) -> void:
     if not (rewards is Dictionary):
