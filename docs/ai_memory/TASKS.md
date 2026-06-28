@@ -8,8 +8,8 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- **M11-T2 - Branching quest authoring conventions** - in_progress: define/verify alternate
-  outcomes, flags, and condition/action patterns for real questlines.
+- **M11-T3 - Quest/dialogue regression fixtures** - in_progress: add headless coverage for a
+  branching multi-stage quest with item rewards/removals and flag consequences.
 
 ## Backlog
 
@@ -20,8 +20,6 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none)
 
 ### M11 - Quest & dialogue production pipeline
-- **M11-T3 - Quest/dialogue regression fixtures** - backlog: add headless coverage for a branching
-  multi-stage quest with item rewards/removals and flag consequences.
 - **M11-T4 - Journal/debug authoring tools** - backlog: improve quest inspection/debug helpers enough
   to author and verify production questlines without manual guesswork.
 
@@ -30,6 +28,13 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M11-T2 - Branching quest authoring conventions** - M11 - files:
+  `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`, `docs/architecture/DATA_SCHEMAS.md`,
+  `docs/architecture/SYSTEMS.md`, `scripts/quest/QuestManager.gd`,
+  `scripts/dialogue/DialogueManager.gd`, `scripts/core/{Conditions,DataRegistry}.gd`,
+  `data/{quests,dialogues}.json`, `tests/headless/M11DialogueActionsRunner.gd` - **done**
+  (2026-06-28): defined quest/dialogue branching conventions, added `set_quest_stage` and
+  `flag_not_set`, and verified two alternate branch outcomes through the M11 headless fixture.
 - **M11-T1 - Production dialogue actions** - M11 - files:
   `scripts/dialogue/DialogueManager.gd`, `scripts/core/DataRegistry.gd`,
   `scripts/quest/QuestManager.gd`, `data/dialogues/dialogues.json`,

@@ -73,5 +73,42 @@
         "choices": [ { "text": "Done.", "next": null } ]
       }
     }
+  },
+  "dialogue_m11_branch_fixture": {
+    "id": "dialogue_m11_branch_fixture",
+    "entry": "start",
+    "nodes": {
+      "start": {
+        "speaker": "player",
+        "text": "M11 branch fixture.",
+        "actions": [ { "type": "start_quest", "quest": "quest_m11_branch_fixture" } ],
+        "choices": [
+          {
+            "text": "Spare them.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m11_branch_fixture", "stage": 0 },
+              { "type": "flag_not_set", "flag": "quest_m11_branch_fixture_outcome_keep" }
+            ],
+            "actions": [
+              { "type": "set_flag", "flag": "quest_m11_branch_fixture_outcome_spare" },
+              { "type": "set_quest_stage", "quest": "quest_m11_branch_fixture", "stage": 100 }
+            ]
+          },
+          {
+            "text": "Keep the goods.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m11_branch_fixture", "stage": 0 },
+              { "type": "flag_not_set", "flag": "quest_m11_branch_fixture_outcome_spare" }
+            ],
+            "actions": [
+              { "type": "set_flag", "flag": "quest_m11_branch_fixture_outcome_keep" },
+              { "type": "set_quest_stage", "quest": "quest_m11_branch_fixture", "stage": 200 }
+            ]
+          }
+        ]
+      }
+    }
   }
 }

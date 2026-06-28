@@ -32,6 +32,26 @@ func advance_quest(quest_id: String) -> void:
     if GameState.quests["active"].has(quest_id):
         _advance(quest_id)
 
+## Force an active quest to a specific stage. Branching dialogue choices use this to jump into
+## outcome bands while quest completion/rewards stay data-driven on the target stage.
+func set_stage(quest_id: String, stage: int) -> void:
+    if not DataRegistry.has_id("quests", quest_id):
+        push_error("QuestManager: cannot set stage for unknown quest '%s'" % quest_id)
+        return
+    if not GameState.quests["active"].has(quest_id):
+        push_error("QuestManager: cannot set stage for inactive quest '%s'" % quest_id)
+        return
+    var stage_def := _stage_def(quest_id, stage)
+    if stage_def.is_empty():
+        push_error("QuestManager: quest '%s' has no stage %d" % [quest_id, stage])
+        return
+    GameState.quests["active"][quest_id]["stage"] = stage
+    EventBus.quest_stage_updated.emit(quest_id, stage)
+    if stage_def.get("completes", false):
+        _complete(quest_id, stage_def)
+    else:
+        _try_advance(quest_id)
+
 func get_stage(quest_id: String) -> int:
     return int(GameState.quests["active"].get(quest_id, {}).get("stage", -1))
 

@@ -42,17 +42,20 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   fixes are required before narrative systems.
 - M11-T1 production dialogue actions are implemented: `set_flag`, `clear_flag`, `start_quest`,
   `advance_quest`, `give_item`, `take_item`, and `give_reward` are runtime-supported and validated.
+- M11-T2 branching conventions are implemented: use stage bands plus outcome flags, branch choices
+  can call `set_quest_stage`, and `flag_not_set` is available for consequence gates. The contract is
+  documented in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
 - Verified with Godot headless import and `.\test.bat` (runs M9 + M10 + M10R asset preview + M11
-  dialogue action regression).
+  dialogue action/branching regression).
 - On `master`, pushed.
 
 ## Last thing done
-Completed M11-T1. Dialogue actions now support production reward/item/flag flows and have a headless
-fixture wired into `test.bat`.
+Completed M11-T2. Quest/dialogue branching now has authoring conventions, a specific stage-jump
+action, negative flag gates, and a two-outcome headless fixture.
 
 ## Next thing to do
-Start **M11-T2 - Branching quest authoring conventions**: define and verify alternate outcomes,
-flags, and condition/action patterns for real questlines.
+Start **M11-T3 - Quest/dialogue regression fixtures**: expand coverage to a multi-stage branching
+quest with item rewards/removals and flag consequences.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

@@ -29,5 +29,28 @@
         "rewards": { "xp": 50, "gold": 20, "items": [ { "id": "item_iron_sword", "count": 1 } ] }
       }
     ]
+  },
+  "quest_m11_branch_fixture": {
+    "id": "quest_m11_branch_fixture",
+    "title": "M11 Branch Fixture",
+    "giver": "npc_blacksmith_valdombra",
+    "stages": [
+      {
+        "stage": 0,
+        "desc": "Choose how to resolve the branch fixture."
+      },
+      {
+        "stage": 100,
+        "desc": "Mercy outcome recorded.",
+        "completes": true,
+        "rewards": { "xp": 5, "gold": 1 }
+      },
+      {
+        "stage": 200,
+        "desc": "Profit outcome recorded.",
+        "completes": true,
+        "rewards": { "xp": 8, "gold": 4, "items": [ { "id": "item_health_potion", "count": 1 } ] }
+      }
+    ]
   }
 }

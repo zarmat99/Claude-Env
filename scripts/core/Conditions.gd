@@ -28,6 +28,8 @@ static func met(cond: Dictionary) -> bool:
             return int(f.get("reputation", 0)) >= int(cond.get("value", 0))
         "flag_set":
             return bool(GameState.flags.get(String(cond.get("flag", "")), false))
+        "flag_not_set":
+            return not bool(GameState.flags.get(String(cond.get("flag", "")), false))
         _:
             push_warning("Conditions: unknown condition type '%s'" % cond.get("type", ""))
             return false

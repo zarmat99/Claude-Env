@@ -83,7 +83,9 @@ current codebase, so it should avoid "current milestone" language that can go st
   react to EventBus events (`item_added`, `actor_died`, `map_changed`, `dialogue_*`) to advance
   stages; grant stage rewards. Models: `QuestData`, `QuestStage`.
 - **Depends on**: DataRegistry, GameState, EventBus.
-- **Implementation**: M3 done and exercised by the M6 vertical slice.
+- **Implementation**: M3 done and exercised by the M6 vertical slice. M11 adds explicit
+  `set_quest_stage` branching support through dialogue actions while keeping completion rewards on
+  quest stages.
 
 ## DialogueManager (autoload) — `scripts/dialogue/*`
 - **Role**: run a dialogue graph; evaluate node/choice `conditions`; execute `actions`
@@ -91,8 +93,9 @@ current codebase, so it should avoid "current milestone" language that can go st
   Model: `DialogueData`.
 - **Depends on**: DataRegistry, GameState, EventBus, QuestManager/InventoryManager (for actions).
 - **Implementation**: dialogue graph, conditional choices, pause handling, and the M11 production
-  action set (`set_flag`, `clear_flag`, `start_quest`, `advance_quest`, `give_item`, `take_item`,
-  `give_reward`) are live. Validation rejects unsupported action types.
+  action set (`set_flag`, `clear_flag`, `start_quest`, `advance_quest`, `set_quest_stage`,
+  `give_item`, `take_item`, `give_reward`) are live. Branching authoring conventions are documented
+  in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`; validation rejects unsupported action types.
 
 ## InventoryManager (autoload) + InventoryComponent — `scripts/inventory/*`, `scripts/components/InventoryComponent.gd`
 - **Role**: add/remove/query items, stacking, weight (later); `InventoryComponent` is the

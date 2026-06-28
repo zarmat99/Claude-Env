@@ -170,18 +170,21 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 workflow, including separate visual size, footprint, collision, and layering metadata. SR2 cleared
 the map pipeline to proceed to narrative systems. M11-T1 completed the production dialogue action
 set: dialogues can now set/clear flags, start/advance quests, give/take items, and grant rewards.
+M11-T2 added the quest/dialogue branching convention, `set_quest_stage`, and `flag_not_set`, with a
+two-outcome fixture covering branch flags and stage-completion rewards.
 
 ## 12. Recommended next step
-Proceed with **M11-T2 - Branching quest authoring conventions**: define and verify alternate
-outcomes, flags, and condition/action patterns for real questlines before expanding content.
+Proceed with **M11-T3 - Quest/dialogue regression fixtures**: expand from the small branch fixture
+to a multi-stage branching quest regression with item removals, rewards, and persistent
+consequences.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
 GDScript, designed to scale. **M10R and SR2 are complete; M11 is active**. Village/Forest/Cave
 remain the playable dev slice and now show approved generated terrain/prop candidates. Save/load,
 progression, quest flow, dynamic pickups, quarantine checks, world-object states, M10R asset
-preview, and M11 dialogue actions are covered by `.\test.bat`. The next step is **M11-T2 branching
-quest authoring conventions**.
+preview, M11 dialogue actions, and the first branching fixture are covered by `.\test.bat`. The
+next step is **M11-T3 quest/dialogue regression fixtures**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

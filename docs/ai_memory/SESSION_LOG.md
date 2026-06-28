@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-06-28 - Session 021 - Branching quest conventions
+
+- **Goal**: complete M11-T2 by turning branching quest/dialogue design into an authoring contract
+  and a verified minimal fixture.
+- **Authoring contract**: added `docs/architecture/QUEST_DIALOGUE_AUTHORING.md` with stage-band
+  conventions, quest-scoped outcome flag naming, dialogue-choice ordering, reward placement rules,
+  and fixture naming rules.
+- **Implementation**: added `flag_not_set` conditions and `set_quest_stage` dialogue actions.
+  `QuestManager.set_stage()` can jump active quests to branch stages and immediately complete
+  reward-bearing final stages.
+- **Regression**: added `quest_m11_branch_fixture` and `dialogue_m11_branch_fixture`; the M11
+  headless runner now verifies two alternate outcomes, branch flags, quest completion, and
+  branch-specific rewards.
+- **Next**: M11-T3 - expand the small branching fixture into a fuller multi-stage quest/dialogue
+  regression with item removals and persistent consequences.
+
+---
+
 ## 2026-06-28 - Session 020 - Production dialogue actions
 
 - **Goal**: complete M11-T1 so real questlines can use validated dialogue actions instead of

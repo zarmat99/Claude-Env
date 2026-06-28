@@ -61,8 +61,10 @@ in their milestone.
 **Condition types** (used by `advance_on` and dialogue/transition gates):
 `has_item{target,count}` · `talked_to{target}` · `killed_enemy{target,count?}` ·
 `entered_area{target}` · `quest_stage_is{quest,stage}` · `quest_not_started{quest}` ·
-`quest_completed{quest}` · `faction_reputation_at_least{faction,value}` *(later)* ·
-`flag_set{flag}`. Conditions are pure predicates evaluated against `GameState`.
+`quest_active{quest}` · `quest_completed{quest}` ·
+`faction_reputation_at_least{faction,value}` *(later)* · `flag_set{flag}` ·
+`flag_not_set{flag}`. Conditions are pure predicates evaluated against `GameState`. Branching
+authoring conventions live in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
 
 ## dialogues/dialogues.json (conditional node graph)
 ```json
@@ -95,9 +97,10 @@ in their milestone.
 }
 ```
 **Implemented action types (M11 validator accepts these)**: `start_quest{quest}` ·
-`advance_quest{quest}` · `set_flag{flag}` · `clear_flag{flag}` · `give_item{id,count}` ·
-`take_item{id,count}` · `give_reward{rewards}`. `give_reward.rewards` uses the same reward object
-shape as quest stages (`xp`, `gold`, `items`). `next: null` ends dialogue.
+`advance_quest{quest}` · `set_quest_stage{quest,stage}` · `set_flag{flag}` ·
+`clear_flag{flag}` · `give_item{id,count}` · `take_item{id,count}` ·
+`give_reward{rewards}`. `give_reward.rewards` uses the same reward object shape as quest stages
+(`xp`, `gold`, `items`). `next: null` ends dialogue.
 
 ## npcs/npcs.json
 ```json

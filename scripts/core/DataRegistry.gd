@@ -43,6 +43,7 @@ const CONDITION_TYPES := [
     "quest_completed",
     "faction_reputation_at_least",
     "flag_set",
+    "flag_not_set",
 ]
 
 const DIALOGUE_ACTION_TYPES := [
@@ -50,6 +51,7 @@ const DIALOGUE_ACTION_TYPES := [
     "clear_flag",
     "start_quest",
     "advance_quest",
+    "set_quest_stage",
     "give_item",
     "take_item",
     "give_reward",
@@ -673,7 +675,7 @@ func _validate_condition(condition, path: String) -> void:
             _require_ref("quests", String(condition.get("quest", "")), "%s.quest" % path)
         "faction_reputation_at_least":
             _require_ref("factions", String(condition.get("faction", "")), "%s.faction" % path)
-        "flag_set":
+        "flag_set", "flag_not_set":
             _require_string(condition, path, "flag")
 
 func _validate_actions(actions, path: String) -> void:
@@ -697,6 +699,13 @@ func _validate_actions(actions, path: String) -> void:
                 _require_string(action, action_path, "flag")
             "start_quest", "advance_quest":
                 _require_ref("quests", String(action.get("quest", "")), "%s.quest" % action_path)
+            "set_quest_stage":
+                var quest_id := String(action.get("quest", ""))
+                _require_ref("quests", quest_id, "%s.quest" % action_path)
+                if not action.has("stage"):
+                    _error("%s.stage is required" % action_path)
+                elif quest_id != "" and not _quest_has_stage(quest_id, int(action.get("stage", -2147483648))):
+                    _error("%s.stage references missing stage %d in %s" % [action_path, int(action.get("stage", -2147483648)), quest_id])
             "give_item", "take_item":
                 _require_ref("items", String(action.get("id", "")), "%s.id" % action_path)
                 if int(action.get("count", 1)) <= 0:

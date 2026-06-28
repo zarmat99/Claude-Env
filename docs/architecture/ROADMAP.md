@@ -123,6 +123,8 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
   support, failure/alternate outcomes, quest/debug tools, journal polish, authoring conventions.
 - **Exit criteria**: a multi-stage branching questline with consequences can be authored primarily
   in JSON and verified by tests/debug tooling.
+- **Status 2026-06-28**: M11-T1 and M11-T2 complete. Production dialogue actions and the branching
+  authoring convention are live; next is a larger quest/dialogue regression fixture.
 
 ## M12 — NPCs, factions & reputation
 - **Goal**: support meaningful NPC roles and faction-based world reactions.

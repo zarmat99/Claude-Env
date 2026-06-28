@@ -81,6 +81,8 @@ func _run_actions(actions: Array) -> void:
                 QuestManager.start_quest(String(a.get("quest", "")))
             "advance_quest":
                 QuestManager.advance_quest(String(a.get("quest", "")))
+            "set_quest_stage":
+                QuestManager.set_stage(String(a.get("quest", "")), int(a.get("stage", -2147483648)))
             "give_item":
                 _give_item(String(a.get("id", "")), int(a.get("count", 1)))
             "take_item":
