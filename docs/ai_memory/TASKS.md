@@ -8,9 +8,7 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- **M13-V1 - Verify, commit, and push M13 core** - in_progress: equipment/item-use/economy core is
-  done, verified by `.\test.bat`, and committed/pushed. Milestone closes after M13-T4 (container
-  inventories) and M13-T5 (in-game merchant + data-authored stock).
+- (none)
 
 ## Backlog
 
@@ -30,17 +28,30 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none - SR3-F1/F2/F3 done; see Done)
 
 ### M13 - items, equipment, economy & merchants
-- **M13-T4 - Container inventories** - backlog: a reusable non-player `InventoryComponent` for
-  chests/containers so loot can live in a container the player opens/transfers, not just auto-pickups.
-- **M13-T5 - In-game merchant content + data-authored stock** - backlog: place a real merchant NPC in
-  the village and define merchant stock as data (a `merchants.json` or NPC `merchant` block) instead
-  of hardcoding buy/sell choices per dialogue fixture.
+- (none - complete)
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M13-V1 - Verify, commit, and push M13** - M13 - files: `test.bat`,
+  `tests/headless/M13EconomyEquipmentRunner.{gd,tscn}` - **done** (2026-06-28): full `.\test.bat`
+  passes (import + M9/M10/M10R/M11/M12/SR3/M13); equipment/item-use/economy + containers + merchant
+  committed and pushed. M13 complete.
+- **M13-T5 - In-game merchant + data-authored stock** - M13 - files:
+  `data/merchants/merchants.json`, `data/npcs/npcs.json`, `data/dialogues/dialogues.json`,
+  `scenes/npcs/Merchant.tscn`, `scenes/maps/Village.tscn`, `scripts/economy/EconomyManager.gd`,
+  `scripts/dialogue/DialogueManager.gd`, `scripts/core/DataRegistry.gd` - **done** (2026-06-28):
+  added a `merchants.json` table (validated stock + buy/sell multipliers), a real `npc_merchant_valdombra`
+  placed in the Village with a merchant dialogue, merchant-aware pricing/stock in `EconomyManager`,
+  and an optional `merchant` ref on `buy_item`/`sell_item` actions.
+- **M13-T4 - Container inventories** - M13 - files:
+  `scripts/inventory/ItemStacking.gd`, `scripts/components/InventoryComponent.gd`,
+  `scripts/inventory/InventoryManager.gd`, `scripts/world/Chest.gd`,
+  `tests/headless/M13EconomyEquipmentRunner.{gd,tscn}` - **done** (2026-06-28): extracted stacking
+  into a shared `ItemStacking` helper, added a reusable non-player `InventoryComponent` (used by
+  `Chest` for its contents and transfer-to-player), and removed the duplicated stacking logic.
 - **M13-T1 - Equipment & derived stats** - M13 - files:
   `scripts/equipment/EquipmentManager.gd`, `scripts/player/PlayerCombat.gd`, `project.godot`,
   `scripts/core/EventBus.gd`, `data/items/items.json`,

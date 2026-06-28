@@ -2,16 +2,21 @@ extends StaticBody2D
 class_name Chest
 
 const PersistentWorldObject = preload("res://scripts/world/PersistentWorldObject.gd")
+const InventoryComponent = preload("res://scripts/components/InventoryComponent.gd")
 
 @export var persistent_id: String = ""
 @export var loot_items: Array = []
 
 var _opened := false
+var _contents: InventoryComponent
 
 @onready var _body: Polygon2D = $Body
 @onready var _interaction: InteractionComponent = $InteractionComponent
 
 func _ready() -> void:
+    _contents = InventoryComponent.new()
+    add_child(_contents)
+    _contents.set_contents(loot_items)
     _interaction.interacted.connect(_on_interacted)
     _opened = PersistentWorldObject.has_state(persistent_id, PersistentWorldObject.STATE_OPENED)
     _apply_visual_state()
@@ -19,13 +24,7 @@ func _ready() -> void:
 func open() -> bool:
     if _opened:
         return false
-    for loot in loot_items:
-        if not (loot is Dictionary):
-            continue
-        var item_id := String(loot.get("id", ""))
-        var count := int(loot.get("count", 1))
-        if item_id != "" and count > 0:
-            InventoryManager.add(item_id, count)
+    _contents.transfer_all_to_player()
     _opened = true
     PersistentWorldObject.set_state(persistent_id, PersistentWorldObject.STATE_OPENED)
     _apply_visual_state()

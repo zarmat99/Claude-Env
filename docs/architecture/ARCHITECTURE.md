@@ -49,8 +49,8 @@ res://
     ui/          HUD.gd DialogueBox.gd InventoryUI.gd QuestJournalUI.gd
   data/
     items/items.json  quests/quests.json  dialogues/dialogues.json  npcs/npcs.json
-    enemies/enemies.json  factions/factions.json  skills/skills.json  maps/maps.json
-    assets/asset_sets.json  world/world_objects.json
+    enemies/enemies.json  factions/factions.json  merchants/merchants.json
+    skills/skills.json  maps/maps.json  assets/asset_sets.json  world/world_objects.json
   assets/
     sprites/  tilesets/  audio/  fonts/
   docs/

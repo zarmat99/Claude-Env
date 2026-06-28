@@ -49,10 +49,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **M13 (items/equipment/economy/merchants) core is implemented and verified** (`.\test.bat` green;
-  committed/pushed): equipment with derived combat stats, consumable item use, and value-based
-  buy/sell via dialogue actions. M0-M12, M10R, SR1, SR2, and SR3 are complete. Remaining to close
-  M13: T4 container inventories and T5 in-game merchant + data-authored stock.
+- **M13 (items/equipment/economy/merchants) is complete and verified** (`.\test.bat` green;
+  committed/pushed): equipment + derived combat stats, consumable item use, buy/sell with merchant
+  stock/pricing, a reusable container `InventoryComponent`, and a data-authored village merchant.
+  M0-M13, M10R, SR1, SR2, and SR3 are complete; M14 (combat/skills/magic) is next.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
   `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
@@ -131,11 +131,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   affordance + node-level `next`), multi-condition quest `advance_on` (single / array AND /
   `any_of` / `all_of`, `talked_to` kept momentary), and `entry_rules` state-reactive opening nodes;
   validated by `DataRegistry` and covered by `SR3NarrativeHardeningRunner`.
-- **M13 (core)**: `EquipmentManager` brokers `GameState.player.equipment` (equip/unequip from
-  inventory, slot swap) and derives effective combat stats (weapon `damage`, armor `max_health`);
-  `InventoryManager.use_item` spends consumables (`heal`); `EconomyManager` derives buy/sell prices
-  from item `value` and brokers gold-checked trade. Dialogue `buy_item`/`sell_item` actions and the
-  `gold_at_least` condition author merchants in JSON. Save/load already carries equipment + gold.
+- **M13**: `EquipmentManager` brokers `GameState.player.equipment` (equip/unequip + slot swap) and
+  derives effective combat stats (weapon `damage`, armor `max_health`); `InventoryManager.use_item`
+  spends consumables (`heal`); a shared `ItemStacking` helper + reusable `InventoryComponent` back
+  both the player inventory and containers (`Chest`); `EconomyManager` derives buy/sell prices from
+  item `value` with optional per-merchant stock/multipliers (`merchants.json`). Dialogue
+  `buy_item`/`sell_item` (optional `merchant`) and the `gold_at_least` condition author merchants in
+  JSON; `npc_merchant_valdombra` is live in the Village. Save/load carries equipment + gold.
 - **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
   SceneLoader, SaveManager, InventoryManager, EquipmentManager, EconomyManager, QuestManager,
   DialogueManager.
@@ -145,8 +147,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M8 Progression, SR1 core review, M9 data/tooling hardening, M10 world authoring, M10R governed
-  assets, SR2 map review, M11 quest/dialogue pipeline, M12 NPCs/factions/reputation, and SR3
-  narrative scalability review are all complete. M13 items/equipment/economy/merchants is next.
+  assets, SR2 map review, M11 quest/dialogue pipeline, M12 NPCs/factions/reputation, SR3 narrative
+  review, and M13 items/equipment/economy/merchants are all complete. M14 combat/skills/magic is next.
 - M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
   dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
@@ -191,16 +193,16 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M13 - items, equipment, economy & merchants: CORE COMPLETE (T1-T3), milestone in progress.**
-`EquipmentManager` (equip/unequip + derived combat stats), `InventoryManager.use_item` (consumables),
-and `EconomyManager` (value-based buy/sell via dialogue actions + `gold_at_least`) are live,
-save-aware, and covered by `tests/headless/M13EconomyEquipmentRunner`. Remaining to close M13: M13-T4
-container inventories and M13-T5 in-game merchant + data-authored stock. M0-M12 plus SR1/SR2/SR3 are
-complete (SR3-F1/F2/F3 resolved).
+**M13 - items, equipment, economy & merchants: COMPLETE.** Equipment + derived combat stats,
+consumable item use, buy/sell with merchant stock/pricing, a reusable container `InventoryComponent`,
+and a data-authored village merchant are live, save-aware, and covered by
+`tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete; **M14 (combat,
+skills & magic) is the next milestone** (it picks up armor-based damage mitigation, deferred from
+M13).
 
 ## 12. Recommended next step
-Continue **M13**: implement **M13-T4** (container inventories) and **M13-T5** (in-game merchant NPC +
-data-authored merchant stock), then close the milestone and move to M14 (combat/skills/magic).
+Proceed with **M14 - combat, skills & magic**: enemy archetypes, damage rules, combat abilities,
+skill growth, magic/spell data, AI variants, and armor-based damage mitigation (deferred from M13).
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
@@ -210,8 +212,8 @@ slice and now show
 approved generated terrain/prop candidates. Save/load, progression, quest flow, dynamic pickups,
 quarantine checks, world-object states, M10R asset preview, M11 dialogue actions/branching, and M12
 faction reputation are covered by `.\test.bat` once runnable. Quest/faction authoring can be
-inspected in game with the F10 Quest Debug overlay. The M13 item/economy core (equipment, item use,
-buy/sell) is in; the next step is **M13-T4 container inventories and M13-T5 in-game merchant**.
+inspected in game with the F10 Quest Debug overlay. M13 (equipment, item use, buy/sell, containers,
+in-game merchant) is complete; the next step is **M14 - combat, skills & magic**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

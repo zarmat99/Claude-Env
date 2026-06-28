@@ -10,6 +10,7 @@ const FILES := {
     "npcs": "res://data/npcs/npcs.json",
     "enemies": "res://data/enemies/enemies.json",
     "factions": "res://data/factions/factions.json",
+    "merchants": "res://data/merchants/merchants.json",
     "skills": "res://data/skills/skills.json",
     "asset_sets": "res://data/assets/asset_sets.json",
     "generated_assets": "res://data/assets/generated_assets.json",
@@ -24,6 +25,7 @@ const ID_PREFIXES := {
     "npcs": "npc_",
     "enemies": "enemy_",
     "factions": "faction_",
+    "merchants": "merchant_",
     "skills": "skill_",
     "asset_sets": "asset_",
     "generated_assets": "asset_",
@@ -84,6 +86,7 @@ func validate_all() -> bool:
     _validate_table_ids()
     _validate_items()
     _validate_factions()
+    _validate_merchants()
     _validate_skills()
     _validate_asset_sets()
     _validate_generated_assets()
@@ -140,6 +143,7 @@ func get_dialogue(content_id: String) -> Dictionary: return _entry("dialogues", 
 func get_npc(content_id: String) -> Dictionary: return _entry("npcs", content_id)
 func get_enemy(content_id: String) -> Dictionary: return _entry("enemies", content_id)
 func get_faction(content_id: String) -> Dictionary: return _entry("factions", content_id)
+func get_merchant(content_id: String) -> Dictionary: return _entry("merchants", content_id)
 func get_skill(content_id: String) -> Dictionary: return _entry("skills", content_id)
 func get_asset_set(content_id: String) -> Dictionary: return _entry("asset_sets", content_id)
 func get_generated_asset(content_id: String) -> Dictionary: return _entry("generated_assets", content_id)
@@ -200,6 +204,21 @@ func _validate_factions() -> void:
                 continue
             for ref in refs:
                 _require_ref("factions", String(ref), "factions/%s.%s" % [faction_id, field])
+
+func _validate_merchants() -> void:
+    for raw_merchant_id in all("merchants").keys():
+        var merchant_id := String(raw_merchant_id)
+        var merchant := get_merchant(merchant_id)
+        _require_string(merchant, "merchants/%s" % merchant_id, "name")
+        for field in ["buy_multiplier", "sell_multiplier"]:
+            if merchant.has(field) and float(merchant.get(field, 0.0)) < 0.0:
+                _error("merchants/%s.%s cannot be negative" % [merchant_id, field])
+        var stock = merchant.get("stock", [])
+        if not (stock is Array) or stock.is_empty():
+            _error("merchants/%s.stock must be a non-empty array" % merchant_id)
+            continue
+        for index in range(stock.size()):
+            _require_ref("items", String(stock[index]), "merchants/%s.stock[%d]" % [merchant_id, index])
 
 func _validate_skills() -> void:
     for raw_skill_id in all("skills").keys():
@@ -329,6 +348,8 @@ func _validate_npcs() -> void:
         var role := String(npc.get("role", ""))
         if not NPC_ROLES.has(role):
             _error("npcs/%s.role has unsupported value '%s'" % [npc_id, role])
+        if npc.has("merchant") or role == "merchant":
+            _require_ref("merchants", String(npc.get("merchant", "")), "npcs/%s.merchant" % npc_id)
         _validate_string_array(npc.get("services", []), "npcs/%s.services" % npc_id)
         var quests_offered = npc.get("quests_offered", [])
         if not (quests_offered is Array):
@@ -787,6 +808,8 @@ func _validate_actions(actions, path: String) -> void:
                 _require_ref("items", String(action.get("id", "")), "%s.id" % action_path)
                 if int(action.get("count", 1)) <= 0:
                     _error("%s.count must be positive" % action_path)
+                if String(action.get("merchant", "")) != "":
+                    _require_ref("merchants", String(action.get("merchant", "")), "%s.merchant" % action_path)
 
 func _validate_rewards(rewards, path: String) -> void:
     if not (rewards is Dictionary):

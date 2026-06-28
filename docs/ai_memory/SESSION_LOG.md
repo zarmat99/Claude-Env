@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-06-28 - Session 028 - Close M13 (containers + merchant)
+
+- **Goal**: finish M13 by adding container inventories (T4) and a data-authored in-game merchant (T5).
+- **M13-T4 (containers)**: extracted the stacking algorithm into a shared `ItemStacking` helper, added
+  a reusable non-player `InventoryComponent` (own item list, same stacking rules, `transfer_all_to_player`),
+  refactored `InventoryManager` to delegate to `ItemStacking` (removing duplicated logic), and made
+  `Chest` hold an `InventoryComponent` for its contents.
+- **M13-T5 (merchant)**: added a validated `data/merchants/merchants.json` table (stock + buy/sell
+  multipliers, `merchant_` prefix), merchant-aware pricing/stock in `EconomyManager` (buy/sell take a
+  `merchant` id), an optional `merchant` ref on the `buy_item`/`sell_item` dialogue actions, a real
+  `npc_merchant_valdombra` with `dialogue_merchant_valdombra`, and placed the merchant in the Village
+  (`scenes/npcs/Merchant.tscn` + `Village.tscn`). `DataRegistry` now validates merchants, the NPC
+  `merchant` ref (required for role `merchant`), and the action `merchant` ref.
+- **Tests**: extended `M13EconomyEquipmentRunner` with container-inventory transfer, merchant
+  stock/pricing (in-stock buy, off-stock rejection, merchant-priced sell), and a merchant-NPC dialogue
+  buy. Full `.\test.bat` passed (import + M9/M10/M10R/M11/M12/SR3/M13, exit 0) - no regressions.
+- **Docs**: updated `DATA_SCHEMAS` (merchants schema + buy/sell `merchant` param + NPC merchant field),
+  `SYSTEMS`, `ARCHITECTURE` (data files), `ROADMAP` (M13 complete), and the ai_memory tracker
+  (M13-T4/T5/V1 to Done; M13 closed). **M13 is complete.**
+- **Next**: M14 - combat, skills & magic (includes armor-based damage mitigation, deferred from M13).
+
+---
+
 ## 2026-06-28 - Session 027 - M13 item/economy core
 
 - **Goal**: build the M13 systems core (equipment, item use, economy/merchants) data-driven and

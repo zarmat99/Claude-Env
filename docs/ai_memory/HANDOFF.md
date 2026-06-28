@@ -10,13 +10,14 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **M13 (items/equipment/economy/merchants) core is in place and verified** (`.\test.bat` green,
-  exit 0; committed/pushed): `EquipmentManager` (equip/unequip + derived combat stats),
-  `InventoryManager.use_item` (consumables), and `EconomyManager` (buy/sell via dialogue actions +
-  `gold_at_least`), all save-aware and covered by `M13EconomyEquipmentRunner`. **Remaining to close
-  M13: M13-T4 container inventories and M13-T5 in-game merchant + data-authored stock.**
-- M0-M12, M10R, SR1, SR2, and SR3 are complete. SR3 verdict was proceed to M13 with no blocking
-  rewrite; its follow-ups SR3-F1/F2/F3 are done.
+- **M13 (items/equipment/economy/merchants) is complete and verified** (`.\test.bat` green, exit 0;
+  committed/pushed): `EquipmentManager` (equip/unequip + derived combat stats),
+  `InventoryManager.use_item` (consumables), `EconomyManager` (buy/sell + merchant stock/pricing), a
+  reusable `InventoryComponent` (shared `ItemStacking`, used by `Chest`), and a data-authored village
+  merchant (`merchants.json` + in-Village `npc_merchant_valdombra`). Covered by
+  `M13EconomyEquipmentRunner`.
+- M0-M13, M10R, SR1, SR2, and SR3 are complete. **M14 (combat, skills & magic) is the next
+  milestone** (it also picks up armor-based damage mitigation, deferred from M13).
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
   (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
   multi-condition `advance_on` (array AND / `any_of` / `all_of`, with `talked_to` kept momentary),
@@ -75,20 +76,18 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, M12 is committed and pushed.
 
 ## Last thing done
-Implemented the **M13 item/economy core**: `EquipmentManager` (equip/unequip from inventory, slot
-swap, derived `damage`/`max_health` feeding `PlayerCombat`, save/load round-trip),
-`InventoryManager.use_item` (consumable `heal`, clamped to effective max, refuses wasted use),
-and `EconomyManager` (value-based buy/sell, gold-checked) with dialogue actions `buy_item`/`sell_item`
-and a `gold_at_least` condition. Added two autoloads, `EventBus` signals `equipment_changed`/
-`item_used`, validation, an armor item + merchant dialogue fixture, and
-`tests/headless/M13EconomyEquipmentRunner`. `.\test.bat` passes (import + M9/M10/M10R/M11/M12/SR3/M13,
-exit 0).
+Completed **M13**. Added M13-T4 container inventories — extracted stacking into a shared
+`ItemStacking` helper, added a reusable `InventoryComponent` (used by `Chest` for contents +
+transfer-to-player), and removed the duplicated stacking logic — and M13-T5 in-game merchant —
+a validated `merchants.json` (stock + buy/sell multipliers), merchant-aware pricing/stock in
+`EconomyManager`, an optional `merchant` ref on `buy_item`/`sell_item`, and a real
+`npc_merchant_valdombra` placed in the Village with a merchant dialogue. `.\test.bat` passes
+(import + M9/M10/M10R/M11/M12/SR3/M13, exit 0); committed and pushed.
 
 ## Next thing to do
-Continue **M13** with **M13-T4 - container inventories** (a reusable non-player `InventoryComponent`
-for chests/containers) and **M13-T5 - in-game merchant NPC + data-authored merchant stock**
-(`merchants.json` or an NPC `merchant` block instead of per-dialogue buy/sell choices). Then close
-M13 and move to M14 (combat/skills/magic).
+Start **M14 - combat, skills & magic** (see `ROADMAP.md`): enemy archetypes, damage rules, combat
+abilities, skill growth, magic/spell data, AI variants — and fold in armor-based damage mitigation
+(equipped armor stats are authorable now but mitigation was deferred from M13).
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

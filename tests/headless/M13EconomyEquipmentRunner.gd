@@ -16,6 +16,9 @@ func _run() -> void:
     _test_item_use()
     _test_economy()
     _test_merchant_dialogue()
+    _test_container_inventory()
+    _test_merchant_stock_pricing()
+    _test_merchant_npc_dialogue()
     await get_tree().process_frame
 
     if _failures.is_empty():
@@ -107,6 +110,49 @@ func _test_merchant_dialogue() -> void:
     _assert(int(GameState.player["gold"]) == 12, "Merchant dialogue sell should credit 12 gold")
     _assert(InventoryManager.get_count("item_iron_sword") == 0, "Merchant dialogue sell should remove the sword")
     _assert(not DialogueManager.is_active(), "Selling should end the dialogue")
+
+# --- M13-T4: reusable container inventory ---
+func _test_container_inventory() -> void:
+    GameState.reset_to_new_game()
+    var container := InventoryComponent.new()
+    add_child(container)
+    container.set_contents([
+        {"id": "item_health_potion", "count": 2},
+        {"id": "item_iron_sword", "count": 1},
+    ])
+    _assert(container.get_count("item_health_potion") == 2, "Container should hold two potions")
+    _assert(container.get_count("item_iron_sword") == 1, "Container should hold one sword")
+    _assert(container.add("item_health_potion", 1), "Container add should succeed")
+    _assert(container.get_count("item_health_potion") == 3, "Container should stack to three potions")
+    container.transfer_all_to_player()
+    _assert(container.is_empty(), "Container should be empty after transfer")
+    _assert(InventoryManager.get_count("item_health_potion") == 3, "Transfer should move potions to the player")
+    _assert(InventoryManager.get_count("item_iron_sword") == 1, "Transfer should move the sword to the player")
+    container.queue_free()
+
+# --- M13-T5: data-authored merchant stock + pricing ---
+func _test_merchant_stock_pricing() -> void:
+    GameState.reset_to_new_game()
+    GameState.player["gold"] = 100
+    var merchant := "merchant_valdombra_general"
+    _assert(EconomyManager.buy_price("item_health_potion", merchant) == 10, "Merchant potion price should be 10")
+    _assert(EconomyManager.buy("item_health_potion", 1, merchant), "Should buy a stocked potion from the merchant")
+    _assert(int(GameState.player["gold"]) == 90, "Merchant buy should spend 10 gold")
+    _assert(not EconomyManager.buy("item_ancient_iron_fragment", 1, merchant), "Should not buy an item the merchant does not stock")
+    _assert(int(GameState.player["gold"]) == 90, "A blocked buy should not spend gold")
+    InventoryManager.add("item_iron_sword", 1)
+    _assert(EconomyManager.sell("item_iron_sword", 1, merchant), "Should sell the sword to the merchant")
+    _assert(int(GameState.player["gold"]) == 102, "Merchant sell should credit 12 gold")
+
+func _test_merchant_npc_dialogue() -> void:
+    get_tree().paused = false
+    GameState.reset_to_new_game()
+    GameState.player["gold"] = 50
+    DialogueManager.start("dialogue_merchant_valdombra")
+    DialogueManager.choose(0)  # gold >= 10 -> Buy a health potion (via merchant)
+    _assert(InventoryManager.get_count("item_health_potion") == 1, "Merchant NPC dialogue buy should add a potion")
+    _assert(int(GameState.player["gold"]) == 40, "Merchant NPC dialogue buy should spend 10 gold")
+    _assert(not DialogueManager.is_active(), "Buying should end the merchant dialogue")
 
 func _assert(condition: bool, message: String) -> void:
     if not condition:

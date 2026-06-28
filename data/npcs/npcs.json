@@ -28,5 +28,16 @@
     "role": "debug_tester",
     "services": ["faction_debug"],
     "quests_offered": ["quest_m12_reputation_fixture"]
+  },
+  "npc_merchant_valdombra": {
+    "id": "npc_merchant_valdombra",
+    "name": "Merchant",
+    "faction": "faction_valdombra_village",
+    "dialogue": "dialogue_merchant_valdombra",
+    "home_map": "map_village",
+    "role": "merchant",
+    "services": ["trade"],
+    "quests_offered": [],
+    "merchant": "merchant_valdombra_general"
   }
 }

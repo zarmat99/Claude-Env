@@ -299,5 +299,36 @@
         ]
       }
     }
+  },
+  "dialogue_merchant_valdombra": {
+    "id": "dialogue_merchant_valdombra",
+    "entry": "start",
+    "nodes": {
+      "start": {
+        "speaker": "npc_merchant_valdombra",
+        "text": "Wares for a weary traveler? Buy or sell, the choice is yours.",
+        "choices": [
+          {
+            "text": "Buy a health potion (10g).",
+            "next": null,
+            "conditions": [ { "type": "gold_at_least", "value": 10 } ],
+            "actions": [ { "type": "buy_item", "id": "item_health_potion", "count": 1, "merchant": "merchant_valdombra_general" } ]
+          },
+          {
+            "text": "Buy leather armor (20g).",
+            "next": null,
+            "conditions": [ { "type": "gold_at_least", "value": 20 } ],
+            "actions": [ { "type": "buy_item", "id": "item_leather_armor", "count": 1, "merchant": "merchant_valdombra_general" } ]
+          },
+          {
+            "text": "Sell the iron sword.",
+            "next": null,
+            "conditions": [ { "type": "has_item", "target": "item_iron_sword", "count": 1 } ],
+            "actions": [ { "type": "sell_item", "id": "item_iron_sword", "count": 1, "merchant": "merchant_valdombra_general" } ]
+          },
+          { "text": "(Leave)", "next": null }
+        ]
+      }
+    }
   }
 }

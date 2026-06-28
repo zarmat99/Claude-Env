@@ -114,8 +114,10 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Depends on**: DataRegistry, GameState, EventBus.
 - **Implementation**: player inventory, stacking, pickups, and inventory UI are live. M9 makes
   add/remove reject unknown item IDs. M13 adds `use_item`, which spends a `consumable`'s `use_effect`
-  (`heal` clamps to the equipment-derived max health) and emits `item_used`. Non-player inventory
-  containers remain future work (M13-T4).
+  (`heal` clamps to the equipment-derived max health) and emits `item_used`. M13 also extracts the
+  stacking algorithm into the shared `ItemStacking` helper and adds a reusable non-player
+  `InventoryComponent` (used by `Chest` for its contents + transfer-to-player), so the player broker
+  and containers share one stacking implementation.
 
 ## EquipmentManager (autoload) — `scripts/equipment/EquipmentManager.gd`
 - **Role**: broker `GameState.player.equipment` (slot → item_id); equip/unequip weapons/armor from
@@ -131,10 +133,12 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Role**: derive buy/sell prices from item `value` and broker gold-checked buy/sell against the
   player inventory and `GameState.player.gold`.
 - **Depends on**: DataRegistry, GameState, InventoryManager, EventBus.
-- **Implementation**: M13. `buy_price` = value × 1.0 (ceil), `sell_price` = value × 0.5 (floor);
-  `buy`/`sell` refuse when unaffordable or unowned and emit `gold_changed`. Dialogue `buy_item`/
-  `sell_item` actions and the `gold_at_least` condition let merchants be authored in JSON. Per-merchant
-  stock/pricing is future work (M13-T5).
+- **Implementation**: M13. `buy_price` = value × buy-mult (ceil), `sell_price` = value × sell-mult
+  (floor); `buy`/`sell` refuse when unaffordable or unowned and emit `gold_changed`. Passing a
+  `merchant` id applies that merchant's multipliers and limits buying to its `stock`
+  (`data/merchants/merchants.json`). Dialogue `buy_item`/`sell_item` actions (with an optional
+  `merchant`) and the `gold_at_least` condition let merchants be authored in JSON;
+  `npc_merchant_valdombra` is a live in-village example. A dedicated merchant/trade UI is M16.
 
 ## Combat — `scripts/combat/*`, components
 - **Role**: `Hitbox`/`Hurtbox` (Area2D) detect hits; `DamageData` carries amount/type/source;

@@ -115,10 +115,11 @@ holding X — it never auto-completes from an earlier conversation. Example:
 `advance_quest{quest}` · `set_quest_stage{quest,stage}` · `set_flag{flag}` ·
 `clear_flag{flag}` · `give_item{id,count}` · `take_item{id,count}` ·
 `give_reward{rewards}` · `change_reputation{faction,amount}` ·
-`set_reputation{faction,value}` · `buy_item{id,count}` · `sell_item{id,count}`. `give_reward.rewards`
-uses the same reward object shape as quest stages (`xp`, `gold`, `items`). `buy_item`/`sell_item`
-trade through `EconomyManager` (gold-checked); pair `buy_item` with a `gold_at_least` choice condition
-so the option only shows when affordable. `next: null` ends dialogue.
+`set_reputation{faction,value}` · `buy_item{id,count,merchant?}` · `sell_item{id,count,merchant?}`.
+`give_reward.rewards` uses the same reward object shape as quest stages (`xp`, `gold`, `items`).
+`buy_item`/`sell_item` trade through `EconomyManager` (gold-checked); an optional `merchant` id applies
+that merchant's multipliers and restricts buying to its stock. Pair `buy_item` with a `gold_at_least`
+choice condition so the option only shows when affordable. `next: null` ends dialogue.
 
 **Node `next` + soft-lock guard (SR3-F1)**: a node may declare a node-level `"next": "node_id"` and
 omit `choices`; the DialogueBox then shows a single **Continue** affordance that advances to `next`,
@@ -145,7 +146,8 @@ separate dialogues. `entry` remains required.
 }
 ```
 `role` is validated against the project role list (`blacksmith`, `debug_tester`, `quest_giver`,
-`villager`, `merchant`, `guard`). `services` is free-form metadata for later systems/UI.
+`villager`, `merchant`, `guard`). `services` is free-form metadata for later systems/UI. An NPC with
+`role: "merchant"` (or any NPC with a `merchant` field) must reference a valid `merchants.json` entry.
 
 ## enemies/enemies.json
 ```json
@@ -173,6 +175,23 @@ separate dialogues. `entry` remains required.
 runtime/save state. Reputation <= -50 is hostile to the player; reputation >= 25 is friendly.
 `hostile_to` / `friendly_to` express faction-to-faction relationships independent of player
 reputation.
+
+## merchants/merchants.json (M13)
+```json
+{
+  "merchant_valdombra_general": {
+    "id": "merchant_valdombra_general",
+    "name": "Valdombra General Goods",
+    "buy_multiplier": 1.0,
+    "sell_multiplier": 0.5,
+    "stock": ["item_health_potion", "item_leather_armor", "item_iron_sword"]
+  }
+}
+```
+Merchant IDs use `merchant_`. `stock` is a non-empty array of item refs the merchant sells;
+`buy_multiplier`/`sell_multiplier` are optional (default 1.0 / 0.5) and scale `EconomyManager`
+prices. An NPC links to a merchant via its `merchant` field; dialogue `buy_item`/`sell_item` actions
+pass the same `merchant` id for stock-gated, merchant-priced trade.
 
 ## skills/skills.json *(progression later)*
 ```json
