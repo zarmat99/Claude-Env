@@ -12,6 +12,7 @@ const WorldScale := preload("res://scripts/core/WorldScale.gd")
 @export var attack_range: float = WorldScale.ENEMY_ATTACK_RANGE
 
 var _data: Dictionary = {}
+var _faction_id := ""
 var _player: Node2D = null
 var _attack_cd := 0.0
 
@@ -29,6 +30,7 @@ func _ready() -> void:
         push_error("EnemyAI: unknown enemy_id '%s' on %s" % [enemy_id, name])
         queue_free()
         return
+    _faction_id = String(_data.get("faction", ""))
     var s: Dictionary = _data.get("stats", {})
     _stats.set_stats(s)
     _health.setup(int(s.get("max_health", 10)))
@@ -42,6 +44,10 @@ func _physics_process(delta: float) -> void:
         _player = get_tree().get_first_node_in_group("player")
         if _player == null:
             return
+    if not FactionManager.is_hostile_to_player(_faction_id):
+        velocity = Vector2.ZERO
+        move_and_slide()
+        return
     var to_player: Vector2 = _player.global_position - global_position
     var dist := to_player.length()
     if dist < aggro_range and dist > attack_range:

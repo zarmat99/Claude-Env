@@ -24,8 +24,9 @@ static func met(cond: Dictionary) -> bool:
         "quest_completed":
             return GameState.quests["completed"].has(String(cond.get("quest", "")))
         "faction_reputation_at_least":
-            var f: Dictionary = GameState.factions.get(String(cond.get("faction", "")), {})
-            return int(f.get("reputation", 0)) >= int(cond.get("value", 0))
+            return FactionManager.get_reputation(String(cond.get("faction", ""))) >= int(cond.get("value", 0))
+        "faction_reputation_below":
+            return FactionManager.get_reputation(String(cond.get("faction", ""))) < int(cond.get("value", 0))
         "flag_set":
             return bool(GameState.flags.get(String(cond.get("flag", "")), false))
         "flag_not_set":

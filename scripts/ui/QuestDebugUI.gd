@@ -1,6 +1,6 @@
 extends Control
-## Authoring/debug overlay for quest production. Read-only snapshot of quest, flag, and inventory
-## state so JSON questlines can be checked in-game without custom scripts.
+## Authoring/debug overlay for quest production. Read-only snapshot of quest, flag, faction, and
+## inventory state so JSON questlines can be checked in-game without custom scripts.
 
 @onready var _list: VBoxContainer = $Panel/Scroll/List
 
@@ -12,6 +12,7 @@ func _ready() -> void:
     EventBus.item_added.connect(func(_id, _count): _refresh_if_visible())
     EventBus.item_removed.connect(func(_id, _count): _refresh_if_visible())
     EventBus.gold_changed.connect(func(_total): _refresh_if_visible())
+    EventBus.faction_reputation_changed.connect(func(_id, _old_value, _new_value): _refresh_if_visible())
     EventBus.player_level_up.connect(func(_level): _refresh_if_visible())
     EventBus.dialogue_ended.connect(func(_id): _refresh_if_visible())
     EventBus.map_changed.connect(func(_id): _refresh_if_visible())
@@ -75,6 +76,26 @@ func _refresh() -> void:
         _add("none", 7, Color(0.65, 0.65, 0.65))
     for flag in flag_names:
         _add("%s = %s" % [String(flag), str(GameState.flags[flag])], 7, Color(0.78, 0.78, 0.9))
+
+    _add_section("Factions")
+    FactionManager.ensure_defaults()
+    var faction_ids := GameState.factions.keys()
+    faction_ids.sort()
+    if faction_ids.is_empty():
+        _add("none", 7, Color(0.65, 0.65, 0.65))
+    for faction_id in faction_ids:
+        var id := String(faction_id)
+        _add(
+            "%s rep %d hostile=%s friendly=%s" %
+            [
+                id,
+                FactionManager.get_reputation(id),
+                str(FactionManager.is_hostile_to_player(id)),
+                str(FactionManager.is_friendly_to_player(id)),
+            ],
+            7,
+            Color(0.75, 0.88, 1.0)
+        )
 
     _add_section("Inventory")
     var items := InventoryManager.get_items()

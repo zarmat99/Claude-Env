@@ -83,5 +83,31 @@
         "rewards": { "xp": 12, "gold": 5 }
       }
     ]
+  },
+  "quest_m12_reputation_fixture": {
+    "id": "quest_m12_reputation_fixture",
+    "title": "M12 Reputation Fixture",
+    "giver": "npc_m12_reputation_tester",
+    "stages": [
+      {
+        "stage": 0,
+        "desc": "Choose how to affect village reputation."
+      },
+      {
+        "stage": 10,
+        "desc": "Trusted by the village; claim the faction reward."
+      },
+      {
+        "stage": 100,
+        "desc": "Trusted outcome recorded.",
+        "completes": true,
+        "rewards": { "xp": 18, "gold": 6, "items": [ { "id": "item_health_potion", "count": 1 } ] }
+      },
+      {
+        "stage": 200,
+        "desc": "Hostile outcome recorded.",
+        "completes": true
+      }
+    ]
   }
 }

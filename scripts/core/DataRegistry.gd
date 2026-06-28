@@ -42,6 +42,7 @@ const CONDITION_TYPES := [
     "quest_active",
     "quest_completed",
     "faction_reputation_at_least",
+    "faction_reputation_below",
     "flag_set",
     "flag_not_set",
 ]
@@ -55,8 +56,11 @@ const DIALOGUE_ACTION_TYPES := [
     "give_item",
     "take_item",
     "give_reward",
+    "change_reputation",
+    "set_reputation",
 ]
 
+const NPC_ROLES := ["blacksmith", "debug_tester", "quest_giver", "villager", "merchant", "guard"]
 const ASSET_TILE_COLLISIONS := ["none", "solid", "water"]
 const GENERATED_ASSET_CLASSES := ["terrain_tile", "transition_tile", "object_sprite", "actor_sprite"]
 const WORLD_OBJECT_KINDS := ["chest", "door", "switch", "pickup", "enemy"]
@@ -183,6 +187,9 @@ func _validate_factions() -> void:
         var faction_id := String(raw_faction_id)
         var faction := get_faction(faction_id)
         _require_string(faction, "factions/%s" % faction_id, "name")
+        var default_reputation := int(faction.get("default_reputation", 0))
+        if default_reputation < -100 or default_reputation > 100:
+            _error("factions/%s.default_reputation must be between -100 and 100" % faction_id)
         for field in ["hostile_to", "friendly_to"]:
             var refs = faction.get(field, [])
             if not (refs is Array):
@@ -316,6 +323,16 @@ func _validate_npcs() -> void:
         _require_ref("factions", String(npc.get("faction", "")), "npcs/%s.faction" % npc_id)
         _require_ref("dialogues", String(npc.get("dialogue", "")), "npcs/%s.dialogue" % npc_id)
         _require_ref("maps", String(npc.get("home_map", "")), "npcs/%s.home_map" % npc_id)
+        var role := String(npc.get("role", ""))
+        if not NPC_ROLES.has(role):
+            _error("npcs/%s.role has unsupported value '%s'" % [npc_id, role])
+        _validate_string_array(npc.get("services", []), "npcs/%s.services" % npc_id)
+        var quests_offered = npc.get("quests_offered", [])
+        if not (quests_offered is Array):
+            _error("npcs/%s.quests_offered must be an array" % npc_id)
+        else:
+            for index in range(quests_offered.size()):
+                _require_ref("quests", String(quests_offered[index]), "npcs/%s.quests_offered[%d]" % [npc_id, index])
 
 func _validate_enemies() -> void:
     for raw_enemy_id in all("enemies").keys():
@@ -673,8 +690,10 @@ func _validate_condition(condition, path: String) -> void:
                 _error("%s.stage references missing stage %d in %s" % [path, stage, quest_id])
         "quest_not_started", "quest_active", "quest_completed":
             _require_ref("quests", String(condition.get("quest", "")), "%s.quest" % path)
-        "faction_reputation_at_least":
+        "faction_reputation_at_least", "faction_reputation_below":
             _require_ref("factions", String(condition.get("faction", "")), "%s.faction" % path)
+            if not condition.has("value"):
+                _error("%s.value is required" % path)
         "flag_set", "flag_not_set":
             _require_string(condition, path, "flag")
 
@@ -712,6 +731,14 @@ func _validate_actions(actions, path: String) -> void:
                     _error("%s.count must be positive" % action_path)
             "give_reward":
                 _validate_rewards(action.get("rewards", null), "%s.rewards" % action_path)
+            "change_reputation":
+                _require_ref("factions", String(action.get("faction", "")), "%s.faction" % action_path)
+                if not action.has("amount"):
+                    _error("%s.amount is required" % action_path)
+            "set_reputation":
+                _require_ref("factions", String(action.get("faction", "")), "%s.faction" % action_path)
+                if not action.has("value"):
+                    _error("%s.value is required" % action_path)
 
 func _validate_rewards(rewards, path: String) -> void:
     if not (rewards is Dictionary):
@@ -767,6 +794,14 @@ func _validate_object_loot(loot_items, path: String) -> void:
         _require_ref("items", String(loot.get("id", "")), "%s.id" % item_path)
         if int(loot.get("count", 1)) <= 0:
             _error("%s.count must be positive" % item_path)
+
+func _validate_string_array(value, path: String) -> void:
+    if not (value is Array):
+        _error("%s must be an array" % path)
+        return
+    for index in range(value.size()):
+        if String(value[index]) == "":
+            _error("%s[%d] must be a non-empty string" % [path, index])
 
 func _validate_vector2_dict(value, path: String) -> void:
     if not (value is Dictionary):

@@ -29,7 +29,14 @@ func reset_to_new_game() -> void:
         "equipment": {},
     }
     quests = {"active": {}, "completed": []}
-    factions = {}
+    factions = _default_factions()
     flags = {}
     world_objects = {}
     kills = {}
+
+func _default_factions() -> Dictionary:
+    var out: Dictionary = {}
+    for raw_faction_id in DataRegistry.all("factions").keys():
+        var faction_id := String(raw_faction_id)
+        out[faction_id] = {"reputation": int(DataRegistry.get_faction(faction_id).get("default_reputation", 0))}
+    return out

@@ -132,6 +132,9 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
   basic NPC role metadata, foundations for later routines.
 - **Exit criteria**: faction reputation can change through gameplay and affect dialogue, quest
   availability, and actor hostility without hardcoded special cases.
+- **Status 2026-06-28**: complete and verified. `FactionManager`, reputation dialogue actions/
+  conditions, validated NPC role metadata, in-game Reputation Tester fixture, faction debug
+  visibility, and M12 headless regression are live; `.\test.bat` passes and M12 is committed/pushed.
 
 ## SR3 — Narrative scalability review
 - **Goal**: verify that narrative systems can support real story production.

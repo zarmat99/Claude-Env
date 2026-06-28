@@ -62,9 +62,10 @@ in their milestone.
 `has_item{target,count}` · `talked_to{target}` · `killed_enemy{target,count?}` ·
 `entered_area{target}` · `quest_stage_is{quest,stage}` · `quest_not_started{quest}` ·
 `quest_active{quest}` · `quest_completed{quest}` ·
-`faction_reputation_at_least{faction,value}` *(later)* · `flag_set{flag}` ·
-`flag_not_set{flag}`. Conditions are pure predicates evaluated against `GameState`. Branching
-authoring conventions live in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
+`faction_reputation_at_least{faction,value}` · `faction_reputation_below{faction,value}` ·
+`flag_set{flag}` · `flag_not_set{flag}`. Conditions are pure predicates evaluated against
+`GameState`/manager state. Branching authoring conventions live in
+`docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
 
 ## dialogues/dialogues.json (conditional node graph)
 ```json
@@ -96,11 +97,12 @@ authoring conventions live in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
   }
 }
 ```
-**Implemented action types (M11 validator accepts these)**: `start_quest{quest}` ·
+**Implemented action types (M11/M12 validator accepts these)**: `start_quest{quest}` ·
 `advance_quest{quest}` · `set_quest_stage{quest,stage}` · `set_flag{flag}` ·
 `clear_flag{flag}` · `give_item{id,count}` · `take_item{id,count}` ·
-`give_reward{rewards}`. `give_reward.rewards` uses the same reward object shape as quest stages
-(`xp`, `gold`, `items`). `next: null` ends dialogue.
+`give_reward{rewards}` · `change_reputation{faction,amount}` ·
+`set_reputation{faction,value}`. `give_reward.rewards` uses the same reward object shape as quest
+stages (`xp`, `gold`, `items`). `next: null` ends dialogue.
 
 ## npcs/npcs.json
 ```json
@@ -108,10 +110,13 @@ authoring conventions live in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
   "npc_blacksmith_valdombra": {
     "id": "npc_blacksmith_valdombra", "name": "Blacksmith", "faction": "faction_valdombra_village",
     "dialogue": "dialogue_blacksmith_intro", "sprite": "res://assets/sprites/placeholder_npc.png",
-    "home_map": "map_village", "quests_offered": ["quest_first_dungeon"]
+    "home_map": "map_village", "role": "blacksmith", "services": ["forge"],
+    "quests_offered": ["quest_first_dungeon"]
   }
 }
 ```
+`role` is validated against the project role list (`blacksmith`, `debug_tester`, `quest_giver`,
+`villager`, `merchant`, `guard`). `services` is free-form metadata for later systems/UI.
 
 ## enemies/enemies.json
 ```json
@@ -126,7 +131,7 @@ authoring conventions live in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
 }
 ```
 
-## factions/factions.json *(reputation later)*
+## factions/factions.json
 ```json
 {
   "faction_valdombra_village": { "id": "faction_valdombra_village", "name": "Valdombra Village",
@@ -135,6 +140,10 @@ authoring conventions live in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`.
     "default_reputation": -100, "hostile_to": ["faction_valdombra_village"], "friendly_to": [] }
 }
 ```
+`default_reputation` is validated from -100 to 100 and copied into `GameState.factions` for mutable
+runtime/save state. Reputation <= -50 is hostile to the player; reputation >= 25 is friendly.
+`hostile_to` / `friendly_to` express faction-to-faction relationships independent of player
+reputation.
 
 ## skills/skills.json *(progression later)*
 ```json

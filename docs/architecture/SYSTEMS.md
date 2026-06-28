@@ -20,7 +20,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   - World: `map_changed(map_id)` · `world_object_state_changed(persistent_id, state)`
   - Progression: `player_level_up(new_level)` · `xp_gained(amount)`
   - Economy: `gold_changed(new_total)`
-- **Implementation**: live; signals used by the M1-M9 systems.
+  - Factions: `faction_reputation_changed(faction_id, old_value, new_value)`
+- **Implementation**: live; signals used by the M1-M12 systems.
 
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
@@ -33,7 +34,9 @@ current codebase, so it should avoid "current milestone" language that can go st
   declared spawn points, transition targets, loot/reward item refs, and duplicate `persistent_id`s.
   M10 extends this to asset sets, generated atlas dimensions, tile metadata, world-object
   definitions, authored map dimensions/layers/spawns/transitions/objects, switch targets, and
-  asset-tile references. Lookups push errors for missing IDs instead of quietly accepting them.
+  asset-tile references. M12 adds faction reputation conditions/actions plus NPC role/service/
+  quest-offer metadata validation. Lookups push errors for missing IDs instead of quietly
+  accepting them.
 
 ## GameState (autoload) — `scripts/core/GameState.gd`
 - **Role**: single runtime source of truth: `current_map`, player snapshot (position, stats,
@@ -42,8 +45,9 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Depends on**: DataRegistry (defaults). Read/written by managers; serialized by SaveManager.
 - **Implementation**: holds map, player, quest, inventory, flags, kills, and world object state.
   M9 dynamic pickups use `world_objects[persistent_id]` entries with `state`, `kind`, `map_id`,
-  `item_id`, `count`, and `position`. Save/load uses GameState as the snapshot boundary;
-  migrations are future work.
+  `item_id`, `count`, and `position`. M12 faction defaults are copied from data into
+  `factions[faction_id].reputation`. Save/load uses GameState as the snapshot boundary; migrations
+  are future work.
 
 ## SceneLoader (autoload) — `scripts/core/SceneLoader.gd`
 - **Role**: load/unload map scenes into `Main/WorldRoot`; place the player at a named
@@ -59,8 +63,9 @@ current codebase, so it should avoid "current milestone" language that can go st
   (apply player, quests, flags, and per-`persistent_id` world-object state on load).
 - **Depends on**: GameState (everything persistable flows through it). Schema in DATA_SCHEMAS.
 - **Implementation**: M7 save/load is live; M9 moves debug save/load keys behind input actions
-  (`save_game`, `load_game`). Load restores the snapshot without emitting `map_changed`, so quest
-  stages do not advance merely because a saved map is reloaded.
+  (`save_game`, `load_game`). M12 ensures old saves get missing faction defaults on load. Load
+  restores the snapshot without emitting `map_changed`, so quest stages do not advance merely
+  because a saved map is reloaded.
 
 ## IdUtils (static class) — `scripts/core/IdUtils.gd`
 - **Role**: helpers for IDs (validation, prefix checks, persistent-id formatting). Not an autoload.
@@ -89,13 +94,15 @@ current codebase, so it should avoid "current milestone" language that can go st
 
 ## DialogueManager (autoload) — `scripts/dialogue/*`
 - **Role**: run a dialogue graph; evaluate node/choice `conditions`; execute `actions`
-  (start/advance quest, give/take item, reward grants, set/clear flag); drive `DialogueBox`.
+  (start/advance quest, give/take item, reward grants, set/clear flag, reputation changes); drive
+  `DialogueBox`.
   Model: `DialogueData`.
 - **Depends on**: DataRegistry, GameState, EventBus, QuestManager/InventoryManager (for actions).
 - **Implementation**: dialogue graph, conditional choices, pause handling, and the M11 production
   action set (`set_flag`, `clear_flag`, `start_quest`, `advance_quest`, `set_quest_stage`,
-  `give_item`, `take_item`, `give_reward`) are live. Branching authoring conventions are documented
-  in `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`; validation rejects unsupported action types.
+  `give_item`, `take_item`, `give_reward`) are live. M12 adds `change_reputation` and
+  `set_reputation`. Branching authoring conventions are documented in
+  `docs/architecture/QUEST_DIALOGUE_AUTHORING.md`; validation rejects unsupported action types.
 
 ## InventoryManager (autoload) + InventoryComponent — `scripts/inventory/*`, `scripts/components/InventoryComponent.gd`
 - **Role**: add/remove/query items, stacking, weight (later); `InventoryComponent` is the
@@ -122,11 +129,15 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Implementation**: M8 done; quest rewards and enemy kills grant XP, level thresholds increase
   max health and damage, HUD shows level/XP.
 
-## Factions & reputation — `FactionComponent`, factions data
-- **Role**: actor faction membership; hostility checks; reputation values (later) influencing
-  dialogue/combat/economy.
-- **Depends on**: DataRegistry, GameState.
-- **Implementation**: designed for post-M8.
+## Factions & reputation — `scripts/factions/FactionManager.gd`, factions data
+- **Role**: actor faction membership, mutable player reputation, friendly/hostile thresholds, and
+  faction-to-faction relationship checks.
+- **Depends on**: DataRegistry, GameState, EventBus.
+- **Implementation**: M12 is live. `FactionManager` initializes default reputation from
+  `factions.json`, clamps changes to -100..100, emits `faction_reputation_changed`, exposes
+  `is_hostile_to_player`, `is_friendly_to_player`, `are_hostile`, and `are_friendly`, and stores
+  mutable state in `GameState.factions` for save/load. Dialogue can change reputation; conditions
+  can gate on reputation; `EnemyAI` checks faction hostility before chasing/attacking.
 
 ## UI — `scripts/ui/*`, `scenes/ui/*`
 - **Role**: `HUD` (health/level/active quest), `DialogueBox` (dialogue runner view),
@@ -135,7 +146,8 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Depends on**: EventBus + managers (read-only).
 - **Implementation**: HUD (M1), DialogueBox (M2), QuestJournalUI (M3), InventoryUI (M4), and the
   M11 QuestDebugUI authoring overlay are live. M9 routes journal/inventory toggles through input
-  actions; M11 adds `quest_debug_toggle` for quest authoring state inspection.
+  actions; M11 adds `quest_debug_toggle` for quest authoring state inspection; M12 extends the
+  overlay with faction reputation/friendly/hostile state.
 
 ## Testing / checks - `tests/headless/*`
 - **Role**: persistent regression coverage for milestone-critical flows.
@@ -144,4 +156,6 @@ current codebase, so it should avoid "current milestone" language that can go st
   and dynamic pickup persistence. M10 adds `M10WorldAuthoringRunner`, and `test.bat` now runs both
   M9 and M10. The M10 runner validates proxy atlas import, authored map generation, object
   placement, chest loot persistence, and switch/door persistence across map reloads. M11 adds
-  `M11DialogueActionsRunner` for production dialogue actions and branching quest fixtures.
+  `M11DialogueActionsRunner` for production dialogue actions and branching quest fixtures. M12
+  adds `M12FactionReputationRunner` for faction defaults, reputation actions/gates, hostile/friendly
+  state, and save/load persistence.

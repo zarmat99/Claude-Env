@@ -10,8 +10,9 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **M10R asset-pipeline remediation, SR2 map review, and M11 quest/dialogue production are
-  complete. M12 is active next.** M0-M11, M10R, SR1, and SR2 are complete.
+- **M12 NPC/faction/reputation is complete and verified: `.\test.bat` passes (Godot import + M9/
+  M10/M10R/M11/M12 headless runners) and M12 is committed and pushed on `master`.** M0-M12, M10R,
+  SR1, and SR2 are complete; SR3 is the next milestone.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
   entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
@@ -19,8 +20,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - **M10 failed probe removed from active content**: the bad `map_probe_ruins` map, failed proxy
   atlas, and proxy asset/world-object data are no longer active. The reusable code (`AuthoredMap`,
   chest/door/switch objects, validation) remains for M10R.
-- Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `InventoryManager`, `QuestManager`,
-  `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
+- Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `FactionManager`, `InventoryManager`,
+  `QuestManager`, `DialogueManager`, `SceneLoader`, `SaveManager`, `ProgressionManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
   map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
   `world_objects`. Pickups stay collected, enemies stay dead, dynamic drops respawn while active,
@@ -51,18 +52,28 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   rewards, and persistent consequence flags.
 - M11-T4 added `QuestDebugUI`, toggled by `quest_debug_toggle` / F10. It shows map, LV/XP/gold,
   active quest stage IDs/descriptions, completed quests, flags, and inventory for authoring checks.
-- Verified with Godot headless import and `.\test.bat` (runs M9 + M10 + M10R asset preview + M11
-  dialogue action/branching regression).
-- On `master`, pushed.
+- M12 adds `FactionManager` and live faction reputation. Dialogue can call `change_reputation` and
+  `set_reputation`; conditions can use `faction_reputation_at_least` and
+  `faction_reputation_below`; `EnemyAI` checks faction hostility before chasing/attacking. NPC data
+  now validates `role`, `services`, and `quests_offered`.
+- The M12 Reputation Tester is reachable in game through the `Reputation Tester` NPC placed in the
+  Village near the Branch Tester. It is a debug probe for trusted/hostile reputation outcomes, not
+  story content.
+- F10 Quest Debug now also shows faction reputation, hostile, and friendly state.
+- M12 verification passed: JSON parses, `git diff --check` is clean, and `.\test.bat` runs green
+  (Godot import + M9/M10/M10R/M11/M12 headless runners all OK, exit 0).
+- On `master`, M12 is committed and pushed.
 
 ## Last thing done
-Completed all of M11. The project now has production dialogue actions, branching quest conventions,
-a multi-stage branch regression fixture, an in-game Branch Tester probe, and the F10 Quest Debug
-overlay for authoring verification.
+Verified M12 end-to-end with `.\test.bat` (all headless runners green, exit 0) and committed + pushed
+the full M12 implementation: data-backed faction reputation, reputation-driven dialogue/quest
+outcomes, validated NPC role metadata, an in-game Reputation Tester probe, faction state in the debug
+overlay, and M12 headless regression coverage in `test.bat`.
 
 ## Next thing to do
-Start **M12-T1 - Faction reputation state and actions**: add data-backed faction reputation changes
-and authorable reputation effects/gates without hardcoded story logic.
+Start **SR3-T1 - Narrative scalability review**: confirm the quest/dialogue/NPC/faction/debug
+systems can support real story production (≈10 NPCs, 5 branching quests, 2 factions) without core
+rewrites, before moving into M13 economy/equipment.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -90,7 +101,7 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 + M10R + M11 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 regression suites
 ```
 Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
 attack = left mouse | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.

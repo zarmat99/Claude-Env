@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/Village.gd" id="1_village"]
 [ext_resource type="PackedScene" path="res://scenes/npcs/Blacksmith.tscn" id="2_smith"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/world/AreaTransition.gd" id="6_tr"]
 [ext_resource type="Script" path="res://scripts/world/GeneratedPropSprite.gd" id="7_prop"]
 [ext_resource type="PackedScene" path="res://scenes/npcs/BranchTester.tscn" id="8_branch"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/ReputationTester.tscn" id="9_reputation"]
 
 [node name="Village" type="Node2D"]
 script = ExtResource("1_village")
@@ -50,6 +51,9 @@ position = Vector2(400, 240)
 
 [node name="BranchTester" parent="." instance=ExtResource("8_branch")]
 position = Vector2(560, 340)
+
+[node name="ReputationTester" parent="." instance=ExtResource("9_reputation")]
+position = Vector2(650, 340)
 
 [node name="PotionA" parent="." instance=ExtResource("3_pick")]
 position = Vector2(440, 300)

@@ -103,6 +103,7 @@ func _apply_snapshot(snapshot: Dictionary) -> void:
         "completed": _normalize_string_array(quests.get("completed", [])),
     }
     GameState.factions = _duplicate_dict(snapshot.get("factions", {}))
+    FactionManager.ensure_defaults()
     GameState.flags = _normalize_bool_dict(snapshot.get("flags", {}))
     GameState.world_objects = _normalize_world_objects(snapshot.get("world_objects", {}))
     GameState.kills = _normalize_int_dict(snapshot.get("kills", {}))

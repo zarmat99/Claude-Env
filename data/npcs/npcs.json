@@ -4,13 +4,29 @@
     "name": "Blacksmith",
     "faction": "faction_valdombra_village",
     "dialogue": "dialogue_blacksmith_intro",
-    "home_map": "map_village"
+    "home_map": "map_village",
+    "role": "blacksmith",
+    "services": ["forge"],
+    "quests_offered": ["quest_first_dungeon"]
   },
   "npc_m11_branch_tester": {
     "id": "npc_m11_branch_tester",
     "name": "Branch Tester",
     "faction": "faction_valdombra_village",
     "dialogue": "dialogue_m11_regression_fixture",
-    "home_map": "map_village"
+    "home_map": "map_village",
+    "role": "debug_tester",
+    "services": ["quest_debug"],
+    "quests_offered": ["quest_m11_regression_fixture"]
+  },
+  "npc_m12_reputation_tester": {
+    "id": "npc_m12_reputation_tester",
+    "name": "Reputation Tester",
+    "faction": "faction_valdombra_village",
+    "dialogue": "dialogue_m12_reputation_fixture",
+    "home_map": "map_village",
+    "role": "debug_tester",
+    "services": ["faction_debug"],
+    "quests_offered": ["quest_m12_reputation_fixture"]
   }
 }

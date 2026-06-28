@@ -8,8 +8,7 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- **M12-T1 - Faction reputation state and actions** - in_progress: add data-backed faction
-  reputation state changes and authorable reputation effects/gates without hardcoded story logic.
+- (none)
 
 ## Backlog
 
@@ -23,18 +22,39 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none)
 
 ### M12 - NPCs, factions & reputation
-- **M12-T2 - Reputation-gated dialogue/quest fixtures** - backlog: prove reputation can alter
-  dialogue availability and quest outcomes through data.
-- **M12-T3 - NPC role metadata and debug coverage** - backlog: define NPC role fields and add
-  enough validation/debug visibility for production NPC authoring.
-- **M12-T4 - Hostility/friendliness foundations** - backlog: connect faction relationships to actor
-  hostility decisions without special-case map scripts.
+- (none)
+
+### SR3 - Narrative scalability review
+- **SR3-T1 - Narrative scalability review** - backlog: review whether the current quest, dialogue,
+  NPC, faction, and debug tooling can support real story production without core rewrites.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M12-V1 - Verify, commit, and push M12** - M12 - files: `test.bat`,
+  `tests/headless/M12FactionReputationRunner.{gd,tscn}` - **done** (2026-06-28): `.\test.bat` passes
+  (Godot import + M9/M10/M10R/M11/M12 headless runners, exit 0); committed and pushed the full M12
+  implementation on `master`.
+- **M12-T4 - Hostility/friendliness foundations** - M12 - files:
+  `scripts/factions/FactionManager.gd`, `scripts/enemies/EnemyAI.gd`, `data/factions/factions.json`,
+  `tests/headless/M12FactionReputationRunner.gd` - **done** (2026-06-28): connected faction
+  relationships and player reputation to actor hostility decisions without map-specific scripts.
+- **M12-T3 - NPC role metadata and debug coverage** - M12 - files:
+  `data/npcs/npcs.json`, `scripts/core/DataRegistry.gd`, `scripts/ui/QuestDebugUI.gd` - **done**
+  (2026-06-28): NPCs now declare validated `role`, `services`, and `quests_offered`; the F10 debug
+  overlay shows faction reputation/friendly/hostile state.
+- **M12-T2 - Reputation-gated dialogue/quest fixtures** - M12 - files:
+  `data/{dialogues,quests,npcs}.json`, `scenes/npcs/ReputationTester.tscn`,
+  `scenes/maps/Village.tscn`, `tests/headless/M12FactionReputationRunner.{gd,tscn}` - **done**
+  (2026-06-28): added the in-game Reputation Tester and a JSON-only fixture where reputation gates
+  dialogue availability, quest outcomes, rewards, and hostile consequences.
+- **M12-T1 - Faction reputation state and actions** - M12 - files:
+  `scripts/factions/FactionManager.gd`, `project.godot`, `scripts/core/{EventBus,GameState,SaveManager,Conditions,DataRegistry}.gd`,
+  `scripts/dialogue/DialogueManager.gd` - **done** (2026-06-28): added data-backed faction
+  reputation state, save/load defaults, `change_reputation`/`set_reputation` actions, and
+  reputation gate conditions.
 - **M11-T4 - Journal/debug authoring tools** - M11 - files:
   `scripts/ui/QuestDebugUI.gd`, `scenes/ui/QuestDebugUI.tscn`, `scenes/main/Main.gd`,
   `project.godot`, `tests/headless/M9RegressionRunner.gd` - **done** (2026-06-28): added an

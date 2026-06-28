@@ -32,3 +32,6 @@ signal world_object_state_changed(persistent_id: String, state: String)
 signal player_level_up(new_level: int)
 signal xp_gained(amount: int)
 signal gold_changed(new_total: int)
+
+# --- Factions ---
+signal faction_reputation_changed(faction_id: String, old_value: int, new_value: int)

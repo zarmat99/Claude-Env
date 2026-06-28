@@ -178,5 +178,57 @@
         ]
       }
     }
+  },
+  "dialogue_m12_reputation_fixture": {
+    "id": "dialogue_m12_reputation_fixture",
+    "entry": "start",
+    "nodes": {
+      "start": {
+        "speaker": "npc_m12_reputation_tester",
+        "text": "Faction reputation test ready.",
+        "actions": [ { "type": "start_quest", "quest": "quest_m12_reputation_fixture" } ],
+        "choices": [
+          {
+            "text": "Help the village.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m12_reputation_fixture", "stage": 0 },
+              { "type": "flag_not_set", "flag": "quest_m12_reputation_fixture_outcome_hostile" }
+            ],
+            "actions": [
+              { "type": "change_reputation", "faction": "faction_valdombra_village", "amount": 25 },
+              { "type": "set_flag", "flag": "quest_m12_reputation_fixture_decision_helped" },
+              { "type": "set_quest_stage", "quest": "quest_m12_reputation_fixture", "stage": 10 }
+            ]
+          },
+          {
+            "text": "Claim trusted reward.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m12_reputation_fixture", "stage": 10 },
+              { "type": "faction_reputation_at_least", "faction": "faction_valdombra_village", "value": 25 }
+            ],
+            "actions": [
+              { "type": "set_flag", "flag": "quest_m12_reputation_fixture_outcome_trusted" },
+              { "type": "set_quest_stage", "quest": "quest_m12_reputation_fixture", "stage": 100 }
+            ]
+          },
+          {
+            "text": "Threaten the village.",
+            "next": null,
+            "conditions": [
+              { "type": "quest_stage_is", "quest": "quest_m12_reputation_fixture", "stage": 0 },
+              { "type": "faction_reputation_below", "faction": "faction_valdombra_village", "value": 25 }
+            ],
+            "actions": [
+              { "type": "change_reputation", "faction": "faction_valdombra_village", "amount": -80 },
+              { "type": "set_flag", "flag": "quest_m12_reputation_fixture_outcome_hostile" },
+              { "type": "set_quest_stage", "quest": "quest_m12_reputation_fixture", "stage": 200 }
+            ]
+          },
+          { "text": "(Leave)", "next": null }
+        ]
+      }
+    }
   }
 }

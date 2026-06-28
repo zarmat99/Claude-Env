@@ -4,6 +4,45 @@
 
 ---
 
+## 2026-06-28 - Session 024 - Verify and ship M12
+
+- **Goal**: run the full Godot regression suite for M12, then commit/push the completed
+  implementation and update the project docs.
+- **Verification**: `.\test.bat` passed end-to-end — Godot headless import plus the M9, M10, M10R,
+  M11, and M12 headless runners all reported OK (exit code 0). The M10R preview runner regenerated
+  its review screenshot deterministically (no tracked-file diff).
+- **Ship**: committed the full M12 change set (`FactionManager`, reputation actions/conditions, NPC
+  role metadata, `ReputationTester` fixture, faction-aware `EnemyAI`, faction debug overlay, M12
+  runner, doc updates) and pushed `master`.
+- **Docs**: flipped M12 from "implemented, verification pending" to "complete and verified" across
+  `HANDOFF`, `PROJECT_MEMORY`, `TASKS`, and `ROADMAP`; moved `M12-V1` to Done.
+- **Next**: SR3 - Narrative scalability review.
+
+---
+
+## 2026-06-28 - Session 023 - Complete M12 faction reputation
+
+- **Goal**: complete the full M12 NPC/factions/reputation milestone before moving to the next
+  review gate.
+- **Implementation**: added `FactionManager` as the data-backed broker for `GameState.factions`,
+  default reputation, clamped reputation changes, friendly/hostile thresholds, and faction
+  relationship checks. Dialogue actions now support `change_reputation` and `set_reputation`;
+  conditions support `faction_reputation_at_least` and `faction_reputation_below`.
+- **Authoring coverage**: NPC data now carries validated `role`, `services`, and `quests_offered`
+  metadata. The in-game `Reputation Tester` NPC in the Village drives a reputation fixture that can
+  produce trusted or hostile outcomes through JSON only.
+- **Runtime effects**: enemy AI now respects faction reputation before chasing/attacking, old saves
+  get missing faction defaults on load, and F10 Quest Debug shows faction reputation/friendly/
+  hostile state.
+- **Validation**: added `M12FactionReputationRunner` to test faction defaults, dialogue-driven
+  reputation changes, quest gates/outcomes, save/load persistence, and hostility state. Static
+  checks passed (`ConvertFrom-Json`, `git diff --check`, stale-doc scan). Full `.\test.bat` could
+  not run because environment escalation hit the usage limit.
+- **Milestone**: M12 implementation is complete; full Godot regression plus commit/push are still
+  pending. Next milestone after that is SR3 - Narrative scalability review.
+
+---
+
 ## 2026-06-28 - Session 022 - Complete M11 quest pipeline
 
 - **Goal**: complete the entire M11 quest/dialogue production milestone, not just the next task.
