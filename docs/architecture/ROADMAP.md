@@ -143,6 +143,10 @@ Current progress and next action live in `docs/ai_memory/HANDOFF.md`, `TASKS.md`
   - Are conditions/actions expressive enough for the first real story act?
   - Are quest/debug tools adequate for authoring and regression checks?
 - **Exit criteria**: narrative blockers fixed before economy/equipment/dungeon complexity grows.
+- **Status 2026-06-28**: complete. `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md` — verdict
+  proceed to M13, no blocking rewrite. Systems are data-driven with strong boot validation and
+  adequate debug/regression tooling. Promoted SR3-F1 (eliminate dialogue soft-lock, near-term) and
+  SR3-F2/F3 (multi-condition quest objectives, state-reactive dialogue) before M18.
 
 ## M13 — Items, equipment, economy & merchants
 - **Goal**: turn loot and inventory into a scalable RPG item/economy system.

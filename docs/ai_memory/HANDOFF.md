@@ -10,9 +10,14 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **M12 NPC/faction/reputation is complete and verified: `.\test.bat` passes (Godot import + M9/
-  M10/M10R/M11/M12 headless runners) and M12 is committed and pushed on `master`.** M0-M12, M10R,
-  SR1, and SR2 are complete; SR3 is the next milestone.
+- **SR3 - Narrative scalability review is complete: verdict proceed to M13, no blocking rewrite**
+  (`docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`). M0-M12, M10R, SR1, SR2, and SR3 are
+  complete; **M13 (items/equipment/economy/merchants) is the next milestone**. M12 was verified
+  (`.\test.bat` green: Godot import + M9/M10/M10R/M11/M12 runners) and is committed and pushed on
+  `master`.
+- **SR3 follow-ups (tracked in `TASKS.md`)**: SR3-F1 eliminate the dialogue soft-lock (a node with
+  zero visible choices leaves the paused game with no exit) — near-term hardening; SR3-F2
+  multi-condition quest objectives and SR3-F3 state-reactive dialogue — before M18. None block M13.
 - **Full playable slice**: 3 connected maps (Village / Forest / Cave) joined by walk-on transitions.
   Talk to the Blacksmith -> accept `quest_first_dungeon` -> travel to the cave (quest advances on
   entering) -> kill/dodge the slime, grab the ancient iron fragment -> return and talk -> quest
@@ -65,15 +70,17 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, M12 is committed and pushed.
 
 ## Last thing done
-Verified M12 end-to-end with `.\test.bat` (all headless runners green, exit 0) and committed + pushed
-the full M12 implementation: data-backed faction reputation, reputation-driven dialogue/quest
-outcomes, validated NPC role metadata, an in-game Reputation Tester probe, faction state in the debug
-overlay, and M12 headless regression coverage in `test.bat`.
+Completed **SR3 - Narrative scalability review** (`docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`):
+verdict proceed to M13, no blocking rewrite. Confirmed the narrative systems are data-driven with
+strong boot validation and adequate debug/regression tooling. Found one near-term safety gap (dialogue
+soft-lock on a choice-less node, SR3-F1) and two pre-M18 expressiveness follow-ups (multi-condition
+quest objectives SR3-F2, state-reactive dialogue SR3-F3). No engine code changed (review-only, per
+SR1/SR2 precedent); findings promoted to `TASKS.md`.
 
 ## Next thing to do
-Start **SR3-T1 - Narrative scalability review**: confirm the quest/dialogue/NPC/faction/debug
-systems can support real story production (≈10 NPCs, 5 branching quests, 2 factions) without core
-rewrites, before moving into M13 economy/equipment.
+Start **M13 - items, equipment, economy & merchants** (see `ROADMAP.md`): equipment slots/stats,
+merchants, containers, prices, sell/buy, loot tables, item-use effects. Before authoring real
+branching dialogue, do **SR3-F1** (dialogue soft-lock guard); schedule **SR3-F2/F3** before M18.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live

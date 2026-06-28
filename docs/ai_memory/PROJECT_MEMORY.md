@@ -49,8 +49,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **M12 is complete and verified (`.\test.bat` passes; committed and pushed on `master`).** M0-M12,
-  M10R, SR1, and SR2 are complete; SR3 is the next milestone.
+- **SR3 - Narrative scalability review is complete (verdict: proceed to M13, no blocking rewrite;
+  `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`).** M0-M12, M10R, SR1, SR2, and SR3 are
+  complete; M13 (items/equipment/economy) is next. M12 was verified (`.\test.bat` green) and is
+  committed/pushed on `master`.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
   `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
@@ -132,10 +134,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   journal/inventory/attack/save/load/debug.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
-- M8 Progression, SR1 Core scalability review, M9 Data & tooling hardening, M10 reusable
-  world-authoring systems, M10R governed asset generation/approval, SR2 map scalability review, M11
-  quest/dialogue production pipeline are complete. M12 NPC/faction/reputation implementation is
-  complete but pending full Godot verification and commit/push before SR3.
+- M8 Progression, SR1 core review, M9 data/tooling hardening, M10 world authoring, M10R governed
+  assets, SR2 map review, M11 quest/dialogue pipeline, M12 NPCs/factions/reputation, and SR3
+  narrative scalability review are all complete. M13 items/equipment/economy/merchants is next.
 - M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
   dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
@@ -180,24 +181,27 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**M12 - NPCs, factions & reputation: COMPLETE and verified.** M12 has data-backed faction
-reputation, reputation actions/conditions, validated NPC role metadata, faction-aware enemy
-hostility, an in-game Reputation Tester fixture, and M12 headless regression coverage in `test.bat`.
-`.\test.bat` passes and M12 is committed and pushed. SR3 is the next milestone.
+**SR3 - Narrative scalability review: COMPLETE.** Verdict: proceed to M13, no blocking rewrite
+(`docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`). The quest/dialogue/NPC/faction systems are
+data-driven with strong boot validation and adequate debug/regression tooling. Promoted follow-ups:
+SR3-F1 (dialogue soft-lock guard, near-term) and SR3-F2/F3 (multi-condition quest objectives,
+state-reactive dialogue) before M18. M0-M12 plus SR1/SR2/SR3 are complete; **M13
+(items/equipment/economy/merchants) is the next milestone**.
 
 ## 12. Recommended next step
-Proceed with **SR3-T1 - Narrative scalability review** (confirm narrative/faction systems scale to
-real story production) before moving into M13 economy/equipment.
+Proceed with **M13 - items, equipment, economy & merchants**. Before authoring real branching
+dialogue, address **SR3-F1** (dialogue soft-lock guard); schedule **SR3-F2/F3** before M18.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M0-M12, M10R, SR1, and SR2 are complete and verified** (`.\test.bat`
-passes; M12 committed and pushed). Village/Forest/Cave remain the playable dev slice and now show
+GDScript, designed to scale. **M0-M12, M10R, SR1, SR2, and SR3 are complete** (`.\test.bat` passes;
+M12 committed and pushed; SR3 verdict = proceed to M13). Village/Forest/Cave remain the playable dev
+slice and now show
 approved generated terrain/prop candidates. Save/load, progression, quest flow, dynamic pickups,
 quarantine checks, world-object states, M10R asset preview, M11 dialogue actions/branching, and M12
 faction reputation are covered by `.\test.bat` once runnable. Quest/faction authoring can be
-inspected in game with the F10 Quest Debug overlay. The next step is **SR3-T1 narrative scalability
-review**.
+inspected in game with the F10 Quest Debug overlay. The next step is **M13 - items/equipment/economy/
+merchants** (do SR3-F1 dialogue soft-lock guard before authoring real branching dialogue).
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

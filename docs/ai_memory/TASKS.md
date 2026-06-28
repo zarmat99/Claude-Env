@@ -24,15 +24,26 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ### M12 - NPCs, factions & reputation
 - (none)
 
-### SR3 - Narrative scalability review
-- **SR3-T1 - Narrative scalability review** - backlog: review whether the current quest, dialogue,
-  NPC, faction, and debug tooling can support real story production without core rewrites.
+### SR3 follow-ups - narrative hardening (from SR3 review)
+- **SR3-F1 - Eliminate dialogue soft-lock** - backlog (recommended near-term, before real branching
+  dialogue): auto-exit and/or a guaranteed "Leave" affordance when a dialogue node has zero visible
+  choices, plus validation for an unconditional fallback choice. See
+  `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`.
+- **SR3-F2 - Multi-condition quest objectives** - backlog (before M18): allow `advance_on` to be an
+  AND array (and optional `any_of` for OR) so one stage can require several objectives at once.
+- **SR3-F3 - State-reactive dialogue** - backlog (before M18): per-node conditions / state-selected
+  entry node or NPC dialogue selection so NPCs can vary greetings by quest/reputation/flags.
 
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **SR3-T1 - Narrative scalability review** - SR3 - files:
+  `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`, `docs/architecture/ROADMAP.md` - **done**
+  (2026-06-28): reviewed quest/dialogue/NPC/faction systems, validation coverage, and debug tooling.
+  Verdict: proceed to M13; no blocking rewrite. Promoted SR3-F1 (dialogue soft-lock guard,
+  near-term) and SR3-F2/F3 (multi-condition objectives, reactive dialogue) before M18.
 - **M12-V1 - Verify, commit, and push M12** - M12 - files: `test.bat`,
   `tests/headless/M12FactionReputationRunner.{gd,tscn}` - **done** (2026-06-28): `.\test.bat` passes
   (Godot import + M9/M10/M10R/M11/M12 headless runners, exit 0); committed and pushed the full M12

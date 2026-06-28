@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-06-28 - Session 025 - SR3 narrative scalability review
+
+- **Goal**: run the SR3 gate — decide whether the M11/M12 narrative systems can support real story
+  production before M13.
+- **Method**: read the live narrative code (`QuestManager`, `DialogueManager`, `Conditions`,
+  `FactionManager`, `NPC`, `QuestDebugUI`, `DialogueBox`) and the `DataRegistry` validation, not the
+  docs, and graded findings with file:line evidence like SR1/SR2.
+- **Deliverable**: `docs/reviews/SR3_NARRATIVE_SCALABILITY_REVIEW.md`. Verdict: **proceed to M13, no
+  blocking rewrite.** Definitions are data-driven with strong ref validation; system separation
+  holds; branching is a documented contract; debug + headless tooling is adequate.
+- **Findings**: Medium-High SR3-F1 — a dialogue node with zero visible choices leaves the paused game
+  with no exit (DialogueBox renders no fallback; validation doesn't require one) → near-term
+  hardening. Medium SR3-F2 — quest stages advance on a single `advance_on` condition (no AND-array /
+  OR). Medium SR3-F3 — dialogue node text/entry are static (no state-reactive greetings). Plus low
+  notes (OR/range conditions, no distinct failed-quest state, constant reputation thresholds).
+- **Decision**: review-only per SR precedent — no engine code changed. Promoted SR3-F1/F2/F3 to
+  `TASKS.md` (F1 near-term, F2/F3 before M18). No `test.bat` run needed (docs-only change).
+- **Next**: M13 - items, equipment, economy & merchants.
+
+---
+
 ## 2026-06-28 - Session 024 - Verify and ship M12
 
 - **Goal**: run the full Godot regression suite for M12, then commit/push the completed
