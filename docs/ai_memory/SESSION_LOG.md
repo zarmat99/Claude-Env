@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-06-28 - Session 030 - Fix equipment save/load derived health
+
+- **Report**: review found that `SaveManager._sync_player_from_world()` copied the live
+  `HealthComponent.max_health` into `GameState.player.stats.max_health`. With armor equipped, this
+  baked the equipment-derived max health into the saved base stat and could double-count equipment
+  after load.
+- **Fix**: `SaveManager` now preserves base `stats.max_health`, saves only current health from the
+  live player, clamps it to the equipment-derived effective max, and restores the live
+  `HealthComponent` using `EquipmentManager.get_effective_stat("max_health")`.
+- **Regression**: extended `M13EconomyEquipmentRunner` with an armor save/load probe using a fake
+  player + `HealthComponent`; it verifies base max health stays 30 while equipped leather armor
+  derives effective max health 40 and preserves current health 35 across save/load.
+- **Tests**: `M13EconomyEquipmentRunner` passed; full `.\test.bat` passed (import +
+  M9/M10/M10R/M11/M12/SR3/M13, exit 0).
+- **Next**: M14 - combat, skills & magic.
+
+---
+
 ## 2026-06-28 - Session 029 - Fix merchant UX (always show wares)
 
 - **Report**: talking to the in-village Merchant on a fresh save showed only "(Leave)" - every buy

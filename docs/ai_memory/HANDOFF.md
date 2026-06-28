@@ -16,6 +16,10 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   reusable `InventoryComponent` (shared `ItemStacking`, used by `Chest`), and a data-authored village
   merchant (`merchants.json` + in-Village `npc_merchant_valdombra`). Covered by
   `M13EconomyEquipmentRunner`.
+- **Post-M13 review fix complete**: `SaveManager` now preserves base `stats.max_health` when armor
+  is equipped and restores the live player health component with equipment-derived effective max
+  health. `M13EconomyEquipmentRunner` covers armor save/load (`base max 30`, leather armor effective
+  max 40, current health 35).
 - M0-M13, M10R, SR1, SR2, and SR3 are complete. **M14 (combat, skills & magic) is the next
   milestone** (it also picks up armor-based damage mitigation, deferred from M13).
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
@@ -76,13 +80,10 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, M12 is committed and pushed.
 
 ## Last thing done
-Completed **M13**. Added M13-T4 container inventories — extracted stacking into a shared
-`ItemStacking` helper, added a reusable `InventoryComponent` (used by `Chest` for contents +
-transfer-to-player), and removed the duplicated stacking logic — and M13-T5 in-game merchant —
-a validated `merchants.json` (stock + buy/sell multipliers), merchant-aware pricing/stock in
-`EconomyManager`, an optional `merchant` ref on `buy_item`/`sell_item`, and a real
-`npc_merchant_valdombra` placed in the Village with a merchant dialogue. `.\test.bat` passes
-(import + M9/M10/M10R/M11/M12/SR3/M13, exit 0); committed and pushed.
+Fixed the M13 equipment save/load bug found in review: derived armor max health is no longer baked
+into the saved base `stats.max_health`, and live player health loads using the effective
+equipment-derived max. Added the armor save/load regression to `M13EconomyEquipmentRunner`.
+`.\test.bat` passes (import + M9/M10/M10R/M11/M12/SR3/M13, exit 0).
 
 ## Next thing to do
 Start **M14 - combat, skills & magic** (see `ROADMAP.md`): enemy archetypes, damage rules, combat

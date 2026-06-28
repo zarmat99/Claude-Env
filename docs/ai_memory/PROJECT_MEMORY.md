@@ -53,6 +53,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   committed/pushed): equipment + derived combat stats, consumable item use, buy/sell with merchant
   stock/pricing, a reusable container `InventoryComponent`, and a data-authored village merchant.
   M0-M13, M10R, SR1, SR2, and SR3 are complete; M14 (combat/skills/magic) is next.
+- Post-M13 review fix: `SaveManager` preserves base `stats.max_health` when armor is equipped,
+  saves current health separately, and restores live player health with
+  `EquipmentManager.get_effective_stat("max_health")`. `M13EconomyEquipmentRunner` covers armored
+  save/load so derived max health is not baked into base stats.
 - Village / Forest / Cave remain the connected dev sandbox/regression slice. The failed M10
   `map_probe_ruins` asset-probe map has been removed from active content.
 - `SceneLoader` swaps maps data-driven (`maps.json`), keeps a persistent player, and emits
@@ -95,7 +99,7 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   plus M9 regression, M10 quarantine/world-object smoke, M10R asset preview, M11 dialogue/branching
   regression, M12 faction reputation regression, and SR3 narrative-hardening regression).
 - Note: player death is still a placeholder (respawn full HP).
-- Next: SR3 (Narrative scalability review), then M13.
+- Next: M14 (Combat, skills & magic).
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -137,7 +141,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   both the player inventory and containers (`Chest`); `EconomyManager` derives buy/sell prices from
   item `value` with optional per-merchant stock/multipliers (`merchants.json`). Dialogue
   `buy_item`/`sell_item` (optional `merchant`) and the `gold_at_least` condition author merchants in
-  JSON; `npc_merchant_valdombra` is live in the Village. Save/load carries equipment + gold.
+  JSON; `npc_merchant_valdombra` is live in the Village. Save/load carries equipment + gold and
+  keeps equipment-derived max health out of base `stats.max_health`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
   SceneLoader, SaveManager, InventoryManager, EquipmentManager, EconomyManager, QuestManager,
   DialogueManager.
@@ -206,14 +211,13 @@ skill growth, magic/spell data, AI variants, and armor-based damage mitigation (
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M0-M12, M10R, SR1, SR2, and SR3 are complete** (`.\test.bat` passes;
-M12 committed and pushed; SR3 verdict = proceed to M13). Village/Forest/Cave remain the playable dev
-slice and now show
-approved generated terrain/prop candidates. Save/load, progression, quest flow, dynamic pickups,
-quarantine checks, world-object states, M10R asset preview, M11 dialogue actions/branching, and M12
-faction reputation are covered by `.\test.bat` once runnable. Quest/faction authoring can be
-inspected in game with the F10 Quest Debug overlay. M13 (equipment, item use, buy/sell, containers,
-in-game merchant) is complete; the next step is **M14 - combat, skills & magic**.
+GDScript, designed to scale. **M0-M13, M10R, SR1, SR2, and SR3 are complete** (`.\test.bat` passes).
+Village/Forest/Cave remain the playable dev slice and now show approved generated terrain/prop
+candidates. Save/load, progression, quest flow, dynamic pickups, quarantine checks, world-object
+states, M10R asset preview, M11 dialogue actions/branching, M12 faction reputation, SR3 hardening,
+and M13 equipment/economy/container/merchant coverage are all in `.\test.bat`. Quest/faction
+authoring can be inspected in game with the F10 Quest Debug overlay. M13 includes the post-review
+armor save/load fix; the next step is **M14 - combat, skills & magic**.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

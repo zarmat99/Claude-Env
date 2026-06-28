@@ -42,6 +42,11 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   SR2-SR5). Add detailed tasks here when each milestone becomes current.
 
 ## Done
+- **M13-F1 - Preserve base stats across equipment save/load** - M13 follow-up - files:
+  `scripts/core/SaveManager.gd`, `tests/headless/M13EconomyEquipmentRunner.gd` - **done**
+  (2026-06-28): fixed save/load so equipped armor does not bake derived max health into
+  `GameState.player.stats.max_health`; added an armor save/load regression and verified full
+  `.\test.bat`.
 - **M13-V1 - Verify, commit, and push M13** - M13 - files: `test.bat`,
   `tests/headless/M13EconomyEquipmentRunner.{gd,tscn}` - **done** (2026-06-28): full `.\test.bat`
   passes (import + M9/M10/M10R/M11/M12/SR3/M13); equipment/item-use/economy + containers + merchant

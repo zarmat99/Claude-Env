@@ -65,7 +65,9 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Implementation**: M7 save/load is live; M9 moves debug save/load keys behind input actions
   (`save_game`, `load_game`). M12 ensures old saves get missing faction defaults on load. Load
   restores the snapshot without emitting `map_changed`, so quest stages do not advance merely
-  because a saved map is reloaded.
+  because a saved map is reloaded. M13 equipment stats stay derived: save/load preserves base
+  `stats.max_health`, stores current health separately, and restores the live `HealthComponent`
+  using equipment-derived effective max health.
 
 ## IdUtils (static class) — `scripts/core/IdUtils.gd`
 - **Role**: helpers for IDs (validation, prefix checks, persistent-id formatting). Not an autoload.

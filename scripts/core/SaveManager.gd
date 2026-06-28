@@ -121,8 +121,7 @@ func _sync_player_from_world() -> void:
     var health := player.get_node_or_null("HealthComponent")
     if health:
         var stats: Dictionary = GameState.player.get("stats", {})
-        stats["max_health"] = int(health.max_health)
-        stats["health"] = int(health.health)
+        stats["health"] = clamp(int(health.health), 0, _effective_player_max_health(stats))
         GameState.player["stats"] = stats
 
 func _apply_player_to_world() -> void:
@@ -133,7 +132,13 @@ func _apply_player_to_world() -> void:
     var health := player.get_node_or_null("HealthComponent")
     if health and health.has_method("setup"):
         var stats: Dictionary = GameState.player.get("stats", {})
-        health.setup(int(stats.get("max_health", 30)), int(stats.get("health", 30)))
+        var effective_max := _effective_player_max_health(stats)
+        health.setup(effective_max, int(stats.get("health", effective_max)))
+
+func _effective_player_max_health(stats: Dictionary) -> int:
+    if has_node("/root/EquipmentManager"):
+        return max(1, EquipmentManager.get_effective_stat("max_health"))
+    return max(1, int(stats.get("max_health", 30)))
 
 func _vector_to_dict(value) -> Dictionary:
     if value is Vector2:
