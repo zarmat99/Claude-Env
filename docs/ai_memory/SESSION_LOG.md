@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-06-29 - Session 035 - Fix Hurtbox legacy damage cast
+
+- **Report**: launching via `play.bat` crashed when a legacy hit path passed numeric damage into
+  `Hurtbox.receive_hit`; GDScript rejected assigning the non-object value through a typed
+  `DamageData` cast.
+- **Fix**: `Hurtbox.receive_hit` now checks `amount_or_damage is DamageData` before assignment and
+  wraps numeric legacy damage into `DamageData.new(...)`.
+- **Regression**: `M14CombatSkillsMagicRunner` now covers direct numeric Hurtbox damage.
+- **Also**: updated the boot log from Milestone 10 to Milestone 14.
+- **Tests**: M14 runner passed; full `.\test.bat` passed.
+
+---
+
 ## 2026-06-29 - Session 034 - Verify and close M14
 
 - **Request**: proceed from the interrupted M14 verification state and complete the milestone.

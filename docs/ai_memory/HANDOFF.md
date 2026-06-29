@@ -14,6 +14,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   damage rules (`DamageData`, `CombatSystem`), skill XP/state (`SkillManager`), player abilities
   (`PlayerAbilities` with `ability_1/2/3`), three enemy archetypes (`chaser`, `skirmisher`,
   `sentinel`), Cave placements, DataRegistry validation, and `M14CombatSkillsMagicRunner`.
+- **Post-M14 crash fix complete**: `Hurtbox.receive_hit` accepts both `DamageData` and legacy raw
+  numeric damage without a typed-cast crash; `M14CombatSkillsMagicRunner` covers this path.
 - **M13 (items/equipment/economy/merchants) is complete and verified** (`.\test.bat` green, exit 0;
   committed/pushed): `EquipmentManager` (equip/unequip + derived combat stats),
   `InventoryManager.use_item` (consumables), `EconomyManager` (buy/sell + merchant stock/pricing), a
@@ -88,8 +90,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 - On `master`, M14 and all earlier milestones/fixes are committed and pushed.
 
 ## Last thing done
-Completed and verified M14 combat/skills/magic: typed damage, armor/resistances, skill persistence,
-player abilities, enemy archetypes, data validation, Cave placements, and regression coverage.
+Fixed the `play.bat` Hurtbox crash caused by legacy numeric damage entering the M14 typed-damage
+path; M14 runner and full `.\test.bat` pass.
 
 ## Next thing to do
 Start **M15 - dungeons & encounters**: dungeon map conventions, locked doors/keys/levers, chests,

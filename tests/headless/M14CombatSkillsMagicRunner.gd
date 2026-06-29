@@ -14,6 +14,7 @@ func _run() -> void:
     print("[M14] Combat/skills/magic runner starting")
     _test_data_validation()
     _test_damage_rules()
+    _test_hurtbox_legacy_numeric_damage()
     _test_skill_growth_and_save_load()
     await _test_player_abilities()
     await _test_enemy_archetypes()
@@ -63,6 +64,25 @@ func _test_damage_rules() -> void:
     source.free()
     target.free()
     player.free()
+
+func _test_hurtbox_legacy_numeric_damage() -> void:
+    GameState.reset_to_new_game()
+    var source: Node2D = Node2D.new()
+    source.name = "LegacyHitSource"
+    add_child(source)
+    var target: Node2D = _make_actor("LegacyHurtboxTarget", {"max_health": 20})
+    add_child(target)
+    var hurtbox := Hurtbox.new()
+    hurtbox.name = "Hurtbox"
+    target.add_child(hurtbox)
+    hurtbox.owner = target
+
+    hurtbox.receive_hit(5, source)
+    var health: HealthComponent = target.get_node("HealthComponent") as HealthComponent
+    _assert(health.health == 15, "Hurtbox should accept legacy numeric damage without a cast error")
+
+    source.free()
+    target.free()
 
 func _test_skill_growth_and_save_load() -> void:
     GameState.reset_to_new_game()

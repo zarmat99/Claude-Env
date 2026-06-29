@@ -46,6 +46,11 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   becomes current.
 
 ## Done
+- **M14-F1 - Hurtbox legacy numeric damage crash** - M14 follow-up - files:
+  `scripts/combat/Hurtbox.gd`, `tests/headless/M14CombatSkillsMagicRunner.gd`,
+  `scenes/main/Main.gd` - **done** (2026-06-29): fixed `play.bat` crash when old hit paths pass a
+  raw damage number into `Hurtbox.receive_hit`; added regression coverage and updated the boot log
+  to Milestone 14.
 - **M14-V1 - Verify, commit, and push M14** - M14 - files: `test.bat`,
   `tests/headless/M14CombatSkillsMagicRunner.{gd,tscn}` - **done** (2026-06-29): Godot
   import/class cache passed, `M14CombatSkillsMagicRunner` passed, full `.\test.bat` passed, and M14

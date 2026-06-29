@@ -8,7 +8,9 @@ class_name Hurtbox
 func receive_hit(amount_or_damage, source: Node = null, damage_type: String = "physical", armor_pierce: int = 0) -> void:
     if owner == null:
         return
-    var damage := amount_or_damage as DamageData
-    if damage == null:
+    var damage: DamageData = null
+    if amount_or_damage is DamageData:
+        damage = amount_or_damage
+    else:
         damage = DamageData.new(int(amount_or_damage), damage_type, source, armor_pierce)
     CombatSystem.apply_damage(owner, damage)
