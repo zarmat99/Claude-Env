@@ -11,6 +11,7 @@ var player: Dictionary = {
     "gold": 0,
     "inventory": [],          # Array of {"id": String, "count": int}
     "equipment": {},          # slot -> item_id
+    "skills": {},             # skill_id -> {"level": int, "xp": int}
 }
 
 var quests: Dictionary = {"active": {}, "completed": []}   # active: quest_id -> {"stage": int}
@@ -27,6 +28,7 @@ func reset_to_new_game() -> void:
         "gold": 0,
         "inventory": [],
         "equipment": {},
+        "skills": {},
     }
     quests = {"active": {}, "completed": []}
     factions = _default_factions()

@@ -1,1 +1,69 @@
-{}
+{
+  "skill_one_handed": {
+    "id": "skill_one_handed",
+    "name": "One-Handed",
+    "category": "combat",
+    "max_level": 100,
+    "xp_to_level": 20,
+    "xp_level_step": 10,
+    "xp_per_use": 3,
+    "description": "Proficiency with one-handed weapons."
+  },
+  "skill_guard_breaker": {
+    "id": "skill_guard_breaker",
+    "name": "Guard Breaker",
+    "category": "combat",
+    "max_level": 50,
+    "xp_to_level": 18,
+    "xp_level_step": 8,
+    "xp_per_use": 4,
+    "input_action": "ability_1",
+    "cooldown": 0.9,
+    "description": "A close-range strike that punches through a little armor.",
+    "ability": {
+      "type": "area_damage",
+      "origin": "self",
+      "damage": 5,
+      "damage_type": "physical",
+      "armor_pierce": 2,
+      "radius": 58,
+      "scale_stat": "damage",
+      "scale": 0.35
+    }
+  },
+  "skill_firebolt": {
+    "id": "skill_firebolt",
+    "name": "Firebolt",
+    "category": "magic",
+    "max_level": 50,
+    "xp_to_level": 18,
+    "xp_level_step": 8,
+    "xp_per_use": 5,
+    "input_action": "ability_2",
+    "cooldown": 1.0,
+    "description": "A short-range burst of fire centered on the nearest enemy.",
+    "ability": {
+      "type": "area_damage",
+      "origin": "nearest_enemy",
+      "damage": 8,
+      "damage_type": "fire",
+      "radius": 48,
+      "range": 150,
+      "scale_stat": "damage",
+      "scale": 0.5
+    }
+  },
+  "skill_mending_word": {
+    "id": "skill_mending_word",
+    "name": "Mending Word",
+    "category": "magic",
+    "max_level": 50,
+    "xp_to_level": 18,
+    "xp_level_step": 8,
+    "xp_per_use": 4,
+    "input_action": "ability_3",
+    "cooldown": 2.5,
+    "description": "A small self-heal for testing restorative magic hooks.",
+    "ability": { "type": "self_heal", "amount": 8 }
+  }
+}

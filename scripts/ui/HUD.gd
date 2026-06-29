@@ -16,7 +16,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
     var st: Dictionary = GameState.player.get("stats", {})
     var hp := int(st.get("health", 0))
-    var max_hp := int(st.get("max_health", 0))
+    var max_hp: int = EquipmentManager.get_effective_stat("max_health") if has_node("/root/EquipmentManager") else int(st.get("max_health", 0))
     _bar.max_value = max(1, max_hp)
     _bar.value = hp
     _label.text = "HP %d/%d" % [hp, max_hp]

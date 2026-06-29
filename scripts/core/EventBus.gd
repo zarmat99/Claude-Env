@@ -31,6 +31,9 @@ signal world_object_state_changed(persistent_id: String, state: String)
 # --- Progression / economy ---
 signal player_level_up(new_level: int)
 signal xp_gained(amount: int)
+signal skill_xp_gained(skill_id: String, amount: int)
+signal skill_level_up(skill_id: String, new_level: int)
+signal skill_used(skill_id: String)
 signal gold_changed(new_total: int)
 
 # --- Factions ---

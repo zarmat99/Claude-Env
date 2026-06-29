@@ -4,6 +4,43 @@
 
 ---
 
+## 2026-06-29 - Session 034 - Verify and close M14
+
+- **Request**: proceed from the interrupted M14 verification state and complete the milestone.
+- **Verification**: regenerated Godot import/class cache, ran
+  `res://tests/headless/M14CombatSkillsMagicRunner.tscn`, ran full `.\test.bat`, and checked
+  `git diff --check`; all passed.
+- **M14 result**: typed damage, armor/resistances, armor-pierce, skill XP persistence,
+  data-authored player abilities, three enemy archetypes, Cave placements, and M14 data validation
+  are complete and regression-covered.
+- **Docs/memory**: flipped ROADMAP/TASKS/HANDOFF/PROJECT_MEMORY from M14 draft/pending verification
+  to M14 complete; next milestone is M15 - dungeons & encounters.
+- **Next**: start M15.
+
+---
+
+## 2026-06-28 - Session 033 - M14 implementation draft
+
+- **Request**: stop the MV1 visible manual verification and proceed with the next full milestone.
+- **MV1 state**: the manual gate was started, screenshots were authorized, and the game was visible;
+  the user then explicitly interrupted the pass and asked to continue. MV1 is recorded as
+  interrupted, not a current blocker.
+- **M14 implementation**: added `DamageData`, `CombatSystem`, `SkillManager`, and `PlayerAbilities`;
+  routed hitboxes/hurtboxes/enemy attacks through typed damage rules; added skill events and
+  persisted `GameState.player.skills`; added `ability_1/2/3` inputs.
+- **Content/data**: added `skill_one_handed`, `skill_guard_breaker`, `skill_firebolt`, and
+  `skill_mending_word`; added `enemy_cave_rat` and `enemy_bone_sentinel` beside the slime, with
+  `chaser`/`skirmisher`/`sentinel` AI variants, damage types, armor, and resistances; placed the new
+  archetypes in Cave.
+- **Validation/tests**: extended `DataRegistry` for M14 schemas and added
+  `M14CombatSkillsMagicRunner` to cover damage rules, skill save/load, abilities, and enemy
+  archetypes.
+- **Blocked verification**: after initial parser fixes, further Godot/test/git commands requiring
+  escalation were blocked by the environment usage limit. Next turn must run Godot import, M14
+  runner, full `.\test.bat`, then commit/push.
+
+---
+
 ## 2026-06-28 - Session 032 - Add visible manual verification gate
 
 - **Request**: before continuing to the next milestone, add an intermediate verification where the

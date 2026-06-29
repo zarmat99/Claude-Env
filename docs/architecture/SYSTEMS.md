@@ -21,9 +21,11 @@ current codebase, so it should avoid "current milestone" language that can go st
   - Dialogue: `dialogue_started(dialogue_id)` · `dialogue_ended(dialogue_id)`
   - World: `map_changed(map_id)` · `world_object_state_changed(persistent_id, state)`
   - Progression: `player_level_up(new_level)` · `xp_gained(amount)`
+  - Skills: `skill_xp_gained(skill_id, amount)` / `skill_level_up(skill_id, new_level)` /
+    `skill_used(skill_id)`
   - Economy: `gold_changed(new_total)`
   - Factions: `faction_reputation_changed(faction_id, old_value, new_value)`
-- **Implementation**: live; signals used by the M1-M12 systems.
+- **Implementation**: live; signals used by the M1-M14 systems.
 
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
@@ -37,19 +39,20 @@ current codebase, so it should avoid "current milestone" language that can go st
   M10 extends this to asset sets, generated atlas dimensions, tile metadata, world-object
   definitions, authored map dimensions/layers/spawns/transitions/objects, switch targets, and
   asset-tile references. M12 adds faction reputation conditions/actions plus NPC role/service/
-  quest-offer metadata validation. Lookups push errors for missing IDs instead of quietly
+  quest-offer metadata validation. M14 adds skill ability/damage schema checks plus enemy AI,
+  damage type, armor, and resistance validation. Lookups push errors for missing IDs instead of quietly
   accepting them.
 
 ## GameState (autoload) — `scripts/core/GameState.gd`
 - **Role**: single runtime source of truth: `current_map`, player snapshot (position, stats,
-  gold, inventory, equipment), `quests {active, completed}`, `factions`, `flags`,
+  gold, inventory, equipment, skills), `quests {active, completed}`, `factions`, `flags`,
   `world_objects {persistent_id: state}`. Provides new-game defaults.
 - **Depends on**: DataRegistry (defaults). Read/written by managers; serialized by SaveManager.
 - **Implementation**: holds map, player, quest, inventory, flags, kills, and world object state.
   M9 dynamic pickups use `world_objects[persistent_id]` entries with `state`, `kind`, `map_id`,
   `item_id`, `count`, and `position`. M12 faction defaults are copied from data into
-  `factions[faction_id].reputation`. Save/load uses GameState as the snapshot boundary; migrations
-  are future work.
+  `factions[faction_id].reputation`. M14 stores skill XP/levels in `player.skills`. Save/load uses
+  GameState as the snapshot boundary; migrations are future work.
 
 ## SceneLoader (autoload) — `scripts/core/SceneLoader.gd`
 - **Role**: load/unload map scenes into `Main/WorldRoot`; place the player at a named
@@ -69,7 +72,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   restores the snapshot without emitting `map_changed`, so quest stages do not advance merely
   because a saved map is reloaded. M13 equipment stats stay derived: save/load preserves base
   `stats.max_health`, stores current health separately, and restores the live `HealthComponent`
-  using equipment-derived effective max health.
+  using equipment-derived effective max health. M14 saves/loads `player.skills` and normalizes
+  missing skill state from `skills.json`.
 
 ## IdUtils (static class) — `scripts/core/IdUtils.gd`
 - **Role**: helpers for IDs (validation, prefix checks, persistent-id formatting). Not an autoload.
@@ -151,16 +155,19 @@ current codebase, so it should avoid "current milestone" language that can go st
 - **Depends on**: EventBus, GameState (rewards), DataRegistry (enemy/loot defs).
 - **Implementation**: M5 simple combat is live (health, stats, hitbox/hurtbox, enemy AI, loot).
   M9 loot drops register dynamic pickup persistence state. M13 makes the player's melee damage and
-  max health read `EquipmentManager.get_effective_stat(...)` (base + equipped bonuses). `DamageData` /
-  `CombatSystem` and armor-based damage mitigation are still deferred until needed (M14).
+  max health read `EquipmentManager.get_effective_stat(...)` (base + equipped bonuses). M14 adds
+  `DamageData` + `CombatSystem` as the typed-damage boundary: hitboxes, enemy attacks, and abilities
+  route through centralized armor/resistance/armor-pierce rules.
 
 ## Progression — `scripts/progression/ProgressionManager.gd`, `StatsComponent`, skills data
-- **Role**: XP gain, level-up curve, stat growth, (later) skills. Reacts to `xp_gained`,
+- **Role**: XP gain, level-up curve, stat growth, skill XP/levels. Reacts to `xp_gained`,
   grants enemy kill XP from `xp_reward`, stores `level`/`xp`/base stats in `GameState.player.stats`,
-  and emits `player_level_up`.
+  stores skills in `GameState.player.skills`, and emits `player_level_up` / skill events.
 - **Depends on**: GameState, EventBus, DataRegistry (skills).
-- **Implementation**: M8 done; quest rewards and enemy kills grant XP, level thresholds increase
-  max health and damage, HUD shows level/XP.
+- **Implementation**: M8 player level progression is live; quest rewards and enemy kills grant XP,
+  level thresholds increase max health and damage, HUD shows level/XP. M14 adds `SkillManager`
+  for skill XP/level state plus save/load support, and `PlayerAbilities` executes data-authored
+  combat/magic abilities from `skills.json` via input actions `ability_1`/`ability_2`/`ability_3`.
 
 ## Factions & reputation — `scripts/factions/FactionManager.gd`, factions data
 - **Role**: actor faction membership, mutable player reputation, friendly/hostile thresholds, and
@@ -193,4 +200,6 @@ current codebase, so it should avoid "current milestone" language that can go st
   placement, chest loot persistence, and switch/door persistence across map reloads. M11 adds
   `M11DialogueActionsRunner` for production dialogue actions and branching quest fixtures. M12
   adds `M12FactionReputationRunner` for faction defaults, reputation actions/gates, hostile/friendly
-  state, and save/load persistence.
+  state, and save/load persistence. M13 adds `M13EconomyEquipmentRunner` for equipment, economy,
+  containers, save/load, and inventory UI actions. M14 adds `M14CombatSkillsMagicRunner` for typed damage,
+  armor/resistance mitigation, skill save/load, player abilities, and enemy archetype loading.

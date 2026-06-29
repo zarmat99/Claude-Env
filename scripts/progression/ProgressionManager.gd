@@ -21,7 +21,13 @@ func ensure_player_stats() -> void:
     stats["level"] = max(BASE_LEVEL, int(stats.get("level", BASE_LEVEL)))
     stats["xp"] = max(BASE_XP, int(stats.get("xp", BASE_XP)))
     stats["max_health"] = max(1, int(stats.get("max_health", BASE_MAX_HEALTH)))
-    stats["health"] = clamp(int(stats.get("health", stats["max_health"])), 0, int(stats["max_health"]))
+    var current_health: int = max(0, int(stats.get("health", stats["max_health"])))
+    var effective_max: int = int(stats["max_health"])
+    if has_node("/root/EquipmentManager"):
+        effective_max = max(effective_max, EquipmentManager.get_effective_stat("max_health"))
+    else:
+        effective_max = max(effective_max, current_health)
+    stats["health"] = clamp(current_health, 0, effective_max)
     stats["damage"] = max(1, int(stats.get("damage", BASE_DAMAGE)))
     GameState.player["stats"] = stats
 
@@ -37,7 +43,7 @@ func add_xp(amount: int) -> void:
     GameState.player["stats"] = stats
 
 func xp_to_next_level(level: int = -1) -> int:
-    var current := int(GameState.player.get("stats", {}).get("level", BASE_LEVEL)) if level < 0 else level
+    var current: int = int(GameState.player.get("stats", {}).get("level", BASE_LEVEL)) if level < 0 else level
     return XP_BASE_THRESHOLD + max(0, current - BASE_LEVEL) * XP_PER_LEVEL_STEP
 
 func _level_up(stats: Dictionary) -> void:
@@ -49,12 +55,13 @@ func _level_up(stats: Dictionary) -> void:
     EventBus.player_level_up.emit(int(stats["level"]))
 
 func _apply_health_to_live_player(stats: Dictionary) -> void:
-    var player := SceneLoader.get_player() if SceneLoader.is_bound() else get_tree().get_first_node_in_group("player")
+    var player: Node = SceneLoader.get_player() if SceneLoader.is_bound() else get_tree().get_first_node_in_group("player")
     if player == null or not is_instance_valid(player):
         return
-    var health := player.get_node_or_null("HealthComponent")
+    var health: Node = player.get_node_or_null("HealthComponent")
     if health and health.has_method("setup"):
-        health.setup(int(stats.get("max_health", BASE_MAX_HEALTH)), int(stats.get("health", BASE_MAX_HEALTH)))
+        var effective_max: int = EquipmentManager.get_effective_stat("max_health") if has_node("/root/EquipmentManager") else int(stats.get("max_health", BASE_MAX_HEALTH))
+        health.setup(effective_max, int(stats.get("health", BASE_MAX_HEALTH)))
 
 func _on_actor_died(actor: Node) -> void:
     if actor == null or not actor.is_in_group("enemy"):
@@ -69,6 +76,6 @@ func _on_actor_died(actor: Node) -> void:
     if enemy.is_empty():
         push_error("ProgressionManager: enemy '%s' has no data, XP skipped" % enemy_id)
         return
-    var xp := int(enemy.get("xp_reward", 0))
+    var xp: int = int(enemy.get("xp_reward", 0))
     if xp > 0:
         EventBus.xp_gained.emit(xp)

@@ -174,8 +174,8 @@ when the feature is player-facing.
   merchant browsing, save/load, and F10 debug readability.
 - **Exit criteria**: user-visible session completed; any player-facing regression is either fixed
   immediately or promoted as a blocking task; user confirms the project may proceed to M14.
-- **Status 2026-06-28**: added at user request after the inventory UX fix; pending shared manual
-  pass.
+- **Status 2026-06-28**: added at user request after the inventory UX fix. The first shared pass was
+  started, then interrupted by user request to continue to M14; no MV1 findings are blocking M14.
 
 ## M14 — Combat, skills & magic
 - **Goal**: expand combat from a simple test loop into a scalable ruleset.
@@ -183,6 +183,9 @@ when the feature is player-facing.
   AI variants, tuning data.
 - **Exit criteria**: at least three enemy archetypes and several player abilities/spells can be
   authored through data/components without bloating player/enemy scripts.
+- **Status 2026-06-29**: complete and verified. `CombatSystem`/`DamageData`, `SkillManager`,
+  `PlayerAbilities`, three enemy archetypes, data validation, Cave placements, and
+  `M14CombatSkillsMagicRunner` are live; Godot import, M14 runner, and full `.\test.bat` pass.
 
 ## M15 — Dungeons & encounters
 - **Goal**: support authored dungeon gameplay and reusable encounter structure.

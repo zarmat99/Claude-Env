@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/PlaceholderMap.gd" id="1_map"]
 [ext_resource type="Script" path="res://scripts/world/SpawnPoint.gd" id="2_sp"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/Slime.tscn" id="4_slime"]
 [ext_resource type="PackedScene" path="res://scenes/items/PickupItem.tscn" id="5_pick"]
 [ext_resource type="Script" path="res://scripts/world/GeneratedPropSprite.gd" id="6_prop"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/CaveRat.tscn" id="7_rat"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/BoneSentinel.tscn" id="8_sentinel"]
 
 [node name="Cave" type="Node2D"]
 script = ExtResource("1_map")
@@ -39,6 +41,14 @@ size = Vector2(24, 90)
 [node name="Slime" parent="." instance=ExtResource("4_slime")]
 position = Vector2(260, 160)
 persistent_id = "enemy_cave_slime_001"
+
+[node name="CaveRat" parent="." instance=ExtResource("7_rat")]
+position = Vector2(320, 228)
+persistent_id = "enemy_cave_rat_001"
+
+[node name="BoneSentinel" parent="." instance=ExtResource("8_sentinel")]
+position = Vector2(360, 100)
+persistent_id = "enemy_cave_sentinel_001"
 
 [node name="Fragment" parent="." instance=ExtResource("5_pick")]
 position = Vector2(400, 160)

@@ -34,6 +34,11 @@ const ID_PREFIXES := {
 }
 
 const ITEM_TYPES := ["weapon", "armor", "consumable", "quest", "material", "misc"]
+const DAMAGE_TYPES := ["physical", "fire", "frost", "arcane", "poison"]
+const SKILL_CATEGORIES := ["combat", "magic", "survival"]
+const SKILL_ABILITY_TYPES := ["area_damage", "self_heal"]
+const SKILL_ABILITY_ORIGINS := ["self", "nearest_enemy"]
+const ENEMY_AI_TYPES := ["chaser", "skirmisher", "sentinel"]
 const CONDITION_TYPES := [
     "has_item",
     "talked_to",
@@ -225,6 +230,27 @@ func _validate_skills() -> void:
         var skill_id := String(raw_skill_id)
         var skill := get_skill(skill_id)
         _require_string(skill, "skills/%s" % skill_id, "name")
+        var category := String(skill.get("category", ""))
+        if not SKILL_CATEGORIES.has(category):
+            _error("skills/%s.category has unsupported value '%s'" % [skill_id, category])
+        if int(skill.get("max_level", 0)) <= 0:
+            _error("skills/%s.max_level must be positive" % skill_id)
+        if int(skill.get("xp_to_level", 1)) <= 0:
+            _error("skills/%s.xp_to_level must be positive" % skill_id)
+        if int(skill.get("xp_level_step", 0)) < 0:
+            _error("skills/%s.xp_level_step cannot be negative" % skill_id)
+        if int(skill.get("xp_per_use", 0)) < 0:
+            _error("skills/%s.xp_per_use cannot be negative" % skill_id)
+        if skill.has("input_action"):
+            var action := String(skill.get("input_action", ""))
+            if action == "":
+                _error("skills/%s.input_action cannot be empty" % skill_id)
+            elif not InputMap.has_action(action):
+                _error("skills/%s.input_action references missing action '%s'" % [skill_id, action])
+        if skill.has("cooldown") and float(skill.get("cooldown", 0.0)) < 0.0:
+            _error("skills/%s.cooldown cannot be negative" % skill_id)
+        if skill.has("ability"):
+            _validate_skill_ability(skill.get("ability", {}), "skills/%s.ability" % skill_id)
 
 func _validate_asset_sets() -> void:
     for raw_asset_set_id in all("asset_sets").keys():
@@ -368,9 +394,21 @@ func _validate_enemies() -> void:
         if not (stats is Dictionary):
             _error("enemies/%s.stats must be an object" % enemy_id)
         else:
+            var raw_ai = enemy.get("ai", {})
+            var ai_type := String(raw_ai.get("type", "chaser")) if raw_ai is Dictionary else "chaser"
             for field in ["max_health", "damage", "move_speed"]:
-                if int(stats.get(field, 0)) <= 0:
+                if field == "move_speed" and ai_type == "sentinel":
+                    if int(stats.get(field, 0)) < 0:
+                        _error("enemies/%s.stats.%s cannot be negative" % [enemy_id, field])
+                elif int(stats.get(field, 0)) <= 0:
                     _error("enemies/%s.stats.%s must be positive" % [enemy_id, field])
+            if int(stats.get("armor", 0)) < 0:
+                _error("enemies/%s.stats.armor cannot be negative" % enemy_id)
+            _validate_resistances(stats.get("resistances", {}), "enemies/%s.stats.resistances" % enemy_id)
+        var damage_type := String(enemy.get("damage_type", "physical"))
+        if not DAMAGE_TYPES.has(damage_type):
+            _error("enemies/%s.damage_type has unsupported value '%s'" % [enemy_id, damage_type])
+        _validate_enemy_ai(enemy.get("ai", {}), "enemies/%s.ai" % enemy_id)
         _validate_loot_table(enemy.get("loot_table", []), "enemies/%s.loot_table" % enemy_id)
         if int(enemy.get("xp_reward", 0)) < 0:
             _error("enemies/%s.xp_reward cannot be negative" % enemy_id)
@@ -810,6 +848,69 @@ func _validate_actions(actions, path: String) -> void:
                     _error("%s.count must be positive" % action_path)
                 if String(action.get("merchant", "")) != "":
                     _require_ref("merchants", String(action.get("merchant", "")), "%s.merchant" % action_path)
+
+func _validate_skill_ability(ability, path: String) -> void:
+    if not (ability is Dictionary):
+        _error("%s must be an object" % path)
+        return
+    var ability_type := String(ability.get("type", ""))
+    if not SKILL_ABILITY_TYPES.has(ability_type):
+        _error("%s.type has unsupported value '%s'" % [path, ability_type])
+        return
+    match ability_type:
+        "area_damage":
+            var origin := String(ability.get("origin", "nearest_enemy"))
+            if not SKILL_ABILITY_ORIGINS.has(origin):
+                _error("%s.origin has unsupported value '%s'" % [path, origin])
+            if int(ability.get("damage", 0)) <= 0:
+                _error("%s.damage must be positive" % path)
+            var damage_type := String(ability.get("damage_type", "physical"))
+            if not DAMAGE_TYPES.has(damage_type):
+                _error("%s.damage_type has unsupported value '%s'" % [path, damage_type])
+            if int(ability.get("armor_pierce", 0)) < 0:
+                _error("%s.armor_pierce cannot be negative" % path)
+            if float(ability.get("radius", 0.0)) <= 0.0:
+                _error("%s.radius must be positive" % path)
+            if origin == "nearest_enemy" and float(ability.get("range", 0.0)) <= 0.0:
+                _error("%s.range must be positive for nearest_enemy origin" % path)
+            var scale_stat := String(ability.get("scale_stat", ""))
+            if scale_stat != "" and float(ability.get("scale", 0.0)) < 0.0:
+                _error("%s.scale cannot be negative" % path)
+        "self_heal":
+            if int(ability.get("amount", 0)) <= 0:
+                _error("%s.amount must be positive" % path)
+
+func _validate_enemy_ai(ai, path: String) -> void:
+    if ai == null:
+        return
+    if not (ai is Dictionary):
+        _error("%s must be an object" % path)
+        return
+    var ai_type := String(ai.get("type", "chaser"))
+    if not ENEMY_AI_TYPES.has(ai_type):
+        _error("%s.type has unsupported value '%s'" % [path, ai_type])
+    for field in ["aggro_range", "attack_range", "attack_cooldown"]:
+        if ai.has(field) and float(ai.get(field, 0.0)) <= 0.0:
+            _error("%s.%s must be positive" % [path, field])
+    if ai.has("preferred_range") and float(ai.get("preferred_range", 0.0)) <= 0.0:
+        _error("%s.preferred_range must be positive" % path)
+
+func _validate_resistances(value, path: String) -> void:
+    if value == null:
+        return
+    if value is Dictionary and value.is_empty():
+        return
+    if not (value is Dictionary):
+        _error("%s must be an object" % path)
+        return
+    for raw_type in value.keys():
+        var damage_type := String(raw_type)
+        if not DAMAGE_TYPES.has(damage_type):
+            _error("%s.%s has unsupported damage type" % [path, damage_type])
+            continue
+        var amount: float = float(value[raw_type])
+        if amount < -0.75 or amount > 0.9:
+            _error("%s.%s must be between -0.75 and 0.9" % [path, damage_type])
 
 func _validate_rewards(rewards, path: String) -> void:
     if not (rewards is Dictionary):

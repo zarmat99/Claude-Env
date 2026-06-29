@@ -154,13 +154,20 @@ separate dialogues. `entry` remains required.
 {
   "enemy_cave_rat": {
     "id": "enemy_cave_rat", "name": "Cave Rat", "faction": "faction_monsters",
-    "stats": { "max_health": 12, "damage": 2, "move_speed": 60 },
-    "sprite": "res://assets/sprites/placeholder_enemy.png",
+    "ai": { "type": "skirmisher", "aggro_range": 180, "attack_range": 54,
+      "preferred_range": 78, "attack_cooldown": 0.7 },
+    "damage_type": "physical",
+    "stats": { "max_health": 8, "damage": 3, "move_speed": 86, "armor": 0,
+      "resistances": { "fire": 0.25 } },
     "loot_table": [ { "id": "item_health_potion", "chance": 0.25, "count": 1 } ],
     "xp_reward": 8
   }
 }
 ```
+Enemy `ai.type` is validated as `chaser`, `skirmisher`, or `sentinel`. `damage_type` is validated as
+`physical`, `fire`, `frost`, `arcane`, or `poison`. Optional `stats.armor` reduces incoming damage;
+optional `stats.resistances` maps damage type to multiplier resistance (`0.5` halves pre-armor
+damage, `-0.25` means 25% weakness).
 
 ## factions/factions.json
 ```json
@@ -193,13 +200,22 @@ Merchant IDs use `merchant_`. `stock` is a non-empty array of item refs the merc
 prices. An NPC links to a merchant via its `merchant` field; dialogue `buy_item`/`sell_item` actions
 pass the same `merchant` id for stock-gated, merchant-priced trade.
 
-## skills/skills.json *(progression later)*
+## skills/skills.json (M14)
 ```json
 {
   "skill_one_handed": { "id": "skill_one_handed", "name": "One-Handed", "category": "combat",
-    "max_level": 100, "description": "Proficiency with one-handed weapons." }
+    "max_level": 100, "xp_to_level": 20, "xp_level_step": 10, "xp_per_use": 3,
+    "description": "Proficiency with one-handed weapons." },
+  "skill_firebolt": { "id": "skill_firebolt", "name": "Firebolt", "category": "magic",
+    "max_level": 50, "xp_to_level": 18, "xp_level_step": 8, "xp_per_use": 5,
+    "input_action": "ability_2", "cooldown": 1.0,
+    "ability": { "type": "area_damage", "origin": "nearest_enemy", "damage": 8,
+      "damage_type": "fire", "radius": 48, "range": 150, "scale_stat": "damage", "scale": 0.5 } }
 }
 ```
+Skill categories are validated as `combat`, `magic`, or `survival`. Ability types currently supported
+by `PlayerAbilities` are `area_damage` and `self_heal`; ability input actions must exist in
+`project.godot`. Runtime skill state is saved under `GameState.player.skills`.
 
 ## assets/asset_sets.json (M10)
 ```json

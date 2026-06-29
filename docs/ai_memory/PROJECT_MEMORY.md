@@ -49,10 +49,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **M13 (items/equipment/economy/merchants) is complete and verified** (`.\test.bat` green;
-  committed/pushed): equipment + derived combat stats, consumable item use, buy/sell with merchant
-  stock/pricing, a reusable container `InventoryComponent`, and a data-authored village merchant.
-  M0-M13, M10R, SR1, SR2, and SR3 are complete; M14 (combat/skills/magic) is next.
+- **M14 (combat/skills/magic) is complete and verified** (`.\test.bat` green; committed/pushed):
+  typed damage rules, armor/resistances, skill XP/state, player abilities, three enemy archetypes,
+  Cave placements, data validation, and M14 regression coverage. M0-M14, M10R, SR1, SR2, and SR3
+  are complete; M15 (dungeons/encounters) is next.
+- **M13 (items/equipment/economy/merchants) is complete and verified**: equipment + derived combat
+  stats, consumable item use, buy/sell with merchant stock/pricing, a reusable container
+  `InventoryComponent`, and a data-authored village merchant.
 - Post-M13 review fix: `SaveManager` preserves base `stats.max_health` when armor is equipped,
   saves current health separately, and restores live player health with
   `EquipmentManager.get_effective_stat("max_health")`. `M13EconomyEquipmentRunner` covers armored
@@ -98,13 +101,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - M12 adds `FactionManager`, reputation conditions/actions, NPC role/service/quest-offer metadata,
   the in-game Reputation Tester fixture, faction state in Quest Debug, and faction-aware enemy
   hostility.
-- Verification: JSON parses, `git diff --check` is clean, and `.\test.bat` runs green (Godot import
-  plus M9 regression, M10 quarantine/world-object smoke, M10R asset preview, M11 dialogue/branching
-  regression, M12 faction reputation regression, SR3 narrative-hardening regression, and M13
-  economy/equipment/inventory UI regression).
+- Verification: JSON parses, `git diff --check` is clean, Godot import/class cache passes, and
+  `.\test.bat` ran green with M9 regression, M10 quarantine/world-object smoke, M10R asset preview,
+  M11 dialogue/branching regression, M12 faction reputation regression, SR3 narrative-hardening
+  regression, M13 economy/equipment/inventory UI regression, and M14 combat/skills/magic
+  regression.
 - Note: player death is still a placeholder (respawn full HP).
-- Next gate: MV1 shared visible in-game verification. M14 starts only after the manual on-screen pass
-  is completed or any player-facing blockers are fixed/promoted.
+- Next: start M15 - dungeons & encounters.
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -149,17 +152,21 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   JSON; `npc_merchant_valdombra` is live in the Village. `InventoryUI` exposes the player-facing
   equip/use/unequip actions. Save/load carries equipment + gold and keeps equipment-derived max
   health out of base `stats.max_health`.
+- **M14**: `CombatSystem`/`DamageData` centralize typed damage, armor, resistance, and armor-pierce;
+  `SkillManager` stores skill level/XP under `GameState.player.skills`; `PlayerAbilities` executes
+  `skills.json` abilities through `ability_1/2/3`; enemies support data-authored `chaser`,
+  `skirmisher`, and `sentinel` AI variants. M14 is covered by `M14CombatSkillsMagicRunner`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
-  SceneLoader, SaveManager, InventoryManager, EquipmentManager, EconomyManager, QuestManager,
-  DialogueManager.
+  SceneLoader, SaveManager, InventoryManager, EquipmentManager, CombatSystem, SkillManager,
+  EconomyManager, QuestManager, DialogueManager.
 - **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse ·
   save F5 · load F9 · quest debug F10. Code now reads input action names for
-  journal/inventory/attack/save/load/debug.
+  journal/inventory/attack/save/load/debug/abilities. Ability keys are 1/2/3.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M8 Progression, SR1 core review, M9 data/tooling hardening, M10 world authoring, M10R governed
   assets, SR2 map review, M11 quest/dialogue pipeline, M12 NPCs/factions/reputation, SR3 narrative
-  review, and M13 items/equipment/economy/merchants are all complete. M14 combat/skills/magic is next.
+  review, M13 items/equipment/economy/merchants, and M14 combat/skills/magic are all complete.
 - M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
   dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
@@ -207,31 +214,32 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
-**MV1 - shared visible in-game verification: IN PROGRESS.** It gates M14. The current slice must be
-played in a visible window with each action narrated before execution, and any player-facing issue
-must be fixed or promoted before M14 begins.
+**M14 - combat, skills & magic: COMPLETE.** Typed damage, armor/resistances, skill persistence,
+player abilities, enemy archetypes, data validation, Cave placements, and regression coverage are
+live. Godot import, `M14CombatSkillsMagicRunner`, full `.\test.bat`, and `git diff --check` passed.
+
+**MV1 - shared visible in-game verification: INTERRUPTED.** It was added and started, then the user
+explicitly requested stopping it and moving on to M14.
 
 **M13 - items, equipment, economy & merchants: COMPLETE.** Equipment + derived combat stats,
 consumable item use, buy/sell with merchant stock/pricing, a reusable container `InventoryComponent`,
 clickable inventory equip/use/unequip actions, and a data-authored village merchant are live,
 save-aware, and covered by
-`tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete; **M14 (combat,
-skills & magic) follows MV1** (it picks up armor-based damage mitigation, deferred from M13).
+`tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete.
 
 ## 12. Recommended next step
-Proceed with **MV1 - shared visible in-game verification**, then **M14 - combat, skills & magic**:
-enemy archetypes, damage rules, combat abilities, skill growth, magic/spell data, AI variants, and
-armor-based damage mitigation (deferred from M13).
+Start **M15 - dungeons & encounters**: dungeon map conventions, locked doors/keys/levers, chests,
+boss/set-piece encounters, reward rooms, and save/load correctness.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M0-M13, M10R, SR1, SR2, and SR3 are complete** (`.\test.bat` passes).
+GDScript, designed to scale. **M0-M14, M10R, SR1, SR2, and SR3 are complete** (`.\test.bat` passes).
 Village/Forest/Cave remain the playable dev slice and now show approved generated terrain/prop
 candidates. Save/load, progression, quest flow, dynamic pickups, quarantine checks, world-object
 states, M10R asset preview, M11 dialogue actions/branching, M12 faction reputation, SR3 hardening,
-and M13 equipment/economy/container/merchant coverage are all in `.\test.bat`. Quest/faction
-authoring can be inspected in game with the F10 Quest Debug overlay. M13 includes the post-review
-armor save/load fix; the next step is **MV1 visible manual verification**, then M14.
+M13 equipment/economy/container/merchant coverage, and M14 combat/skills/magic coverage are all in
+`.\test.bat`. Quest/faction authoring can be inspected in game with the F10 Quest Debug overlay.
+M13 includes the post-review armor save/load fix. Next milestone is M15 dungeons/encounters.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

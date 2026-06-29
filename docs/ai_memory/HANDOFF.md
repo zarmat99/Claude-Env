@@ -10,6 +10,10 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
+- **M14 (combat/skills/magic) is complete and verified** (`.\test.bat` green, exit 0): typed
+  damage rules (`DamageData`, `CombatSystem`), skill XP/state (`SkillManager`), player abilities
+  (`PlayerAbilities` with `ability_1/2/3`), three enemy archetypes (`chaser`, `skirmisher`,
+  `sentinel`), Cave placements, DataRegistry validation, and `M14CombatSkillsMagicRunner`.
 - **M13 (items/equipment/economy/merchants) is complete and verified** (`.\test.bat` green, exit 0;
   committed/pushed): `EquipmentManager` (equip/unequip + derived combat stats),
   `InventoryManager.use_item` (consumables), `EconomyManager` (buy/sell + merchant stock/pricing), a
@@ -24,8 +28,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   equipped-slot unequip buttons. It remains a passive UI layer: equipment and consumables are still
   handled by `EquipmentManager` / `InventoryManager`. `M13EconomyEquipmentRunner` covers the UI
   button flow.
-- M0-M13, M10R, SR1, SR2, and SR3 are complete. **MV1 (shared visible in-game verification) is the
-  active gate before M14**. M14 (combat, skills & magic) starts only after this manual pass.
+- M0-M14, M10R, SR1, SR2, and SR3 are complete. MV1 was started then explicitly interrupted by the
+  user, who requested moving on to M14.
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
   (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
   multi-condition `advance_on` (array AND / `any_of` / `all_of`, with `talked_to` kept momentary),
@@ -39,8 +43,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   atlas, and proxy asset/world-object data are no longer active. The reusable code (`AuthoredMap`,
   chest/door/switch objects, validation) remains for M10R.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `FactionManager`, `ProgressionManager`,
-  `SceneLoader`, `SaveManager`, `InventoryManager`, `EquipmentManager`, `EconomyManager`,
-  `QuestManager`, `DialogueManager`.
+  `SceneLoader`, `SaveManager`, `InventoryManager`, `EquipmentManager`, `CombatSystem`,
+  `SkillManager`, `EconomyManager`, `QuestManager`, `DialogueManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
   map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
   `world_objects`. Pickups stay collected, enemies stay dead, dynamic drops respawn while active,
@@ -79,19 +83,17 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   Village near the Branch Tester. It is a debug probe for trusted/hostile reputation outcomes, not
   story content.
 - F10 Quest Debug now also shows faction reputation, hostile, and friendly state.
-- M12 verification passed: JSON parses, `git diff --check` is clean, and `.\test.bat` runs green
-  (Godot import + M9/M10/M10R/M11/M12 headless runners all OK, exit 0).
-- On `master`, M13 and the post-M13 fixes are committed and pushed.
+- Latest verification passed: Godot import/class cache, `M14CombatSkillsMagicRunner`, full
+  `.\test.bat`, and `git diff --check` are green.
+- On `master`, M14 and all earlier milestones/fixes are committed and pushed.
 
 ## Last thing done
-Added MV1, a shared visible in-game verification gate before M14. The rule is: open the game window
-where the user can see it, narrate each intended action before doing it, and fix or promote every
-player-facing issue before moving to the next milestone.
+Completed and verified M14 combat/skills/magic: typed damage, armor/resistances, skill persistence,
+player abilities, enemy archetypes, data validation, Cave placements, and regression coverage.
 
 ## Next thing to do
-Run **MV1 - shared visible in-game verification**: play the current slice on-screen and check
-movement/collisions, NPC dialogue, quest flow, transitions, combat/loot, inventory equip/use/unequip,
-merchant browsing, save/load, and F10 debug readability. Then start **M14 - combat, skills & magic**.
+Start **M15 - dungeons & encounters**: dungeon map conventions, locked doors/keys/levers, chests,
+boss/set-piece encounters, reward rooms, and save/load correctness.
 - ⚠️ **Economy UX gaps for M16**: the HUD has no gold readout, the merchant gives no "can't afford"
   feedback, and starting gold is 0 (gold comes from quests/selling). The merchant now always shows
   its wares (Session 029). A real shop UI is M16.
@@ -122,10 +124,10 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 + M14 regression suites
 ```
 Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
-attack = left mouse | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
+attack = left mouse | abilities = 1/2/3 | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
 Maps connect via walk-on pads (the colored rectangles near map edges).
 
 ## Screenshot trick (visual checks; delete temp files + clear .godot after)

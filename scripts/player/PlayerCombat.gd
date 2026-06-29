@@ -34,6 +34,8 @@ func attack() -> void:
         return
     _cooling = true
     _hitbox.damage = EquipmentManager.get_effective_stat("damage")
+    _hitbox.damage_type = "physical"
+    _hitbox.armor_pierce = EquipmentManager.get_effective_stat("armor_pierce")
     await _hitbox.strike(get_parent())   # source = the Player root
     await get_tree().create_timer(attack_cooldown).timeout
     _cooling = false

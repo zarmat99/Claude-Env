@@ -8,10 +8,7 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ---
 
 ## In Progress
-- **MV1-T1 - Shared visible in-game verification before M14** - MV1 - files:
-  `docs/architecture/ROADMAP.md`, `docs/ai_memory/*` - **in_progress** (2026-06-28): open the game
-  visibly, narrate each action before doing it, test the current slice manually with the user, and
-  fix or promote any player-facing issue before starting M14.
+- (none)
 
 ## Backlog
 
@@ -33,6 +30,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ### M13 - items, equipment, economy & merchants
 - (none - complete)
 
+### M14 - combat, skills & magic
+- (none - complete)
+
 ### Noted early - economy UX (for M16 persistence & UX hardening)
 - Add a **HUD gold readout** (gold is currently only visible via the F10 Quest Debug overlay).
 - Add a **merchant/shop UI** with affordability feedback (the merchant now always shows its wares,
@@ -46,6 +46,32 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   becomes current.
 
 ## Done
+- **M14-V1 - Verify, commit, and push M14** - M14 - files: `test.bat`,
+  `tests/headless/M14CombatSkillsMagicRunner.{gd,tscn}` - **done** (2026-06-29): Godot
+  import/class cache passed, `M14CombatSkillsMagicRunner` passed, full `.\test.bat` passed, and M14
+  is ready to commit/push.
+- **MV1-T1 - Shared visible in-game verification before M14** - MV1 - files:
+  `docs/architecture/ROADMAP.md`, `docs/ai_memory/*` - **done/interrupted**
+  (2026-06-28): MV1 gate was added and a visible game session was started with screenshots enabled,
+  then the user explicitly stopped the manual pass and requested moving on to M14.
+- **M14-T1 - Typed damage rules** - M14 - files:
+  `scripts/combat/DamageData.gd`, `scripts/combat/CombatSystem.gd`,
+  `scripts/combat/{Hitbox,Hurtbox}.gd`, `scripts/player/PlayerCombat.gd` - **done**
+  (2026-06-29): centralized damage type, armor, resistance, and armor-pierce rules.
+- **M14-T2 - Skills and player abilities** - M14 - files:
+  `scripts/progression/SkillManager.gd`, `scripts/player/PlayerAbilities.gd`,
+  `data/skills/skills.json`, `project.godot`, `scenes/player/Player.tscn` - **done**
+  (2026-06-29): skill XP/levels persist in `GameState.player.skills`; `ability_1/2/3` execute
+  data-authored combat/magic abilities.
+- **M14-T3 - Enemy archetypes and AI variants** - M14 - files:
+  `data/enemies/enemies.json`, `scripts/enemies/EnemyAI.gd`,
+  `scenes/enemies/{CaveRat,BoneSentinel}.tscn`, `scenes/maps/Cave.tscn` - **done**
+  (2026-06-29): added chaser/skirmisher/sentinel archetypes with data-authored ranges, cooldowns,
+  damage types, armor, and resistances.
+- **M14-T4 - M14 validation and regression runner** - M14 - files:
+  `scripts/core/DataRegistry.gd`, `tests/headless/M14CombatSkillsMagicRunner.{gd,tscn}`, `test.bat`
+  - **done** (2026-06-29): added schema checks and a runner covering damage rules,
+  skills save/load, player abilities, and enemy archetype loading.
 - **M13-F2 - Inventory UI item actions** - M13 follow-up - files:
   `scripts/ui/InventoryUI.gd`, `tests/headless/M13EconomyEquipmentRunner.gd` - **done**
   (2026-06-28): inventory entries are now actionable in game (`Equip` weapons/armor, `Use`

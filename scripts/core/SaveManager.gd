@@ -44,7 +44,7 @@ func load_game(slot: int = 0) -> bool:
         return false
 
     var snapshot: Dictionary = parsed
-    var version := int(snapshot.get("version", 0))
+    var version: int = int(snapshot.get("version", 0))
     if version > SAVE_VERSION:
         push_error("SaveManager: save version %d is newer than supported version %d" % [version, SAVE_VERSION])
         return false
@@ -76,6 +76,7 @@ func _build_snapshot() -> Dictionary:
             "gold": int(player.get("gold", 0)),
             "inventory": _duplicate_array(player.get("inventory", [])),
             "equipment": _duplicate_dict(player.get("equipment", {})),
+            "skills": _duplicate_dict(player.get("skills", {})),
         },
         "quests": {
             "active": _duplicate_dict(GameState.quests.get("active", {})),
@@ -95,6 +96,7 @@ func _apply_snapshot(snapshot: Dictionary) -> void:
         "gold": int(player.get("gold", 0)),
         "inventory": _normalize_inventory(player.get("inventory", [])),
         "equipment": _duplicate_dict(player.get("equipment", {})),
+        "skills": _normalize_skills(player.get("skills", {})),
     }
 
     var quests: Dictionary = snapshot.get("quests", {})
@@ -108,31 +110,33 @@ func _apply_snapshot(snapshot: Dictionary) -> void:
     GameState.world_objects = _normalize_world_objects(snapshot.get("world_objects", {}))
     GameState.kills = _normalize_int_dict(snapshot.get("kills", {}))
     GameState.current_map = String(snapshot.get("current_map", ""))
+    if has_node("/root/SkillManager"):
+        SkillManager.ensure_player_skills()
 
     if SceneLoader.is_bound() and GameState.current_map != "":
         # Loading should restore the saved state, not fire map_changed and advance quests.
         SceneLoader.change_map(GameState.current_map, "", false)
 
 func _sync_player_from_world() -> void:
-    var player := SceneLoader.get_player() if SceneLoader.is_bound() else get_tree().get_first_node_in_group("player")
+    var player: Node = SceneLoader.get_player() if SceneLoader.is_bound() else get_tree().get_first_node_in_group("player")
     if player == null or not is_instance_valid(player):
         return
     GameState.player["position"] = player.global_position
-    var health := player.get_node_or_null("HealthComponent")
+    var health: Node = player.get_node_or_null("HealthComponent")
     if health:
         var stats: Dictionary = GameState.player.get("stats", {})
         stats["health"] = clamp(int(health.health), 0, _effective_player_max_health(stats))
         GameState.player["stats"] = stats
 
 func _apply_player_to_world() -> void:
-    var player := SceneLoader.get_player() if SceneLoader.is_bound() else get_tree().get_first_node_in_group("player")
+    var player: Node = SceneLoader.get_player() if SceneLoader.is_bound() else get_tree().get_first_node_in_group("player")
     if player == null or not is_instance_valid(player):
         return
     player.global_position = GameState.player.get("position", Vector2.ZERO)
-    var health := player.get_node_or_null("HealthComponent")
+    var health: Node = player.get_node_or_null("HealthComponent")
     if health and health.has_method("setup"):
         var stats: Dictionary = GameState.player.get("stats", {})
-        var effective_max := _effective_player_max_health(stats)
+        var effective_max: int = _effective_player_max_health(stats)
         health.setup(effective_max, int(stats.get("health", effective_max)))
 
 func _effective_player_max_health(stats: Dictionary) -> int:
@@ -155,7 +159,7 @@ func _dict_to_vector(value) -> Vector2:
     return Vector2.ZERO
 
 func _normalize_stats(value) -> Dictionary:
-    var stats := _duplicate_dict(value)
+    var stats: Dictionary = _duplicate_dict(value)
     stats["level"] = int(stats.get("level", 1))
     stats["xp"] = int(stats.get("xp", 0))
     stats["max_health"] = int(stats.get("max_health", 30))
@@ -170,10 +174,23 @@ func _normalize_inventory(value) -> Array:
     for slot in value:
         if not (slot is Dictionary):
             continue
-        var item_id := String(slot.get("id", ""))
-        var count := int(slot.get("count", 0))
+        var item_id: String = String(slot.get("id", ""))
+        var count: int = int(slot.get("count", 0))
         if item_id != "" and count > 0:
             out.append({"id": item_id, "count": count})
+    return out
+
+func _normalize_skills(value) -> Dictionary:
+    var out: Dictionary = {}
+    if not (value is Dictionary):
+        return out
+    for skill_id in value.keys():
+        var state = value[skill_id]
+        if state is Dictionary:
+            out[String(skill_id)] = {
+                "level": max(1, int(state.get("level", 1))),
+                "xp": max(0, int(state.get("xp", 0))),
+            }
     return out
 
 func _normalize_active_quests(value) -> Dictionary:

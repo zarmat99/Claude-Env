@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="1_pc"]
 [ext_resource type="Script" path="res://scripts/player/PlayerInteraction.gd" id="2_pi"]
 [ext_resource type="Script" path="res://scripts/components/HealthComponent.gd" id="3_hc"]
 [ext_resource type="Script" path="res://scripts/combat/Hitbox.gd" id="4_hit"]
 [ext_resource type="Script" path="res://scripts/player/PlayerCombat.gd" id="5_cmb"]
+[ext_resource type="Script" path="res://scripts/player/PlayerAbilities.gd" id="6_ab"]
 
 [sub_resource type="RectangleShape2D" id="rect_player"]
 size = Vector2(36, 44)
@@ -55,3 +56,6 @@ shape = SubResource("circle_attack")
 
 [node name="PlayerCombat" type="Node" parent="."]
 script = ExtResource("5_cmb")
+
+[node name="PlayerAbilities" type="Node" parent="."]
+script = ExtResource("6_ab")

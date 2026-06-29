@@ -5,7 +5,10 @@ class_name Hurtbox
 ## the actor's hurt collision layer (player and enemies use different layers, so attacks only hit
 ## the intended team).
 
-func receive_hit(amount: int, source: Node) -> void:
-    var h = owner.get_node_or_null("HealthComponent") if owner else null
-    if h and h.has_method("take_damage"):
-        h.take_damage(amount, source)
+func receive_hit(amount_or_damage, source: Node = null, damage_type: String = "physical", armor_pierce: int = 0) -> void:
+    if owner == null:
+        return
+    var damage := amount_or_damage as DamageData
+    if damage == null:
+        damage = DamageData.new(int(amount_or_damage), damage_type, source, armor_pierce)
+    CombatSystem.apply_damage(owner, damage)
