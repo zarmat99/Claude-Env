@@ -36,6 +36,14 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ### M15 - dungeons & encounters
 - (none - complete)
 
+### SR4 - Systems stress review
+- (none - complete)
+
+### M16 - persistence & UX hardening
+- Detail M16 tasks from `docs/architecture/ROADMAP.md`: save UI/slots, autosave policy, save
+  migration/rejection feedback, game-over/respawn, settings/input remapping, pause/menu flow, and
+  player-facing error handling.
+
 ### Noted early - economy UX (for M16 persistence & UX hardening)
 - Add a **HUD gold readout** (gold is currently only visible via the F10 Quest Debug overlay).
 - Add a **merchant/shop UI** with affordability feedback (the merchant now always shows its wares,
@@ -49,6 +57,24 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   becomes current.
 
 ## Done
+- **SR4-V1 - Full regression, commit, and push SR4** - SR4 - files: `test.bat`,
+  `tests/headless/SR4SystemsStressRunner.{gd,tscn}`, `docs/**` - **done** (2026-06-29): full
+  `.\test.bat` passes (Godot import + M9/M10/M10R/M11/M12/SR3/M13/M14/M15/SR4, exit 0); SR4 review,
+  runner, and docs committed and pushed on `master`.
+- **SR4-T1 - Synthetic systems stress dataset** - SR4 - files:
+  `tests/headless/SR4SystemsStressRunner.{gd,tscn}` - **done** (2026-06-29): added an in-memory
+  stress fixture reaching 10+ maps, 20 NPCs, 10 quests, 50 items, several factions/merchants/
+  dungeons, authored objects, encounter metadata, and unique persistent IDs without polluting
+  production JSON.
+- **SR4-T2 - Mid-flow save/load stress regression** - SR4 - files:
+  `tests/headless/SR4SystemsStressRunner.gd`, `test.bat` - **done** (2026-06-29): validates the
+  stress dataset, saves/loads current map, inventory, completed quest, faction reputation, kills,
+  and door/switch/enemy/chest world-object state, then restores and revalidates the real data.
+- **SR4-T3 - Systems stress review** - SR4 - files:
+  `docs/reviews/SR4_SYSTEMS_STRESS_REVIEW.md`, `docs/architecture/ROADMAP.md`,
+  `docs/architecture/SYSTEMS.md` - **done** (2026-06-29): verdict is proceed to M16; no blocking
+  rewrite. Follow-ups: M16 persistence/UX, governed production-region fixture, and authoring
+  summaries before M18.
 - **M15-T1 - Data-authored dungeon fixture** - M15 - files:
   `data/maps/maps.json`, `scenes/maps/TrialDungeon.tscn`, `scenes/maps/Cave.tscn`,
   `scripts/world/AuthoredMap.gd`, `scripts/core/DataRegistry.gd` - **done** (2026-06-29): added

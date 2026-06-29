@@ -215,4 +215,7 @@ current codebase, so it should avoid "current milestone" language that can go st
   containers, save/load, and inventory UI actions. M14 adds `M14CombatSkillsMagicRunner` for typed damage,
   armor/resistance mitigation, skill save/load, player abilities, and enemy archetype loading. M15
   adds `M15DungeonEncounterRunner` for keyed doors, switch gates, boss encounters, reward chests,
-  and dungeon save/load persistence.
+  and dungeon save/load persistence. SR4 adds `SR4SystemsStressRunner`, which injects a synthetic
+  review-scale dataset in memory (10+ maps, 20 NPCs, 10 quests, 50 items, several factions/merchants/
+  dungeons), validates it, checks mid-flow save/load, restores real data, and keeps the production
+  JSON free of throwaway stress content.

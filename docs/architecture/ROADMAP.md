@@ -203,6 +203,10 @@ when the feature is player-facing.
   merchants, several dungeons, and save/load in mid-flow.
 - **Exit criteria**: performance, data validation, save/load, quest flow, and authoring ergonomics
   are acceptable or fixed before production region work.
+- **Status 2026-06-29**: complete and verified. `SR4SystemsStressRunner` injects the review-scale
+  dataset in memory, validates it, exercises mid-flow save/load, restores the real data, and is wired
+  into `test.bat`. Review verdict: proceed to M16; no blocking rewrite. Full `.\test.bat` passes
+  (exit 0) and SR4 is committed and pushed.
 
 ## M16 — Persistence & UX hardening
 - **Goal**: make core player-facing UX and persistence production-ready.

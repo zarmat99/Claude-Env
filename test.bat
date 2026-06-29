@@ -32,4 +32,7 @@ if errorlevel 1 exit /b %errorlevel%
 if errorlevel 1 exit /b %errorlevel%
 
 "%GODOT_EXE%" --path "%PROJECT_DIR%" --headless res://tests/headless/M15DungeonEncounterRunner.tscn
+if errorlevel 1 exit /b %errorlevel%
+
+"%GODOT_EXE%" --path "%PROJECT_DIR%" --headless res://tests/headless/SR4SystemsStressRunner.tscn
 exit /b %errorlevel%

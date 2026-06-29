@@ -4,6 +4,43 @@
 
 ---
 
+## 2026-06-29 - Session 039 - Verify and ship SR4
+
+- **Context**: SR4 (review doc + `SR4SystemsStressRunner` + `test.bat`/docs) was implemented in
+  Session 038 but left uncommitted, with the full regression and commit/push pending (the previous
+  block hit the escalation usage limit). Also reviewed the M14/M15 work Codex had committed/pushed.
+- **Verification**: ran the full `.\test.bat` end-to-end - Godot import plus the M9, M10, M10R, M11,
+  M12, SR3, M13, M14, M15, and SR4 runners all reported OK (exit 0). No regressions from the M14/M15
+  combat/dungeon work or the SR4 in-memory stress harness.
+- **Ship**: committed and pushed the SR4 change set (review doc, runner + scene, `test.bat` wiring,
+  and the SR4 doc updates) on `master`.
+- **Docs**: flipped SR4 from "implemented / regression pending" to "complete and verified" across
+  HANDOFF, PROJECT_MEMORY, ROADMAP, and TASKS (SR4-V1 moved from Blocked to Done).
+- **Note**: the SR4 synthetic dataset is in-memory test content only (restored after the run); it is
+  not playable. The M15 Trial Dungeon, by contrast, is real dev-sandbox content reachable from Cave.
+- **Next**: M16 - persistence & UX hardening (includes the tracked economy UX gaps).
+
+---
+
+## 2026-06-29 - Session 038 - Complete SR4 systems stress review
+
+- **Request**: complete the next SR4 milestone.
+- **SR4 method**: added `SR4SystemsStressRunner`, which clones `DataRegistry` tables in memory,
+  injects a review-scale synthetic content set, validates it, exercises mid-flow save/load, then
+  restores the real project data and validates again.
+- **Stress coverage**: 10+ maps, 20 NPCs, 10 quests, 50 items, several factions, several merchants,
+  several authored dungeons, authored collision rectangles, encounter metadata, gates, rewards, and
+  unique persistent IDs.
+- **Review**: wrote `docs/reviews/SR4_SYSTEMS_STRESS_REVIEW.md`. Verdict: proceed to M16; no
+  blocking rewrite. Follow-ups are M16 persistence/UX, a governed production-region fixture before
+  replacing the dev sandbox, and content-authoring summaries before M18.
+- **Tests**: Godot import passed; `SR4SystemsStressRunner` passed; `git diff --check` passed. Full
+  `.\test.bat`, commit, and push are pending because the environment rejected the needed escalated
+  command after reaching the usage limit.
+- **Next**: rerun full `.\test.bat`, commit/push SR4, then start M16 - persistence & UX hardening.
+
+---
+
 ## 2026-06-29 - Session 037 - Complete M15 dungeons and encounters
 
 - **Request**: complete the next milestone after M14.

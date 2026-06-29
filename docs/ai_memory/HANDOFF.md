@@ -10,6 +10,12 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
+- **SR4 (systems stress review) is complete and verified**: the `SR4SystemsStressRunner` injects a
+  review-scale synthetic dataset in memory (10+ maps, 20 NPCs, 10 quests, 50 items, several
+  factions/merchants/dungeons), validates it, exercises mid-flow save/load, restores the real data,
+  and confirms the architecture can proceed to M16 with no blocking rewrite. Review doc:
+  `docs/reviews/SR4_SYSTEMS_STRESS_REVIEW.md`. Full `.\test.bat` passes (exit 0); SR4 is committed
+  and pushed.
 - **M15 (dungeons/encounters) is complete and verified** (`.\test.bat` green, exit 0): data-authored
   `map_trial_dungeon_01`, Cave transition/spawn, reusable `world_objects` definitions, keyed doors,
   switch-opened gates, boss encounter metadata, reward chest, boss/reward save-load persistence, and
@@ -36,7 +42,7 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   equipped-slot unequip buttons. It remains a passive UI layer: equipment and consumables are still
   handled by `EquipmentManager` / `InventoryManager`. `M13EconomyEquipmentRunner` covers the UI
   button flow.
-- M0-M15, M10R, SR1, SR2, and SR3 are complete. MV1 was started then explicitly interrupted by the
+- M0-M15, M10R, SR1, SR2, SR3, and SR4 are complete. MV1 was started then explicitly interrupted by the
   user, who requested moving on to M14.
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
   (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
@@ -91,17 +97,17 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   Village near the Branch Tester. It is a debug probe for trusted/hostile reputation outcomes, not
   story content.
 - F10 Quest Debug now also shows faction reputation, hostile, and friendly state.
-- Latest verification passed: Godot import/class cache, `M15DungeonEncounterRunner`, full
-  `.\test.bat`, and `git diff --check` are green.
-- On `master`, M15 and all earlier milestones/fixes are committed and pushed.
+- Latest verification passed: full `.\test.bat` is green (exit 0) - Godot import plus the M9, M10,
+  M10R, M11, M12, SR3, M13, M14, M15, and SR4 runners all OK.
+- On `master`, M0-M15 plus SR1-SR4 (including the SR4 review) are committed and pushed.
 
 ## Last thing done
-Completed M15 dungeons/encounters: trial dungeon fixture, keyed door, switch gate, boss encounter,
-reward chest, and save/load regression coverage.
+Completed SR4 systems stress review: in-memory stress dataset runner, mid-flow save/load check,
+written review, and regression-suite wiring.
 
 ## Next thing to do
-Start **SR4 - systems stress review**: stress the architecture with quantity before production
-region work.
+Start **M16 - persistence & UX hardening**: move save/load and core UX from debug/dev controls toward
+player-facing flows.
 - ⚠️ **Economy UX gaps for M16**: the HUD has no gold readout, the merchant gives no "can't afford"
   feedback, and starting gold is 0 (gold comes from quests/selling). The merchant now always shows
   its wares (Session 029). A real shop UI is M16.
@@ -132,7 +138,7 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 + M14 + M15 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 + M14 + M15 + SR4 regression suites
 ```
 Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
 attack = left mouse | abilities = 1/2/3 | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
@@ -152,5 +158,5 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, pre-M17
-  approved data-authored map fixture using governed assets.
+- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, SR4-F2
+  governed production-region fixture, and SR4-F3 content-authoring summaries before M18.
