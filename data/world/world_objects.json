@@ -1,30 +1,30 @@
 {
-  "world_object_dungeon_chest": {
-    "id": "world_object_dungeon_chest",
+  "world_object_fixture_chest": {
+    "id": "world_object_fixture_chest",
     "kind": "chest",
     "scene": "res://scenes/world/Chest.tscn",
     "persistent": true
   },
-  "world_object_dungeon_door": {
-    "id": "world_object_dungeon_door",
+  "world_object_fixture_door": {
+    "id": "world_object_fixture_door",
     "kind": "door",
     "scene": "res://scenes/world/Door.tscn",
     "persistent": true
   },
-  "world_object_dungeon_switch": {
-    "id": "world_object_dungeon_switch",
+  "world_object_fixture_switch": {
+    "id": "world_object_fixture_switch",
     "kind": "switch",
     "scene": "res://scenes/world/Switch.tscn",
     "persistent": true
   },
-  "world_object_dungeon_pickup": {
-    "id": "world_object_dungeon_pickup",
+  "world_object_fixture_pickup": {
+    "id": "world_object_fixture_pickup",
     "kind": "pickup",
     "scene": "res://scenes/items/PickupItem.tscn",
     "persistent": true
   },
-  "world_object_dungeon_enemy": {
-    "id": "world_object_dungeon_enemy",
+  "world_object_fixture_enemy": {
+    "id": "world_object_fixture_enemy",
     "kind": "enemy",
     "scene": "res://scenes/enemies/EnemyBase.tscn",
     "persistent": true

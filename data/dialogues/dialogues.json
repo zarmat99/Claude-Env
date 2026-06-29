@@ -1,330 +1,124 @@
-{
-  "dialogue_blacksmith_intro": {
-    "id": "dialogue_blacksmith_intro",
+﻿{
+  "dialogue_fixture_actions": {
+    "id": "dialogue_fixture_actions",
     "entry": "start",
     "nodes": {
       "start": {
-        "speaker": "npc_blacksmith_valdombra",
-        "text": "Well met, traveler. The forge is hot and the roads are dangerous. What can I do for you?",
-        "choices": [
-          {
-            "text": "Looking for work.",
-            "next": "offer",
-            "conditions": [ { "type": "quest_not_started", "quest": "quest_first_dungeon" } ]
-          },
-          {
-            "text": "About that fragment...",
-            "next": "reminder",
-            "conditions": [ { "type": "quest_active", "quest": "quest_first_dungeon" } ]
-          },
-          {
-            "text": "Thanks again for the work.",
-            "next": "thanks",
-            "conditions": [ { "type": "quest_completed", "quest": "quest_first_dungeon" } ]
-          },
-          { "text": "Just passing through.", "next": "passing" },
-          { "text": "(Leave)", "next": null }
-        ]
-      },
-      "offer": {
-        "speaker": "npc_blacksmith_valdombra",
-        "text": "There's an old cave east of here. Inside lies a fragment of ancient iron - I need it for a commission. Bring it to me and I'll make it worth your while.",
-        "actions": [ { "type": "start_quest", "quest": "quest_first_dungeon" } ],
-        "choices": [ { "text": "I'll find it.", "next": null } ]
-      },
-      "reminder": {
-        "speaker": "npc_blacksmith_valdombra",
-        "text": "The fragment is still out there, in the cave to the east. Bring it back and the reward is yours.",
-        "choices": [ { "text": "I'm on it.", "next": null } ]
-      },
-      "thanks": {
-        "speaker": "npc_blacksmith_valdombra",
-        "text": "That fragment was exactly what I needed. You have my thanks - and my forge, should you ever need it.",
-        "choices": [ { "text": "Farewell.", "next": null } ]
-      },
-      "passing": {
-        "speaker": "npc_blacksmith_valdombra",
-        "text": "Then keep your blade close. The woods east of here have grown unfriendly of late.",
-        "choices": [ { "text": "I will. Farewell.", "next": null } ]
-      }
-    }
-  },
-  "dialogue_m11_action_fixture": {
-    "id": "dialogue_m11_action_fixture",
-    "entry": "start",
-    "nodes": {
-      "start": {
-        "speaker": "player",
-        "text": "M11 action fixture.",
+        "speaker": "npc_fixture_guide",
+        "text": "Fixture action node.",
         "actions": [
-          { "type": "set_flag", "flag": "m11_fixture_running" },
-          { "type": "give_item", "id": "item_health_potion", "count": 2 },
-          { "type": "take_item", "id": "item_health_potion", "count": 1 },
-          {
-            "type": "give_reward",
-            "rewards": {
-              "xp": 10,
-              "gold": 7,
-              "items": [ { "id": "item_ancient_iron_fragment", "count": 1 } ]
-            }
-          },
-          { "type": "clear_flag", "flag": "m11_fixture_running" }
+          { "type": "set_flag", "flag": "fixture_dialogue_started" },
+          { "type": "give_item", "id": "item_fixture_consumable", "count": 2 },
+          { "type": "take_item", "id": "item_fixture_consumable", "count": 1 },
+          { "type": "give_reward", "rewards": { "xp": 5, "gold": 3, "items": [ { "id": "item_fixture_key", "count": 1 } ] } },
+          { "type": "clear_flag", "flag": "fixture_dialogue_started" }
         ],
         "choices": [ { "text": "Done.", "next": null } ]
       }
     }
   },
-  "dialogue_m11_branch_fixture": {
-    "id": "dialogue_m11_branch_fixture",
+  "dialogue_fixture_branch": {
+    "id": "dialogue_fixture_branch",
     "entry": "start",
     "nodes": {
       "start": {
-        "speaker": "player",
-        "text": "M11 branch fixture.",
-        "actions": [ { "type": "start_quest", "quest": "quest_m11_branch_fixture" } ],
+        "speaker": "npc_fixture_guide",
+        "text": "Fixture branch node.",
+        "actions": [ { "type": "start_quest", "quest": "quest_fixture_branch" } ],
         "choices": [
           {
-            "text": "Spare them.",
+            "text": "Choose branch one.",
             "next": null,
             "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m11_branch_fixture", "stage": 0 },
-              { "type": "flag_not_set", "flag": "quest_m11_branch_fixture_outcome_keep" }
+              { "type": "quest_stage_is", "quest": "quest_fixture_branch", "stage": 0 },
+              { "type": "flag_not_set", "flag": "fixture_branch_two" }
             ],
             "actions": [
-              { "type": "set_flag", "flag": "quest_m11_branch_fixture_outcome_spare" },
-              { "type": "set_quest_stage", "quest": "quest_m11_branch_fixture", "stage": 100 }
+              { "type": "set_flag", "flag": "fixture_branch_one" },
+              { "type": "set_quest_stage", "quest": "quest_fixture_branch", "stage": 100 }
             ]
           },
           {
-            "text": "Keep the goods.",
+            "text": "Choose branch two.",
             "next": null,
             "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m11_branch_fixture", "stage": 0 },
-              { "type": "flag_not_set", "flag": "quest_m11_branch_fixture_outcome_spare" }
+              { "type": "quest_stage_is", "quest": "quest_fixture_branch", "stage": 0 },
+              { "type": "flag_not_set", "flag": "fixture_branch_one" }
             ],
             "actions": [
-              { "type": "set_flag", "flag": "quest_m11_branch_fixture_outcome_keep" },
-              { "type": "set_quest_stage", "quest": "quest_m11_branch_fixture", "stage": 200 }
+              { "type": "set_flag", "flag": "fixture_branch_two" },
+              { "type": "set_quest_stage", "quest": "quest_fixture_branch", "stage": 200 }
             ]
           },
-          { "text": "(Leave)", "next": null }
+          { "text": "Leave.", "next": null }
         ]
       }
     }
   },
-  "dialogue_m11_regression_fixture": {
-    "id": "dialogue_m11_regression_fixture",
-    "entry": "start",
+  "dialogue_fixture_reactive": {
+    "id": "dialogue_fixture_reactive",
+    "entry": "unknown",
+    "entry_rules": [
+      {
+        "conditions": [ { "type": "flag_set", "flag": "fixture_known" } ],
+        "node": "known"
+      }
+    ],
     "nodes": {
-      "start": {
-        "speaker": "npc_m11_branch_tester",
-        "text": "Courier test ready.",
-        "actions": [ { "type": "start_quest", "quest": "quest_m11_regression_fixture" } ],
-        "choices": [
-          {
-            "text": "Begin delivery.",
-            "next": null,
-            "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 0 },
-              { "type": "flag_not_set", "flag": "quest_m11_regression_fixture_decision_started" }
-            ],
-            "actions": [
-              { "type": "set_flag", "flag": "quest_m11_regression_fixture_decision_started" },
-              { "type": "give_item", "id": "item_health_potion", "count": 2 },
-              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 10 }
-            ]
-          },
-          {
-            "text": "Pay the toll.",
-            "next": null,
-            "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 10 },
-              { "type": "has_item", "target": "item_health_potion", "count": 2 }
-            ],
-            "actions": [
-              { "type": "set_flag", "flag": "quest_m11_regression_fixture_decision_toll_paid" },
-              { "type": "take_item", "id": "item_health_potion", "count": 1 },
-              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 20 }
-            ]
-          },
-          {
-            "text": "Deliver the remaining potion.",
-            "next": null,
-            "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 20 },
-              { "type": "has_item", "target": "item_health_potion", "count": 1 },
-              { "type": "flag_not_set", "flag": "quest_m11_regression_fixture_outcome_keep" }
-            ],
-            "actions": [
-              { "type": "set_flag", "flag": "quest_m11_regression_fixture_outcome_deliver" },
-              { "type": "take_item", "id": "item_health_potion", "count": 1 },
-              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 100 }
-            ]
-          },
-          {
-            "text": "Keep the remaining potion.",
-            "next": null,
-            "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m11_regression_fixture", "stage": 20 },
-              { "type": "has_item", "target": "item_health_potion", "count": 1 },
-              { "type": "flag_not_set", "flag": "quest_m11_regression_fixture_outcome_deliver" }
-            ],
-            "actions": [
-              { "type": "set_flag", "flag": "quest_m11_regression_fixture_outcome_keep" },
-              { "type": "set_quest_stage", "quest": "quest_m11_regression_fixture", "stage": 200 }
-            ]
-          },
-          { "text": "(Leave)", "next": null }
-        ]
+      "unknown": {
+        "speaker": "npc_fixture_guide",
+        "text": "Fixture unknown greeting.",
+        "choices": [ { "text": "Leave.", "next": null } ]
+      },
+      "known": {
+        "speaker": "npc_fixture_guide",
+        "text": "Fixture known greeting.",
+        "choices": [ { "text": "Leave.", "next": null } ]
       }
     }
   },
-  "dialogue_m12_reputation_fixture": {
-    "id": "dialogue_m12_reputation_fixture",
-    "entry": "start",
-    "nodes": {
-      "start": {
-        "speaker": "npc_m12_reputation_tester",
-        "text": "Faction reputation test ready.",
-        "actions": [ { "type": "start_quest", "quest": "quest_m12_reputation_fixture" } ],
-        "choices": [
-          {
-            "text": "Help the village.",
-            "next": null,
-            "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m12_reputation_fixture", "stage": 0 },
-              { "type": "flag_not_set", "flag": "quest_m12_reputation_fixture_outcome_hostile" }
-            ],
-            "actions": [
-              { "type": "change_reputation", "faction": "faction_valdombra_village", "amount": 25 },
-              { "type": "set_flag", "flag": "quest_m12_reputation_fixture_decision_helped" },
-              { "type": "set_quest_stage", "quest": "quest_m12_reputation_fixture", "stage": 10 }
-            ]
-          },
-          {
-            "text": "Claim trusted reward.",
-            "next": null,
-            "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m12_reputation_fixture", "stage": 10 },
-              { "type": "faction_reputation_at_least", "faction": "faction_valdombra_village", "value": 25 }
-            ],
-            "actions": [
-              { "type": "set_flag", "flag": "quest_m12_reputation_fixture_outcome_trusted" },
-              { "type": "set_quest_stage", "quest": "quest_m12_reputation_fixture", "stage": 100 }
-            ]
-          },
-          {
-            "text": "Threaten the village.",
-            "next": null,
-            "conditions": [
-              { "type": "quest_stage_is", "quest": "quest_m12_reputation_fixture", "stage": 0 },
-              { "type": "faction_reputation_below", "faction": "faction_valdombra_village", "value": 25 }
-            ],
-            "actions": [
-              { "type": "change_reputation", "faction": "faction_valdombra_village", "amount": -80 },
-              { "type": "set_flag", "flag": "quest_m12_reputation_fixture_outcome_hostile" },
-              { "type": "set_quest_stage", "quest": "quest_m12_reputation_fixture", "stage": 200 }
-            ]
-          },
-          { "text": "(Leave)", "next": null }
-        ]
-      }
-    }
-  },
-  "dialogue_sr3_guard_fixture": {
-    "id": "dialogue_sr3_guard_fixture",
+  "dialogue_fixture_guard": {
+    "id": "dialogue_fixture_guard",
     "entry": "intro",
     "nodes": {
       "intro": {
         "speaker": "player",
-        "text": "This line has no choices; it continues to the dead-end node.",
+        "text": "Fixture guarded intro.",
         "next": "deadend"
       },
       "deadend": {
         "speaker": "player",
-        "text": "Every choice here is gated off, so the continue guard must end the dialogue.",
+        "text": "Fixture guarded dead end.",
         "choices": [
           {
-            "text": "Unreachable choice.",
+            "text": "Unreachable.",
             "next": null,
-            "conditions": [ { "type": "flag_set", "flag": "sr3_guard_never_set" } ]
+            "conditions": [ { "type": "flag_set", "flag": "fixture_never_set" } ]
           }
         ]
       }
     }
   },
-  "dialogue_sr3_reactive_fixture": {
-    "id": "dialogue_sr3_reactive_fixture",
-    "entry": "stranger",
-    "entry_rules": [
-      {
-        "conditions": [ { "type": "flag_set", "flag": "sr3_reactive_known" } ],
-        "node": "friend"
-      }
-    ],
-    "nodes": {
-      "stranger": {
-        "speaker": "player",
-        "text": "Who are you, stranger?",
-        "choices": [ { "text": "(Leave)", "next": null } ]
-      },
-      "friend": {
-        "speaker": "player",
-        "text": "Good to see you again, friend.",
-        "choices": [ { "text": "(Leave)", "next": null } ]
-      }
-    }
-  },
-  "dialogue_m13_merchant_fixture": {
-    "id": "dialogue_m13_merchant_fixture",
+  "dialogue_fixture_trade": {
+    "id": "dialogue_fixture_trade",
     "entry": "start",
     "nodes": {
       "start": {
-        "speaker": "player",
-        "text": "Trade test counter.",
+        "speaker": "npc_fixture_merchant",
+        "text": "Fixture trade node.",
         "choices": [
           {
-            "text": "Buy a health potion.",
-            "next": null,
-            "conditions": [ { "type": "gold_at_least", "value": 10 } ],
-            "actions": [ { "type": "buy_item", "id": "item_health_potion", "count": 1 } ]
-          },
-          {
-            "text": "Sell the iron sword.",
-            "next": null,
-            "conditions": [ { "type": "has_item", "target": "item_iron_sword", "count": 1 } ],
-            "actions": [ { "type": "sell_item", "id": "item_iron_sword", "count": 1 } ]
-          },
-          { "text": "(Leave)", "next": null }
-        ]
-      }
-    }
-  },
-  "dialogue_merchant_valdombra": {
-    "id": "dialogue_merchant_valdombra",
-    "entry": "start",
-    "nodes": {
-      "start": {
-        "speaker": "npc_merchant_valdombra",
-        "text": "Wares for a weary traveler? Buy or sell, the choice is yours.",
-        "choices": [
-          {
-            "text": "Buy a health potion (10g).",
+            "text": "Buy fixture consumable.",
             "next": "start",
-            "actions": [ { "type": "buy_item", "id": "item_health_potion", "count": 1, "merchant": "merchant_valdombra_general" } ]
+            "actions": [ { "type": "buy_item", "id": "item_fixture_consumable", "count": 1, "merchant": "merchant_fixture_basic" } ]
           },
           {
-            "text": "Buy leather armor (20g).",
+            "text": "Sell fixture weapon.",
             "next": "start",
-            "actions": [ { "type": "buy_item", "id": "item_leather_armor", "count": 1, "merchant": "merchant_valdombra_general" } ]
+            "conditions": [ { "type": "has_item", "target": "item_fixture_weapon", "count": 1 } ],
+            "actions": [ { "type": "sell_item", "id": "item_fixture_weapon", "count": 1, "merchant": "merchant_fixture_basic" } ]
           },
-          {
-            "text": "Sell the iron sword (12g).",
-            "next": "start",
-            "conditions": [ { "type": "has_item", "target": "item_iron_sword", "count": 1 } ],
-            "actions": [ { "type": "sell_item", "id": "item_iron_sword", "count": 1, "merchant": "merchant_valdombra_general" } ]
-          },
-          { "text": "(Leave)", "next": null }
+          { "text": "Leave.", "next": null }
         ]
       }
     }

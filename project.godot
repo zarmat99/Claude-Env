@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Valdombra"
-config/description="2D top-down fantasy RPG. Data-driven, component-based. See docs/ai_memory/."
+config/name="RPG Skeleton"
+config/description="Content-stripped 2D top-down RPG skeleton. Data-driven, component-based. See docs/ai_memory/."
 run/main_scene="res://scenes/main/Main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 

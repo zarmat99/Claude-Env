@@ -30,14 +30,14 @@ func save_game(slot: int = 0) -> bool:
     if not _write_snapshot(get_save_path(slot)):
         return false
     EventBus.game_saved.emit(slot)
-    print("[Valdombra] Saved game to slot %d" % slot)
+    print("[RPGSkeleton] Saved game to slot %d" % slot)
     return true
 
 func load_game(slot: int = 0) -> bool:
     if not _read_and_apply(get_save_path(slot)):
         return false
     EventBus.game_loaded.emit(slot)
-    print("[Valdombra] Loaded game from slot %d" % slot)
+    print("[RPGSkeleton] Loaded game from slot %d" % slot)
     return true
 
 func autosave() -> bool:

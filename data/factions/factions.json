@@ -1,16 +1,23 @@
 {
-  "faction_valdombra_village": {
-    "id": "faction_valdombra_village",
-    "name": "Valdombra Village",
+  "faction_fixture_player": {
+    "id": "faction_fixture_player",
+    "name": "Fixture Player Faction",
     "default_reputation": 0,
-    "hostile_to": ["faction_monsters"],
-    "friendly_to": []
+    "hostile_to": ["faction_fixture_hostile"],
+    "friendly_to": ["faction_fixture_neutral"]
   },
-  "faction_monsters": {
-    "id": "faction_monsters",
-    "name": "Monsters",
-    "default_reputation": -100,
-    "hostile_to": ["faction_valdombra_village"],
+  "faction_fixture_neutral": {
+    "id": "faction_fixture_neutral",
+    "name": "Fixture Neutral Faction",
+    "default_reputation": 0,
+    "hostile_to": [],
+    "friendly_to": ["faction_fixture_player"]
+  },
+  "faction_fixture_hostile": {
+    "id": "faction_fixture_hostile",
+    "name": "Fixture Hostile Faction",
+    "default_reputation": -60,
+    "hostile_to": ["faction_fixture_player"],
     "friendly_to": []
   }
 }

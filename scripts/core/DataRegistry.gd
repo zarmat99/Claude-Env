@@ -70,7 +70,7 @@ const DIALOGUE_ACTION_TYPES := [
     "sell_item",
 ]
 
-const NPC_ROLES := ["blacksmith", "debug_tester", "quest_giver", "villager", "merchant", "guard"]
+const NPC_ROLES := ["debug_tester", "quest_giver", "villager", "merchant", "guard"]
 const ASSET_TILE_COLLISIONS := ["none", "solid", "water"]
 const GENERATED_ASSET_CLASSES := ["terrain_tile", "transition_tile", "object_sprite", "actor_sprite"]
 const WORLD_OBJECT_KINDS := ["chest", "door", "switch", "pickup", "enemy"]

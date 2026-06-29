@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/SpawnPoint.gd" id="1_spawn"]
+
+[node name="BootstrapMap" type="Node2D"]
+
+[node name="Ground" type="Polygon2D" parent="."]
+color = Color(0.16, 0.18, 0.16, 1)
+polygon = PackedVector2Array(-320, -240, 320, -240, 320, 240, -320, 240)
+
+[node name="SpawnDefault" type="Marker2D" parent="."]
+position = Vector2(0, 0)
+script = ExtResource("1_spawn")
+spawn_id = "spawn_default"

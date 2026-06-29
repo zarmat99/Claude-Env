@@ -1,18 +1,18 @@
 {
-  "item_health_potion": {
-    "id": "item_health_potion",
-    "name": "Health Potion",
+  "item_fixture_consumable": {
+    "id": "item_fixture_consumable",
+    "name": "Fixture Consumable",
     "type": "consumable",
     "stackable": true,
     "max_stack": 99,
     "value": 10,
     "weight": 0.2,
     "use_effect": { "type": "heal", "amount": 25 },
-    "description": "Restores a little health."
+    "description": "Neutral test consumable for system verification."
   },
-  "item_iron_sword": {
-    "id": "item_iron_sword",
-    "name": "Iron Sword",
+  "item_fixture_weapon": {
+    "id": "item_fixture_weapon",
+    "name": "Fixture Weapon",
     "type": "weapon",
     "slot": "main_hand",
     "stackable": false,
@@ -20,21 +20,11 @@
     "value": 25,
     "weight": 3.0,
     "stats": { "damage": 6 },
-    "description": "A plain but reliable blade."
+    "description": "Neutral test weapon for equipment verification."
   },
-  "item_ancient_iron_fragment": {
-    "id": "item_ancient_iron_fragment",
-    "name": "Ancient Iron Fragment",
-    "type": "quest",
-    "stackable": false,
-    "max_stack": 1,
-    "value": 0,
-    "weight": 0.5,
-    "description": "A shard of strangely old iron. The blacksmith wants it."
-  },
-  "item_leather_armor": {
-    "id": "item_leather_armor",
-    "name": "Leather Armor",
+  "item_fixture_armor": {
+    "id": "item_fixture_armor",
+    "name": "Fixture Armor",
     "type": "armor",
     "slot": "chest",
     "stackable": false,
@@ -42,26 +32,26 @@
     "value": 20,
     "weight": 4.0,
     "stats": { "max_health": 10, "armor": 2 },
-    "description": "Boiled leather that turns a glancing blow."
+    "description": "Neutral test armor for derived-stat verification."
   },
-  "item_trial_dungeon_key": {
-    "id": "item_trial_dungeon_key",
-    "name": "Trial Dungeon Key",
+  "item_fixture_key": {
+    "id": "item_fixture_key",
+    "name": "Fixture Key",
     "type": "quest",
     "stackable": false,
     "max_stack": 1,
     "value": 0,
     "weight": 0.1,
-    "description": "A simple iron key for the trial dungeon lock."
+    "description": "Neutral test key for door and quest verification."
   },
-  "item_sentinel_core": {
-    "id": "item_sentinel_core",
-    "name": "Sentinel Core",
+  "item_fixture_material": {
+    "id": "item_fixture_material",
+    "name": "Fixture Material",
     "type": "material",
     "stackable": true,
     "max_stack": 10,
     "value": 35,
     "weight": 1.0,
-    "description": "A cold core pulled from an old dungeon guardian."
+    "description": "Neutral test material for loot and reward verification."
   }
 }

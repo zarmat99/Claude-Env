@@ -1,7 +1,7 @@
 extends Node2D
 ## Boot scene root. Creates the persistent player, binds SceneLoader, loads the start map, and
-## builds the UI. Map loading now lives in SceneLoader (data-driven via maps.json) — Main no longer
-## instantiates a specific map.
+## builds the UI. Map loading lives in SceneLoader (data-driven via maps.json), so this scene stays
+## content-agnostic.
 
 const PlayerScene := preload("res://scenes/player/Player.tscn")
 const HUDScene := preload("res://scenes/ui/HUD.tscn")
@@ -12,14 +12,14 @@ const QuestDebugScene := preload("res://scenes/ui/QuestDebugUI.tscn")
 const PauseMenuScene := preload("res://scenes/ui/PauseMenu.tscn")
 const GameOverScene := preload("res://scenes/ui/GameOverOverlay.tscn")
 
-const START_MAP := "map_village"
+const START_MAP := "map_bootstrap"
 const START_SPAWN := "spawn_default"
 
 @onready var _world: Node2D = $WorldRoot
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 16.")
+    print("[RPGSkeleton] Boot OK.")
     var player := PlayerScene.instantiate()
     _world.add_child(player)
 

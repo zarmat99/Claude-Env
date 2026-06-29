@@ -1,42 +1,32 @@
 {
-  "enemy_slime": {
-    "id": "enemy_slime",
-    "name": "Slime",
-    "faction": "faction_monsters",
+  "enemy_fixture_chaser": {
+    "id": "enemy_fixture_chaser",
+    "name": "Fixture Chaser",
+    "faction": "faction_fixture_hostile",
     "ai": { "type": "chaser", "aggro_range": 160, "attack_range": 48, "attack_cooldown": 0.8 },
     "damage_type": "physical",
     "stats": { "max_health": 12, "damage": 2, "move_speed": 45, "armor": 0 },
-    "loot_table": [ { "id": "item_health_potion", "chance": 0.5, "count": 1 } ],
+    "loot_table": [ { "id": "item_fixture_consumable", "chance": 0.5, "count": 1 } ],
     "xp_reward": 8
   },
-  "enemy_cave_rat": {
-    "id": "enemy_cave_rat",
-    "name": "Cave Rat",
-    "faction": "faction_monsters",
+  "enemy_fixture_skirmisher": {
+    "id": "enemy_fixture_skirmisher",
+    "name": "Fixture Skirmisher",
+    "faction": "faction_fixture_hostile",
     "ai": { "type": "skirmisher", "aggro_range": 180, "attack_range": 54, "preferred_range": 78, "attack_cooldown": 0.7 },
     "damage_type": "physical",
     "stats": { "max_health": 8, "damage": 3, "move_speed": 86, "armor": 0 },
-    "loot_table": [ { "id": "item_health_potion", "chance": 0.2, "count": 1 } ],
+    "loot_table": [ { "id": "item_fixture_consumable", "chance": 0.2, "count": 1 } ],
     "xp_reward": 10
   },
-  "enemy_bone_sentinel": {
-    "id": "enemy_bone_sentinel",
-    "name": "Bone Sentinel",
-    "faction": "faction_monsters",
+  "enemy_fixture_sentinel": {
+    "id": "enemy_fixture_sentinel",
+    "name": "Fixture Sentinel",
+    "faction": "faction_fixture_hostile",
     "ai": { "type": "sentinel", "aggro_range": 150, "attack_range": 76, "attack_cooldown": 1.2 },
     "damage_type": "physical",
     "stats": { "max_health": 18, "damage": 4, "move_speed": 0, "armor": 2, "resistances": { "fire": -0.25, "poison": 0.5 } },
-    "loot_table": [ { "id": "item_health_potion", "chance": 0.35, "count": 1 } ],
+    "loot_table": [ { "id": "item_fixture_material", "chance": 1.0, "count": 1 } ],
     "xp_reward": 16
-  },
-  "enemy_trial_sentinel": {
-    "id": "enemy_trial_sentinel",
-    "name": "Trial Sentinel",
-    "faction": "faction_monsters",
-    "ai": { "type": "sentinel", "aggro_range": 170, "attack_range": 82, "attack_cooldown": 1.1 },
-    "damage_type": "physical",
-    "stats": { "max_health": 26, "damage": 5, "move_speed": 0, "armor": 3, "resistances": { "fire": -0.15, "poison": 0.65 } },
-    "loot_table": [ { "id": "item_sentinel_core", "chance": 1.0, "count": 1 } ],
-    "xp_reward": 28
   }
 }

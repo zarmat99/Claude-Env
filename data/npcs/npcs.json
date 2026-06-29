@@ -1,43 +1,23 @@
-{
-  "npc_blacksmith_valdombra": {
-    "id": "npc_blacksmith_valdombra",
-    "name": "Blacksmith",
-    "faction": "faction_valdombra_village",
-    "dialogue": "dialogue_blacksmith_intro",
-    "home_map": "map_village",
-    "role": "blacksmith",
-    "services": ["forge"],
-    "quests_offered": ["quest_first_dungeon"]
-  },
-  "npc_m11_branch_tester": {
-    "id": "npc_m11_branch_tester",
-    "name": "Branch Tester",
-    "faction": "faction_valdombra_village",
-    "dialogue": "dialogue_m11_regression_fixture",
-    "home_map": "map_village",
+﻿{
+  "npc_fixture_guide": {
+    "id": "npc_fixture_guide",
+    "name": "Fixture Guide",
+    "faction": "faction_fixture_neutral",
+    "dialogue": "dialogue_fixture_actions",
+    "home_map": "map_bootstrap",
     "role": "debug_tester",
-    "services": ["quest_debug"],
-    "quests_offered": ["quest_m11_regression_fixture"]
+    "services": ["system_test"],
+    "quests_offered": ["quest_fixture_flow"]
   },
-  "npc_m12_reputation_tester": {
-    "id": "npc_m12_reputation_tester",
-    "name": "Reputation Tester",
-    "faction": "faction_valdombra_village",
-    "dialogue": "dialogue_m12_reputation_fixture",
-    "home_map": "map_village",
-    "role": "debug_tester",
-    "services": ["faction_debug"],
-    "quests_offered": ["quest_m12_reputation_fixture"]
-  },
-  "npc_merchant_valdombra": {
-    "id": "npc_merchant_valdombra",
-    "name": "Merchant",
-    "faction": "faction_valdombra_village",
-    "dialogue": "dialogue_merchant_valdombra",
-    "home_map": "map_village",
+  "npc_fixture_merchant": {
+    "id": "npc_fixture_merchant",
+    "name": "Fixture Merchant",
+    "faction": "faction_fixture_neutral",
+    "dialogue": "dialogue_fixture_trade",
+    "home_map": "map_bootstrap",
     "role": "merchant",
     "services": ["trade"],
     "quests_offered": [],
-    "merchant": "merchant_valdombra_general"
+    "merchant": "merchant_fixture_basic"
   }
 }

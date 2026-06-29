@@ -3,8 +3,8 @@ extends Node
 ## screen makes the player reload a save. The only fallback (when no save exists at all) is starting a
 ## fresh game, so the player is never hard-stuck.
 
-# Dev-sandbox start, mirrors Main.START_MAP / Main.START_SPAWN (used only for the no-save fallback).
-const START_MAP := "map_village"
+# Skeleton start, mirrors Main.START_MAP / Main.START_SPAWN (used only for the no-save fallback).
+const START_MAP := "map_bootstrap"
 const START_SPAWN := "spawn_default"
 const SAVE_SLOT_COUNT := 3  # kept local so this autoload never depends on a UI class_name
 

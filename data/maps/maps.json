@@ -1,91 +1,10 @@
-{
-  "map_village": {
-    "id": "map_village",
-    "scene": "res://scenes/maps/Village.tscn",
-    "display_name": "Valdombra Village",
-    "region": "region_dev_sandbox",
-    "dev_role": "vertical_slice",
-    "spawn_points": ["spawn_default", "spawn_from_forest"]
-  },
-  "map_forest": {
-    "id": "map_forest",
-    "scene": "res://scenes/maps/Forest.tscn",
-    "display_name": "Whispering Forest",
-    "region": "region_dev_sandbox",
-    "dev_role": "vertical_slice",
-    "spawn_points": ["spawn_from_village", "spawn_from_cave", "spawn_from_asset_probe"]
-  },
-  "map_m10r_asset_playground": {
-    "id": "map_m10r_asset_playground",
-    "scene": "res://scenes/maps/M10RAssetPlayground.tscn",
-    "display_name": "M10R Asset Playground",
-    "region": "region_dev_sandbox",
-    "dev_role": "asset_pipeline_probe",
-    "spawn_points": ["spawn_from_forest"]
-  },
-  "map_cave_01": {
-    "id": "map_cave_01",
-    "scene": "res://scenes/maps/Cave.tscn",
-    "display_name": "Old Cave",
-    "region": "region_dev_sandbox",
-    "dev_role": "vertical_slice",
-    "spawn_points": ["spawn_from_forest", "spawn_from_trial_dungeon"]
-  },
-  "map_trial_dungeon_01": {
-    "id": "map_trial_dungeon_01",
-    "scene": "res://scenes/maps/TrialDungeon.tscn",
-    "display_name": "Trial Dungeon",
-    "region": "region_dev_sandbox",
-    "dev_role": "dungeon_fixture",
-    "asset_set": "asset_generated_m10r_dev",
-    "spawn_points": ["spawn_from_cave"],
-    "authoring": {
-      "width": 10,
-      "height": 7,
-      "layers": {
-        "ground": [
-          ["tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a"],
-          ["tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a"],
-          ["tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a"],
-          ["tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a"],
-          ["tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a"],
-          ["tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a"],
-          ["tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a", "tile_generated_cave_floor_a"]
-        ]
-      },
-      "collision_rects": [
-        { "name": "north_wall", "position": { "x": 320, "y": -16 }, "size": { "x": 640, "y": 32 } },
-        { "name": "south_wall", "position": { "x": 320, "y": 464 }, "size": { "x": 640, "y": 32 } },
-        { "name": "west_wall", "position": { "x": -16, "y": 224 }, "size": { "x": 32, "y": 448 } },
-        { "name": "east_wall", "position": { "x": 656, "y": 224 }, "size": { "x": 32, "y": 448 } },
-        { "name": "boss_room_north_pillar", "position": { "x": 384, "y": 64 }, "size": { "x": 32, "y": 128 } },
-        { "name": "boss_room_south_pillar", "position": { "x": 384, "y": 384 }, "size": { "x": 32, "y": 128 } }
-      ],
-      "spawns": [
-        { "id": "spawn_from_cave", "position": { "x": 128, "y": 384 } }
-      ],
-      "transitions": [
-        { "name": "ToCave", "position": { "x": 48, "y": 384 }, "size": { "x": 56, "y": 96 }, "target_map": "map_cave_01", "target_spawn": "spawn_from_trial_dungeon" }
-      ],
-      "objects": [
-        { "name": "TrialKey", "world_object": "world_object_dungeon_pickup", "persistent_id": "item_trial_key_001", "position": { "x": 144, "y": 160 }, "item_id": "item_trial_dungeon_key", "count": 1 },
-        { "name": "LockedEntryDoor", "world_object": "world_object_dungeon_door", "persistent_id": "door_trial_locked_001", "position": { "x": 256, "y": 160 }, "required_item_id": "item_trial_dungeon_key", "consume_required_item": true },
-        { "name": "TrialRat", "world_object": "world_object_dungeon_enemy", "persistent_id": "enemy_trial_rat_001", "position": { "x": 320, "y": 256 }, "enemy_id": "enemy_cave_rat" },
-        { "name": "RewardGate", "world_object": "world_object_dungeon_door", "persistent_id": "door_trial_reward_gate_001", "position": { "x": 448, "y": 320 } },
-        { "name": "GateSwitch", "world_object": "world_object_dungeon_switch", "persistent_id": "switch_trial_reward_gate_001", "position": { "x": 336, "y": 384 }, "target_persistent_id": "door_trial_reward_gate_001" },
-        { "name": "TrialSentinel", "world_object": "world_object_dungeon_enemy", "persistent_id": "enemy_trial_sentinel_001", "position": { "x": 512, "y": 160 }, "enemy_id": "enemy_trial_sentinel" },
-        { "name": "RewardChest", "world_object": "world_object_dungeon_chest", "persistent_id": "chest_trial_reward_001", "position": { "x": 560, "y": 352 }, "loot": [ { "id": "item_health_potion", "count": 2 }, { "id": "item_sentinel_core", "count": 1 } ] }
-      ],
-      "encounters": [
-        {
-          "id": "encounter_trial_sentinel",
-          "name": "Trial Sentinel",
-          "kind": "boss",
-          "enemy_persistent_ids": ["enemy_trial_sentinel_001"],
-          "gate_persistent_ids": ["door_trial_reward_gate_001"],
-          "reward_persistent_ids": ["chest_trial_reward_001"]
-        }
-      ]
-    }
+﻿{
+  "map_bootstrap": {
+    "id": "map_bootstrap",
+    "scene": "res://scenes/maps/BootstrapMap.tscn",
+    "display_name": "Bootstrap Map",
+    "region": "region_skeleton",
+    "dev_role": "technical_bootstrap",
+    "spawn_points": ["spawn_default"]
   }
 }
