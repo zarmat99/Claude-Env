@@ -19,7 +19,8 @@ func _run() -> void:
     _test_save_slots_and_metadata()
     _test_migration_and_rejection()
     await _test_autosave()
-    _test_game_over_respawn()
+    _test_game_over_load()
+    _test_game_over_restart()
     _test_settings_persistence()
     _test_trade_feedback()
     _cleanup()
@@ -99,11 +100,15 @@ func _test_autosave() -> void:
     _assert(SaveManager.load_autosave(), "the autosave should load")
     _assert(int(GameState.player.get("gold", 0)) == 55, "autosave should restore gold")
 
-func _test_game_over_respawn() -> void:
+func _test_game_over_load() -> void:
+    # Dying shows the save screen to reload a save (no in-place respawn, no gold penalty).
     get_tree().paused = false
     GameState.reset_to_new_game()
-    GameState.current_map = ""  # no SceneLoader bound in headless; skip the reposition branch
-    GameState.player["gold"] = 100
+    GameState.current_map = ""  # no SceneLoader bound in headless
+    GameState.player["gold"] = 30
+    _assert(SaveManager.save_game(SLOT_A), "should have a save to reload")
+
+    GameState.player["gold"] = 5  # diverge the live state, then die
     GameState.player["stats"]["health"] = 0
     var respawned := [false]
     var on_respawn := func(): respawned[0] = true
@@ -112,14 +117,32 @@ func _test_game_over_respawn() -> void:
     EventBus.player_died.emit()
     _assert(GameOverManager.is_game_over, "player_died should enter game-over")
     _assert(get_tree().paused, "game-over should pause the tree")
+    _assert(GameOverManager.has_any_save(), "a save should be available to load")
 
-    GameOverManager.respawn()
-    _assert(not GameOverManager.is_game_over, "respawn should clear game-over")
-    _assert(not get_tree().paused, "respawn should unpause the tree")
-    _assert(int(GameState.player.get("gold", 0)) == 75, "respawn should apply a 25% gold penalty")
-    _assert(int(GameState.player["stats"]["health"]) == EquipmentManager.get_effective_stat("max_health"), "respawn should restore health to max")
-    _assert(respawned[0], "respawn should emit player_respawned")
+    # The GameOver screen's slot list loads a save, then resumes.
+    _assert(SaveManager.load_game(SLOT_A), "loading a save should succeed")
+    GameOverManager.resume_after_load()
+    _assert(not GameOverManager.is_game_over, "loading should clear game-over")
+    _assert(not get_tree().paused, "resuming should unpause the tree")
+    _assert(int(GameState.player.get("gold", 0)) == 30, "loaded save should restore pre-death gold (no penalty)")
+    _assert(respawned[0], "resume_after_load should emit player_respawned")
     EventBus.player_respawned.disconnect(on_respawn)
+
+func _test_game_over_restart() -> void:
+    # Fallback: no save exists, so the GameOver screen offers a fresh start.
+    get_tree().paused = false
+    GameState.reset_to_new_game()
+    GameState.current_map = ""
+    _delete_file(SaveManager._autosave_path())
+    for slot in [0, 1, 2, SLOT_A]:
+        SaveManager.delete_save(slot)
+    GameState.player["stats"]["health"] = 0
+    EventBus.player_died.emit()
+    _assert(not GameOverManager.has_any_save(), "no saves should exist for the restart fallback")
+    GameOverManager.restart_new_game()
+    _assert(not GameOverManager.is_game_over, "restart should clear game-over")
+    _assert(not get_tree().paused, "restart should unpause the tree")
+    _assert(int(GameState.player["stats"]["health"]) == EquipmentManager.get_effective_stat("max_health"), "restart should restore full health")
 
 func _test_settings_persistence() -> void:
     SettingsManager.set_master_volume(0.4)

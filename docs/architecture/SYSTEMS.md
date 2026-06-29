@@ -25,7 +25,7 @@ current codebase, so it should avoid "current milestone" language that can go st
     `skill_used(skill_id)`
   - Economy: `gold_changed(new_total)`
   - Factions: `faction_reputation_changed(faction_id, old_value, new_value)`
-- **Implementation**: live; signals used by the M1-M15 systems.
+- **Implementation**: live; signals used by the M1-M16 systems.
 
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
@@ -53,7 +53,7 @@ current codebase, so it should avoid "current milestone" language that can go st
   M9 dynamic pickups use `world_objects[persistent_id]` entries with `state`, `kind`, `map_id`,
   `item_id`, `count`, and `position`. M12 faction defaults are copied from data into
   `factions[faction_id].reputation`. M14 stores skill XP/levels in `player.skills`. Save/load uses
-  GameState as the snapshot boundary; migrations are future work.
+  GameState as the snapshot boundary; save version migration is handled by SaveManager from M16.
 
 ## SceneLoader (autoload) — `scripts/core/SceneLoader.gd`
 - **Role**: load/unload map scenes into `Main/WorldRoot`; place the player at a named
@@ -79,11 +79,14 @@ current codebase, so it should avoid "current milestone" language that can go st
   completion, and version migration (`SAVE_VERSION = 2`: migrate older saves, reject newer ones).
 
 ## GameOverManager (autoload) — `scripts/core/GameOverManager.gd`
-- **Role**: handle player death and respawn (M16), replacing the M5 in-place placeholder.
+- **Role**: handle player death (M16), replacing the M5 in-place placeholder. Dying means **reloading
+  a save**, not respawning in place.
 - **Depends on**: EventBus, GameState, SceneLoader, SaveManager, EquipmentManager.
-- **Implementation**: on `EventBus.player_died` it pauses the tree; the `GameOverOverlay` then offers
-  Respawn (apply a gold penalty, restore health to effective max, return to the current map's default
-  spawn) or Load last save (autosave, else the quicksave slot). Either path emits `player_respawned`.
+- **Implementation**: on `EventBus.player_died` it pauses the tree; the `GameOverOverlay` shows the
+  save list (`SaveSlotList`) so the player loads a save, then `resume_after_load()` unpauses and emits
+  `player_respawned`. `restart_new_game()` is a fallback only when `has_any_save()` is false. There is
+  no gold penalty. (Note: do not reference a UI `class_name` from this autoload - use a local const /
+  `preload` - or boot parse-fails.) Live verification status belongs in `HANDOFF.md` and `TASKS.md`.
 
 ## SettingsManager (autoload) — `scripts/core/SettingsManager.gd`
 - **Role**: load/apply/persist player settings (M16); currently master audio volume.
@@ -163,7 +166,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   `merchant` id applies that merchant's multipliers and limits buying to its `stock`
   (`data/merchants/merchants.json`). Dialogue `buy_item`/`sell_item` actions (with an optional
   `merchant`) and the `gold_at_least` condition let merchants be authored in JSON;
-  `npc_merchant_valdombra` is a live in-village example. A dedicated merchant/trade UI is M16.
+  `npc_merchant_valdombra` is a live in-village example. M16 adds `trade_failed` feedback and HUD
+  toasts for unaffordable/out-of-stock buys; a richer shop UI can be added later if needed.
 
 ## Dungeon fixtures & encounters â€” `AuthoredMap`, `Door`, `world_objects`, map authoring
 - **Role**: compose dungeon rooms from authored map data: collision rectangles, persistent placed
@@ -208,15 +212,17 @@ current codebase, so it should avoid "current milestone" language that can go st
 ## UI — `scripts/ui/*`, `scenes/ui/*`
 - **Role**: `HUD` (health/level/quest/gold + transient toasts), `DialogueBox` (dialogue runner view),
   `InventoryUI`, `QuestJournalUI`, `QuestDebugUI`, plus the M16 `PauseMenu` (Esc: per-slot
-  save/load/delete + master volume) and `GameOverOverlay` (Respawn / Load). UIs are passive views
-  that subscribe to EventBus and query/command managers; they never own game logic.
+  save/load/delete + master volume) and `GameOverOverlay` (load a save after death, with New Game
+  only as a no-save fallback). UIs are passive views that subscribe to EventBus and query/command
+  managers; they never own game logic.
 - **Depends on**: EventBus + managers (queries and delegated commands).
 - **Implementation**: HUD (M1), DialogueBox (M2), QuestJournalUI (M3), InventoryUI (M4), and the
   M11 QuestDebugUI authoring overlay are live. M9 routes journal/inventory toggles through input
   actions; M11 adds `quest_debug_toggle` for quest authoring state inspection; M12 extends the
   overlay with faction reputation/friendly/hostile state. M13 makes InventoryUI actionable: it
   renders `Equip`, `Use`, and equipped-slot unequip buttons, while the actual state changes stay in
-  `EquipmentManager` and `InventoryManager`.
+  `EquipmentManager` and `InventoryManager`. M16 adds HUD gold/toasts, `PauseMenu`, `GameOverOverlay`,
+  and the shared `SaveSlotList` used by both pause and game-over slot lists.
 
 ## Testing / checks - `tests/headless/*`
 - **Role**: persistent regression coverage for milestone-critical flows.
@@ -234,4 +240,7 @@ current codebase, so it should avoid "current milestone" language that can go st
   and dungeon save/load persistence. SR4 adds `SR4SystemsStressRunner`, which injects a synthetic
   review-scale dataset in memory (10+ maps, 20 NPCs, 10 quests, 50 items, several factions/merchants/
   dungeons), validates it, checks mid-flow save/load, restores real data, and keeps the production
-  JSON free of throwaway stress content.
+  JSON free of throwaway stress content. M16 adds `M16PersistenceUXRunner` for slots/metadata,
+  migration/rejection, autosave, game-over flow, settings persistence, and trade feedback. When the
+  game-over flow changes, rerun the full suite and read the log for `SCRIPT ERROR` lines as well as
+  explicit assertion failures.

@@ -63,6 +63,9 @@ func delete_save(slot: int) -> bool:
 func get_save_info(slot: int = 0) -> Dictionary:
     return _info_for_path(get_save_path(slot), slot)
 
+func get_autosave_info() -> Dictionary:
+    return _info_for_path(_autosave_path(), -1)
+
 func list_saves(count: int = 3) -> Array:
     var out: Array = []
     for slot in range(max(0, count)):

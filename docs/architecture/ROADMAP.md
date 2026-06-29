@@ -214,13 +214,15 @@ when the feature is player-facing.
   input remapping, pause/menu flow, error handling.
 - **Exit criteria**: a normal player can save/load/manage settings without debug keys, and old save
   versions can be migrated or rejected clearly.
-- **Status 2026-06-29**: complete. `SaveManager` adds multiple slots + metadata, `delete_save`,
-  autosave on quest completion, and version migration/rejection (`SAVE_VERSION = 2`).
-  `GameOverManager` replaces the M5 respawn placeholder (death -> Respawn with gold penalty / Load
-  last save). `SettingsManager` persists master volume. A `PauseMenu` (Esc) + `GameOverOverlay` give
-  debug-free save/load/settings; HUD gold readout and merchant affordability feedback land too.
-  Covered by `M16PersistenceUXRunner`; `.\test.bat` passes (exit 0). Deferred follow-up: input
-  remapping. A manual in-game visual pass of the menus is recommended per the verification gate.
+- **Status 2026-06-29**: complete and verified. `SaveManager` adds multiple slots + metadata,
+  `delete_save`, autosave on quest completion, and version migration/rejection (`SAVE_VERSION = 2`).
+  `SettingsManager` persists master volume. A `PauseMenu` (Esc) gives debug-free save/load/settings;
+  HUD gold readout and merchant affordability feedback are live. Per user feedback, game over now
+  loads a save instead of respawning in place: `SaveSlotList` is shared between `PauseMenu` and
+  `GameOverOverlay`, death shows a load-only save list, and "New Game" is only a no-save fallback.
+  `M16PersistenceUXRunner` and full `.\test.bat` passed after the rework.
+- **Deferred follow-up**: input remapping. A manual in-game visual pass of the menus is recommended
+  per the verification gate.
 
 ## M17 — Art/audio pipeline
 - **Goal**: define how real assets enter the project without disrupting systems.

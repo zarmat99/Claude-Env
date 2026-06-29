@@ -4,6 +4,64 @@
 
 ---
 
+## 2026-06-29 - Session 043 - Verify and ship M16-R1 game-over save-load rework
+
+- **Request**: continue after Claude's handoff-doc update and close the M16-R1 work if the state is
+  sound.
+- **Verification**: full `.\test.bat` passed after the game-over rework. All milestone runners are
+  green (M9, M10, M10R, M11, M12, SR3, M13, M14, M15, SR4, M16). No `SCRIPT ERROR` lines were present;
+  the SaveManager error for save version `999` is expected coverage for rejecting newer saves.
+- **Docs aligned**: updated live docs from "M16-R1 pending/unverified" to "M16 complete and
+  verified": `HANDOFF.md`, `PROJECT_MEMORY.md`, `TASKS.md`, and `ROADMAP.md`.
+- **Result**: M16-R1 finalizes the death flow: game over loads a save via `SaveSlotList` /
+  `GameOverOverlay`; no in-place respawn and no gold penalty. "New Game" remains only as a no-save
+  fallback.
+- **Next**: M17 - art/audio pipeline. Deferred follow-ups remain M16-F1 input remapping and a manual
+  in-game visual pass of M16 menus.
+
+---
+
+## 2026-06-29 - Session 042 - Align handoff docs after M16 game-over rework
+
+- **Request**: check whether Claude finished updating handoff docs and align them if needed.
+- **Audit result**: repo is at `944f929` for committed M16 core, with an uncommitted working-tree
+  rework that changes game over from in-place respawn/gold penalty to load-a-save/new-game fallback.
+- **Docs aligned**: updated `HANDOFF.md`, `PROJECT_MEMORY.md`, `TASKS.md`, `ROADMAP.md`, and
+  `SYSTEMS.md` so they consistently state: M16 core is committed and was green, M16-R1 is
+  implemented in the working tree but not yet re-verified/committed, and the next action is
+  `.\test.bat` then commit/push before M17.
+- **Cleanup**: removed stale M16 economy UX backlog text and marked the old M16 respawn task as
+  superseded by M16-R1.
+- **Next**: run full `.\test.bat`, watch for `SCRIPT ERROR` lines, commit/push M16-R1, then proceed
+  to M17.
+
+---
+
+## 2026-06-29 - Session 041 - Rework game-over to "load a save" (HANDOFF, unfinished)
+
+- **User feedback**: on death the game must show the **save-list screen to reload a save**, not respawn
+  in place with a gold penalty. "la logica deve essere quella."
+- **Done in the working tree (UNCOMMITTED, NOT re-verified)**:
+  - New reusable `scripts/ui/SaveSlotList.gd` (lists autosave + numbered slots with metadata; Load
+    always, optional Save/Delete; emits `slot_loaded`). Shared by `PauseMenu` and `GameOverOverlay`
+    to avoid duplicated slot logic.
+  - `GameOverOverlay` rebuilt: "You Died" + a load-only `SaveSlotList`, plus a "New Game" fallback
+    shown only when no save exists.
+  - `GameOverManager` rewritten: removed `respawn()` + gold penalty; added `resume_after_load()`,
+    `restart_new_game()`, `has_any_save()`. `PlayerCombat._on_died` still emits `player_died`.
+  - `SaveManager.get_autosave_info()` added; `PauseMenu` refactored onto `SaveSlotList`.
+  - `M16PersistenceUXRunner` game-over test rewritten (`_test_game_over_load` +
+    `_test_game_over_restart`, no gold-penalty assertion).
+- **Bug found & fixed (verify it)**: the autoload `GameOverManager` referenced `SaveSlotList.SLOT_COUNT`
+  (a UI `class_name`); at boot the autoload parse-failed and cascaded so `SaveSlotList` never
+  registered, breaking `PauseMenu`/`GameOverOverlay` and giving the runner a false "OK". Fixed with a
+  local const in the autoload and `preload(...)` in the consumers. **`.\test.bat` has NOT been re-run
+  since the fix** (session was stopped to hand off).
+- **NEXT AGENT**: run `.\test.bat`; confirm green (watch for SCRIPT ERROR lines - a mid-test crash can
+  still print "OK"); then commit + push the rework. After that: M17 - art/audio pipeline.
+
+---
+
 ## 2026-06-29 - Session 040 - Complete M16 persistence & UX hardening
 
 - **Goal**: complete the next milestone (M16) - move persistence and core UX from debug keys to

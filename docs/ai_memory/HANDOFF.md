@@ -10,13 +10,13 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
-- **M16 (persistence & UX hardening) is complete and verified** (`.\test.bat` green, exit 0;
-  committed/pushed): multi-slot saves with metadata + delete, autosave on quest completion, save
-  version migration/rejection (`SAVE_VERSION = 2`), a real game-over/respawn flow (`GameOverManager`),
-  persisted master volume (`SettingsManager`), a player-facing `PauseMenu` (Esc) for
-  save/load/settings without debug keys, a HUD gold readout, and merchant affordability feedback.
-  Covered by `M16PersistenceUXRunner`. **M17 (art/audio pipeline) is next**; input remapping is
-  deferred (M16-F1). A manual in-game visual pass of the new menus is recommended (verification gate).
+- **M16 (persistence & UX hardening) is complete and verified**: multi-slot saves with metadata +
+  delete, autosave on quest completion, version migration/rejection (`SAVE_VERSION = 2`), persisted
+  master volume (`SettingsManager`), a `PauseMenu` (Esc), HUD gold + toasts, merchant affordability
+  feedback (`trade_failed`), and the final game-over flow. On death the player now sees a save-list
+  screen and must load a save instead of respawning in place with a gold penalty; "New Game" is only
+  a no-save fallback. `SaveSlotList` is shared by `PauseMenu` and `GameOverOverlay`, and
+  `GameOverManager` exposes `resume_after_load()` / `restart_new_game()` / `has_any_save()`.
 - **SR4 (systems stress review) is complete and verified**: the `SR4SystemsStressRunner` injects a
   review-scale synthetic dataset in memory (10+ maps, 20 NPCs, 10 quests, 50 items, several
   factions/merchants/dungeons), validates it, exercises mid-flow save/load, restores the real data,
@@ -49,8 +49,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   equipped-slot unequip buttons. It remains a passive UI layer: equipment and consumables are still
   handled by `EquipmentManager` / `InventoryManager`. `M13EconomyEquipmentRunner` covers the UI
   button flow.
-- M0-M15, M10R, SR1, SR2, SR3, and SR4 are complete. MV1 was started then explicitly interrupted by the
-  user, who requested moving on to M14.
+- M0-M16, M10R, SR1, SR2, SR3, and SR4 are complete. MV1 was started then explicitly interrupted by
+  the user, who requested moving on to M14.
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
   (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
   multi-condition `advance_on` (array AND / `any_of` / `all_of`, with `talked_to` kept momentary),
@@ -67,10 +67,11 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   `SceneLoader`, `SaveManager`, `InventoryManager`, `EquipmentManager`, `CombatSystem`,
   `SkillManager`, `EconomyManager`, `QuestManager`, `DialogueManager`, `SettingsManager`,
   `GameOverManager`.
-- Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
-  map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
-  `world_objects`. Pickups stay collected, enemies stay dead, dynamic drops respawn while active,
-  and M10 chest/door/switch state persists.
+- Save/load works via F5/F9 slot 0, `SaveManager.save_game/load_game(slot)`, and the M16 pause menu
+  slot UI. It restores current map, player position/stats/gold/inventory/equipment, quests,
+  factions, flags, kills, and `world_objects`. Pickups stay collected, enemies stay dead, dynamic
+  drops respawn while active, and M10 chest/door/switch state persists. Autosave writes
+  `autosave.json` on quest completion.
 - Progression works: quest rewards and enemy kills grant XP; level-up increases max health and
   damage, refills health, emits `player_level_up`, and appears in the HUD.
 - M9 added `DataRegistry.validate_all()`, runtime unknown-ID guardrails, input actions for journal/
@@ -105,25 +106,25 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   Village near the Branch Tester. It is a debug probe for trusted/hostile reputation outcomes, not
   story content.
 - F10 Quest Debug now also shows faction reputation, hostile, and friendly state.
-- Latest verification passed: full `.\test.bat` is green (exit 0) - Godot import plus the M9, M10,
-  M10R, M11, M12, SR3, M13, M14, M15, SR4, and M16 runners all OK.
+- Latest verification passed: full `.\test.bat` is green after the M16-R1 game-over save-load rework
+  (Godot import plus M9, M10, M10R, M11, M12, SR3, M13, M14, M15, SR4, and M16 runners). The log has
+  no `SCRIPT ERROR`; the newer-save rejection message for version `999` is expected test coverage.
 - On `master`, M0-M16 plus SR1-SR4 are committed and pushed.
 
 ## Last thing done
-Completed **M16 - persistence & UX hardening**: multi-slot saves with metadata + delete, autosave on
-quest completion, save version migration/rejection (`SAVE_VERSION = 2`), a real game-over/respawn flow
-(`GameOverManager`), persisted master volume (`SettingsManager`), and a player-facing `PauseMenu`
-(Esc) for save/load/settings without debug keys, plus a HUD gold readout and merchant affordability
-feedback. Added `M16PersistenceUXRunner`; `.\test.bat` passes (exit 0).
+Completed and verified the M16-R1 game-over rework: death now shows the save-list screen to reload a
+save instead of respawning in place with a gold penalty. Extracted reusable `SaveSlotList` UI (used by
+`PauseMenu` + `GameOverOverlay`), rewrote `GameOverManager` around load/restart, removed the penalty
+path, fixed the autoload/class_name boot crash, and reran full `.\test.bat` successfully.
 
 ## Next thing to do
-Start **M17 - art/audio pipeline** (see `ROADMAP.md`): art style guide, tileset/import + animation
-conventions, audio hooks, and a placeholder-replacement strategy.
-- ⚠️ **Recommended first**: a manual in-game visual pass of the new M16 menus (pause / save-load /
-  settings / game-over) per the ROADMAP verification gate - their logic is headless-tested but the UI
-  has not had a visual check.
-- Deferred M16 follow-up: **input remapping** (M16-F1). Economy UX gaps are now addressed (HUD gold +
-  merchant `trade_failed` feedback); starting gold stays 0 by design.
+1. Start **M17 - art/audio pipeline** (see `ROADMAP.md`).
+2. Keep the M16 manual in-game visual pass as a recommended follow-up, especially pause/save-load/
+   settings/game-over menu polish.
+- ⚠️ **Recommended**: a manual in-game visual pass of the M16 menus (pause / save-load / settings /
+  game-over) per the ROADMAP verification gate - logic is headless-tested, UI is not visually checked.
+- Deferred M16 follow-up: **input remapping** (M16-F1). Economy UX gaps are addressed (HUD gold +
+  merchant `trade_failed`); starting gold stays 0 by design.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -131,6 +132,11 @@ conventions, audio hooks, and a placeholder-replacement strategy.
   tracker.
 - ⚠️ **Class cache**: after adding/renaming `class_name` scripts, run `--headless --editor --quit`
   once before a headless game run (regenerates `.godot/global_script_class_cache.cfg`).
+- ⚠️ **Autoloads must NOT reference a UI `class_name` global**: an autoload (`GameOverManager`)
+  referencing `SaveSlotList.SLOT_COUNT` parse-failed at boot, the autoload failed to instantiate, and
+  it cascaded so the `SaveSlotList` class never registered (every run errored). Fix: use a local const
+  in the autoload and `preload(".../SaveSlotList.gd")` (not the global type) in consumers. Keep
+  autoload→UI type dependencies out.
 - ⚠️ **Physics-flush**: don't change Area2D monitoring / add map Area2Ds from inside a physics
   callback (body_entered). Use `call_deferred` (AreaTransition does this when swapping maps).
 - ⚠️ **Temp scenes**: after running + deleting a throwaway `_dev_shot.tscn`, also delete `.godot/`
@@ -171,5 +177,5 @@ with the console exe, read the PNG from `%APPDATA%\Godot\app_userdata\Valdombra\
 `docs/ai_memory/TASKS.md`.
 
 ## Open problems / questions
-- Known follow-ups: player death/game-over (placeholder), save UI/slots beyond debug keys, SR4-F2
-  governed production-region fixture, and SR4-F3 content-authoring summaries before M18.
+- Known follow-ups: M16-F1 input remapping UI, manual visual pass for M16 menus, SR4-F2 governed
+  production-region fixture, and SR4-F3 content-authoring summaries before M18.

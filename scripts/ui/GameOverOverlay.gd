@@ -1,8 +1,12 @@
 extends Control
-## Game-over overlay (M16): shown on player death, offers Respawn or Load Last Save. Runs with
-## PROCESS_MODE_ALWAYS so its buttons work while GameOverManager has the tree paused.
+## Game-over screen (M16): on death it shows the save list so the player reloads a save - dying means
+## loading, not respawning in place. Runs with PROCESS_MODE_ALWAYS so it works while the tree is
+## paused. A "New Game" fallback is offered only when there is no save to load.
 
-var _load_button: Button
+const SaveSlotListScene = preload("res://scripts/ui/SaveSlotList.gd")
+
+var _list
+var _restart_button: Button
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -13,12 +17,13 @@ func _ready() -> void:
     EventBus.player_respawned.connect(hide)
 
 func _on_player_died() -> void:
-    _load_button.disabled = not GameOverManager.has_last_save()
+    _list.refresh()
+    _restart_button.visible = not GameOverManager.has_any_save()
     show()
 
 func _build_ui() -> void:
     var dim := ColorRect.new()
-    dim.color = Color(0.12, 0.0, 0.0, 0.78)
+    dim.color = Color(0.12, 0.0, 0.0, 0.8)
     dim.set_anchors_preset(Control.PRESET_FULL_RECT)
     dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
     add_child(dim)
@@ -28,7 +33,7 @@ func _build_ui() -> void:
     add_child(center)
 
     var vbox := VBoxContainer.new()
-    vbox.custom_minimum_size = Vector2(260, 0)
+    vbox.custom_minimum_size = Vector2(360, 0)
     center.add_child(vbox)
 
     var title := Label.new()
@@ -37,12 +42,19 @@ func _build_ui() -> void:
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     vbox.add_child(title)
 
-    var respawn := Button.new()
-    respawn.text = "Respawn"
-    respawn.pressed.connect(func(): GameOverManager.respawn())
-    vbox.add_child(respawn)
+    var subtitle := Label.new()
+    subtitle.text = "Load a save to continue:"
+    vbox.add_child(subtitle)
 
-    _load_button = Button.new()
-    _load_button.text = "Load Last Save"
-    _load_button.pressed.connect(func(): GameOverManager.load_last_save())
-    vbox.add_child(_load_button)
+    _list = SaveSlotListScene.new()
+    _list.configure(false, false)  # load-only on death
+    _list.slot_loaded.connect(_on_slot_loaded)
+    vbox.add_child(_list)
+
+    _restart_button = Button.new()
+    _restart_button.text = "New Game (no save found)"
+    _restart_button.pressed.connect(func(): GameOverManager.restart_new_game())
+    vbox.add_child(_restart_button)
+
+func _on_slot_loaded() -> void:
+    GameOverManager.resume_after_load()

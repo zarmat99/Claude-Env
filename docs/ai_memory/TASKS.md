@@ -40,7 +40,7 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none - complete)
 
 ### M16 - persistence & UX hardening
-- (none - complete)
+- M16 is complete. Remaining follow-up is deferred.
 - **M16-F1 - Input remapping UI** - backlog: let players rebind input actions from the settings
   menu (deferred from M16; the rest of M16 shipped).
 
@@ -48,19 +48,21 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - Detail M17 tasks from `docs/architecture/ROADMAP.md`: art style guide, tileset/import + animation
   conventions, audio hooks, and placeholder-replacement strategy.
 
-### Noted early - economy UX (for M16 persistence & UX hardening)
-- Add a **HUD gold readout** (gold is currently only visible via the F10 Quest Debug overlay).
-- Add a **merchant/shop UI** with affordability feedback (the merchant now always shows its wares,
-  but an unaffordable buy is a silent no-op and prices aren't shown beside live gold).
-- **Decision**: starting gold stays **0** for now - the player earns gold from quest rewards and
-  selling, so the economy loop runs without changing the existing gold-based test expectations.
-
 ### Later roadmap
 - Full milestone sequence and review gates live in `docs/architecture/ROADMAP.md` (M11-M20,
   SR2-SR5, plus manual verification gates such as MV1). Add detailed tasks here when each milestone
   becomes current.
 
 ## Done
+- **M16-R1 - Game-over reloads a save** - M16 follow-up - files:
+  `scripts/core/GameOverManager.gd`, `scripts/core/SaveManager.gd`,
+  `scripts/ui/GameOverOverlay.gd`, `scripts/ui/PauseMenu.gd`, `scripts/ui/SaveSlotList.gd`,
+  `tests/headless/M16PersistenceUXRunner.gd` - **done** (2026-06-29): per user feedback, death now
+  shows the save-list screen and reloads a save instead of respawning in place with a gold penalty.
+  `SaveSlotList` is shared by pause and game-over UI; `GameOverManager` now exposes
+  `resume_after_load`/`restart_new_game`/`has_any_save`; `SaveManager.get_autosave_info` supports the
+  list; the M16 runner covers load-save game over and no-save new-game fallback. Full `.\test.bat`
+  passed after the rework; the newer-save rejection error for version `999` is expected coverage.
 - **M16-T5 - Pause menu + save/load UI + settings** - M16 - files:
   `scripts/ui/PauseMenu.gd`, `scenes/ui/PauseMenu.tscn`, `scripts/core/SettingsManager.gd`,
   `scenes/main/Main.gd`, `project.godot` - **done** (2026-06-29): an Esc pause menu with per-slot
@@ -73,11 +75,12 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **M16-T3 - Autosave** - M16 - files: `scripts/core/SaveManager.gd` - **done** (2026-06-29):
   SaveManager autosaves to `autosave.json` on quest completion (deferred), with `load_autosave`/
   `has_autosave`.
-- **M16-T2 - Game-over & respawn** - M16 - files:
+- **M16-T2 - Game-over & respawn** - M16 core - files:
   `scripts/core/GameOverManager.gd`, `scripts/player/PlayerCombat.gd`, `scripts/ui/GameOverOverlay.gd`,
   `scenes/ui/GameOverOverlay.tscn`, `scripts/core/EventBus.gd`, `project.godot` - **done**
   (2026-06-29): death emits `player_died`, pauses, and shows an overlay; Respawn applies a gold
-  penalty and restores health at the map spawn, Load reloads the last save. Replaces the M5 placeholder.
+  penalty and restores health at the map spawn, Load reloads the last save. Replaces the M5
+  placeholder. **Superseded by M16-R1**, where death loads a save instead of respawning in place.
 - **M16-T1 - SaveManager slots/metadata/migration** - M16 - files:
   `scripts/core/SaveManager.gd`, `scripts/core/EventBus.gd` - **done** (2026-06-29): multiple slots,
   `get_save_info`/`list_saves`/`has_save`/`delete_save`, and version migration (v1->v2) with clear
@@ -85,8 +88,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - **M16-V1 - Verify, commit, and push M16** - M16 - files: `test.bat`,
   `tests/headless/M16PersistenceUXRunner.{gd,tscn}` - **done** (2026-06-29): added the M16 runner
   (slots/metadata, migration+rejection, autosave, game-over/respawn, settings persistence, trade
-  feedback); full `.\test.bat` passes (exit 0); committed and pushed. Manual in-game visual pass of
-  the menus recommended per the verification gate.
+  feedback); full `.\test.bat` passes (exit 0); committed and pushed as `944f929`. Manual in-game
+  visual pass of the menus recommended per the verification gate. M16-R1 later replaced the
+  respawn/penalty game-over flow with save-load.
 - **SR4-V1 - Full regression, commit, and push SR4** - SR4 - files: `test.bat`,
   `tests/headless/SR4SystemsStressRunner.{gd,tscn}`, `docs/**` - **done** (2026-06-29): full
   `.\test.bat` passes (Godot import + M9/M10/M10R/M11/M12/SR3/M13/M14/M15/SR4, exit 0); SR4 review,

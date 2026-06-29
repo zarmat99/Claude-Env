@@ -49,11 +49,13 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **M16 (persistence & UX hardening) is complete**: multi-slot saves with metadata + delete, autosave
-  on quest completion, save version migration/rejection (`SAVE_VERSION = 2`), a real game-over/respawn
-  flow (`GameOverManager`), persisted settings (`SettingsManager` master volume), and a player-facing
-  `PauseMenu` (Esc) for save/load/settings without debug keys. HUD shows gold; merchant gives
-  affordability feedback. Covered by `M16PersistenceUXRunner`; `.\test.bat` passes.
+- **M16 (persistence & UX hardening) is complete and verified**: multi-slot saves with metadata +
+  delete, autosave on quest completion, save version migration/rejection (`SAVE_VERSION = 2`),
+  persisted settings (`SettingsManager` master volume), a player-facing `PauseMenu` (Esc), HUD gold,
+  merchant affordability feedback, and the final game-over save-load flow. On death the player now
+  sees a save-list screen and loads a save instead of respawning in place with a gold penalty; "New
+  Game" is only a no-save fallback. `SaveSlotList` is shared by pause and game-over UI. Full
+  `.\test.bat` passed after this rework.
 - **SR4 (systems stress review) is complete and verified**: `SR4SystemsStressRunner` injects a
   review-scale synthetic dataset in memory (10+ maps, 20 NPCs, 10 quests, 50 items, several factions,
   merchants, and dungeons), validates it, exercises mid-flow save/load, restores the real project
@@ -62,7 +64,7 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **M15 (dungeons/encounters) is complete and verified** (`.\test.bat` green; committed/pushed):
   a data-authored Trial Dungeon fixture is reachable from Cave and covers keyed doors, lever-opened
   gates, persistent enemies/bosses, encounter metadata, reward chests, authored collision rects, and
-  save/load correctness. M0-M15, M10R, SR1, SR2, SR3, and SR4 are complete; M16 is next.
+  save/load correctness. M0-M16, M10R, SR1, SR2, SR3, and SR4 are complete; M17 is next.
 - **M14 (combat/skills/magic) is complete and verified**:
   typed damage rules, armor/resistances, skill XP/state, player abilities, three enemy archetypes,
   Cave placements, data validation, and M14 regression coverage.
@@ -114,12 +116,12 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - M12 adds `FactionManager`, reputation conditions/actions, NPC role/service/quest-offer metadata,
   the in-game Reputation Tester fixture, faction state in Quest Debug, and faction-aware enemy
   hostility.
-- Verification: JSON parses, `git diff --check` is clean, Godot import/class cache passes, and
-  `SR4SystemsStressRunner` passes. Full `.\test.bat` last ran green through M15; the SR4-inclusive
-  full suite could not be rerun in this block because command escalation hit the environment usage
-  limit.
-- Note: player death is still a placeholder (respawn full HP).
-- Next: start M16 - persistence & UX hardening.
+- Verification: full `.\test.bat` passed after M16-R1. The log has no `SCRIPT ERROR`; the
+  SaveManager error for save version `999` is expected coverage for newer-than-supported save
+  rejection.
+- Note: player death is no longer intended to respawn in place. Death loads a save; if no save
+  exists, only then it offers a fresh new-game fallback.
+- Next: start M17 - art/audio pipeline.
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -178,10 +180,12 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   proceed to M16; no blocking rewrite.
 - **M16 (persistence & UX)**: `SaveManager` adds multiple slots, metadata (`get_save_info`/
   `list_saves`), `delete_save`, autosave on quest completion, and version migration/rejection
-  (`SAVE_VERSION = 2`). `GameOverManager` handles death -> Respawn (gold penalty + restore at the map
-  spawn) or Load last save. `SettingsManager` persists master volume to `user://settings.cfg`. A
-  `PauseMenu` (Esc) and `GameOverOverlay` give debug-free save/load/settings; the HUD shows gold and
-  transient toasts. Covered by `M16PersistenceUXRunner`.
+  (`SAVE_VERSION = 2`). `GameOverManager` replaces the M5 respawn placeholder with a save-load flow:
+  death opens a save list, `resume_after_load()` unpauses only after `SaveManager` loads a save, and
+  `restart_new_game()` is a no-save fallback. `SettingsManager` persists master volume to
+  `user://settings.cfg`. A `PauseMenu` (Esc), `GameOverOverlay`, and shared `SaveSlotList` give
+  debug-free save/load/settings; the HUD shows gold and transient toasts. Covered by
+  `M16PersistenceUXRunner` and full `.\test.bat`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
   SceneLoader, SaveManager, InventoryManager, EquipmentManager, CombatSystem, SkillManager,
   EconomyManager, QuestManager, DialogueManager, SettingsManager, GameOverManager.
@@ -194,9 +198,9 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   assets, SR2 map review, M11 quest/dialogue pipeline, M12 NPCs/factions/reputation, SR3 narrative
   review, M13 items/equipment/economy/merchants, M14 combat/skills/magic, and M15
   dungeons/encounters, plus SR4 systems stress review, are all complete.
-- M16-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
-  to production content: UX/persistence hardening, art/audio pipeline, first real region/story act,
-  world expansion, and alpha stabilization.
+- M17-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
+  to production content: art/audio pipeline, first real region/story act, world expansion, and alpha
+  stabilization.
 - Scalability reviews are explicit milestones: SR1 after M8, SR2 after world authoring, SR3 after
   narrative systems, SR4 before production region work, and SR5 before broad world/story expansion.
 - Manual verification gates are required for player-facing work. MV1 sits between M13 and M14:
@@ -243,19 +247,19 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 ## 11. Current milestone state
 **M16 - persistence & UX hardening: COMPLETE.** `SaveManager` now supports multiple slots with
 metadata, list/delete, autosave on quest completion, and save version migration/rejection
-(`SAVE_VERSION = 2`). `GameOverManager` replaces the M5 respawn placeholder: death pauses and the
-GameOver overlay offers Respawn (gold penalty + restore health at the map spawn) or Load (reload the
-last save). `SettingsManager` persists master volume to `user://settings.cfg`. A `PauseMenu` (Esc)
-gives player-facing save/load/delete + a volume slider; the HUD shows gold and transient toasts; the
-merchant reports affordability via `trade_failed`. Covered by `M16PersistenceUXRunner`; `.\test.bat`
-passes (exit 0). A manual in-game visual pass of the new menus is recommended (ROADMAP gate). M17
-(art/audio pipeline) is next; input remapping was deferred as a small M16 follow-up.
+(`SAVE_VERSION = 2`). `GameOverManager` replaces the M5 respawn placeholder: **on death the GameOver
+screen shows the save list so the player reloads a save** (no in-place respawn, no gold penalty; a
+"New Game" fallback appears only when no save exists). `SettingsManager` persists master volume to
+`user://settings.cfg`. A `PauseMenu` (Esc) gives player-facing save/load/delete + a volume slider via
+the shared `SaveSlotList`; the HUD shows gold and transient toasts; the merchant reports affordability
+via `trade_failed`. Full `.\test.bat` passed after the M16-R1 game-over rework; input remapping is
+deferred (M16-F1).
 
 **SR4 - systems stress review: COMPLETE and verified.** `SR4SystemsStressRunner` injects 10+ maps,
 20 NPCs, 10 quests, 50 items, several factions/merchants/dungeons, and authored encounter fixtures in
 memory, then validates data refs, tests mid-flow save/load, restores real data, and validates again.
 Review verdict: proceed to M16; no blocking rewrite. Full `.\test.bat` passes (exit 0) and SR4 is
-committed and pushed. M16 (persistence & UX hardening) is the next milestone.
+committed and pushed. M16 has since been completed; M17 is next.
 
 **M15 - dungeons & encounters: COMPLETE.** `map_trial_dungeon_01` is a data-authored dungeon fixture
 reachable from Cave, with authored collision rects, keyed door/key consumption, switch-opened reward
@@ -276,12 +280,13 @@ save-aware, and covered by
 `tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete.
 
 ## 12. Recommended next step
-Start **M17 - art/audio pipeline**: art style guide, tileset/import + animation conventions, audio
-hooks, and a placeholder-replacement strategy. (M16 deferred input remapping - a small follow-up.)
+Start **M17 - art/audio pipeline**. M16 input remapping remains a deferred follow-up, and a manual
+in-game visual pass of the M16 menus is still recommended.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M0-M16, M10R, SR1, SR2, SR3, and SR4 are complete** (`.\test.bat` passes).
+GDScript, designed to scale. **M0-M16, M10R, SR1, SR2, SR3, and SR4 are complete**; full
+`.\test.bat` passes after the M16-R1 game-over save-load rework.
 Village/Forest/Cave remain the playable dev slice and now show approved generated terrain/prop
 candidates. Save/load, progression, quest flow, dynamic pickups, quarantine checks, world-object
 states, M10R asset preview, M11 dialogue actions/branching, M12 faction reputation, SR3 hardening,
@@ -289,7 +294,7 @@ M13 equipment/economy/container/merchant coverage, M14 combat/skills/magic cover
 dungeon/encounter coverage, SR4 systems stress coverage, and M16 persistence/UX (save slots,
 migration, game-over, autosave, settings) are all in `.\test.bat`. Quest/faction authoring can be
 inspected in game with the F10 Quest Debug overlay; Esc opens the pause/save/load/settings menu. Next
-milestone is M17 art/audio pipeline.
+action is M17 art/audio pipeline.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,
