@@ -8,7 +8,7 @@
 - Active data is fixture-only and uses neutral IDs (`item_fixture_*`, `quest_fixture_*`, `npc_fixture_*`, `enemy_fixture_*`, `faction_fixture_*`, `merchant_fixture_*`). These are not game content; they are contracts for the systems.
 - The scalable skeleton remains: DataRegistry, GameState, SceneLoader, SaveManager, QuestManager, DialogueManager, InventoryManager, EquipmentManager, EconomyManager, CombatSystem, SkillManager, FactionManager, SettingsManager, GameOverManager, UI shells, world-object components, and player/enemy/NPC base scenes.
 - `test.bat` now runs Godot import plus `tests/headless/SkeletonRegressionRunner.tscn`.
-- Latest verification: `.	est.bat` passes, and the log is clean.
+- Latest verification: `.\test.bat` passes, and the log is clean.
 
 ## Next Thing To Do
 Commit/push the purge if this work block has not been committed yet. Then start the new art/audio pipeline on top of this clean skeleton.
@@ -28,3 +28,4 @@ Commit/push the purge if this work block has not been committed yet. Then start 
 ```
 
 Controls still use input actions: move, interact, inventory, journal, quest debug, attack, abilities, save/load, pause.
+

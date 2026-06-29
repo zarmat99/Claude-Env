@@ -11,5 +11,6 @@ Legend: backlog, in_progress, done, blocked.
 - **UX-F1 - Input remapping UI** - backlog: deferred system follow-up.
 
 ## Done
-- **PURGE-T1 - Strip prototype content to scalable skeleton** - done (2026-06-29): removed old maps, generated assets, game-specific data, old content-bound tests, stale review docs, and old project references. Kept systems, neutral fixtures, `map_bootstrap`, and `SkeletonRegressionRunner`. `.	est.bat` passes.
+- **PURGE-T1 - Strip prototype content to scalable skeleton** - done (2026-06-29): removed old maps, generated assets, game-specific data, old content-bound tests, stale review docs, and old project references. Kept systems, neutral fixtures, `map_bootstrap`, and `SkeletonRegressionRunner`. `.\test.bat` passes.
 - **SKELETON-BASE - Scalable systems skeleton** - done: data registry, state, save/load, map loading, quests/dialogue, inventory/equipment/economy, combat/skills, factions, settings, game-over, UI shells, world objects, base actors.
+

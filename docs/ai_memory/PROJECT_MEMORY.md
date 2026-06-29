@@ -31,7 +31,8 @@ This repository now contains a content-stripped, scalable 2D top-down RPG skelet
 6. Do not reintroduce deleted prototype content except by reading git history for reference outside active files.
 
 ## Verification
-`.	est.bat` passes. It runs Godot import/class-cache refresh plus `SkeletonRegressionRunner`, covering data validation, bootstrap map loading, inventory/equipment/economy, quest/dialogue/faction flow, combat/skills, save/load, and game-over resume.
+`.\test.bat` passes. It runs Godot import/class-cache refresh plus `SkeletonRegressionRunner`, covering data validation, bootstrap map loading, inventory/equipment/economy, quest/dialogue/faction flow, combat/skills, save/load, and game-over resume.
 
 ## Next Step
 Commit/push the clean skeleton if needed, then begin the new art/audio pipeline on this base.
+
