@@ -49,6 +49,11 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
+- **M16 (persistence & UX hardening) is complete**: multi-slot saves with metadata + delete, autosave
+  on quest completion, save version migration/rejection (`SAVE_VERSION = 2`), a real game-over/respawn
+  flow (`GameOverManager`), persisted settings (`SettingsManager` master volume), and a player-facing
+  `PauseMenu` (Esc) for save/load/settings without debug keys. HUD shows gold; merchant gives
+  affordability feedback. Covered by `M16PersistenceUXRunner`; `.\test.bat` passes.
 - **SR4 (systems stress review) is complete and verified**: `SR4SystemsStressRunner` injects a
   review-scale synthetic dataset in memory (10+ maps, 20 NPCs, 10 quests, 50 items, several factions,
   merchants, and dungeons), validates it, exercises mid-flow save/load, restores the real project
@@ -171,12 +176,18 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   review-scale synthetic dataset, validates data/ref coverage, saves and loads a mid-flow state,
   restores the real data, and keeps throwaway stress content out of production JSON. Verdict:
   proceed to M16; no blocking rewrite.
+- **M16 (persistence & UX)**: `SaveManager` adds multiple slots, metadata (`get_save_info`/
+  `list_saves`), `delete_save`, autosave on quest completion, and version migration/rejection
+  (`SAVE_VERSION = 2`). `GameOverManager` handles death -> Respawn (gold penalty + restore at the map
+  spawn) or Load last save. `SettingsManager` persists master volume to `user://settings.cfg`. A
+  `PauseMenu` (Esc) and `GameOverOverlay` give debug-free save/load/settings; the HUD shows gold and
+  transient toasts. Covered by `M16PersistenceUXRunner`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
   SceneLoader, SaveManager, InventoryManager, EquipmentManager, CombatSystem, SkillManager,
-  EconomyManager, QuestManager, DialogueManager.
+  EconomyManager, QuestManager, DialogueManager, SettingsManager, GameOverManager.
 - **Controls**: move WASD/arrows · interact E/Space · journal J · inventory I · attack left-mouse ·
-  save F5 · load F9 · quest debug F10. Code now reads input action names for
-  journal/inventory/attack/save/load/debug/abilities. Ability keys are 1/2/3.
+  save F5 · load F9 · quest debug F10 · pause/menu Esc. Code now reads input action names for
+  journal/inventory/attack/save/load/debug/abilities/pause. Ability keys are 1/2/3.
 
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M8 Progression, SR1 core review, M9 data/tooling hardening, M10 world authoring, M10R governed
@@ -230,6 +241,16 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
+**M16 - persistence & UX hardening: COMPLETE.** `SaveManager` now supports multiple slots with
+metadata, list/delete, autosave on quest completion, and save version migration/rejection
+(`SAVE_VERSION = 2`). `GameOverManager` replaces the M5 respawn placeholder: death pauses and the
+GameOver overlay offers Respawn (gold penalty + restore health at the map spawn) or Load (reload the
+last save). `SettingsManager` persists master volume to `user://settings.cfg`. A `PauseMenu` (Esc)
+gives player-facing save/load/delete + a volume slider; the HUD shows gold and transient toasts; the
+merchant reports affordability via `trade_failed`. Covered by `M16PersistenceUXRunner`; `.\test.bat`
+passes (exit 0). A manual in-game visual pass of the new menus is recommended (ROADMAP gate). M17
+(art/audio pipeline) is next; input remapping was deferred as a small M16 follow-up.
+
 **SR4 - systems stress review: COMPLETE and verified.** `SR4SystemsStressRunner` injects 10+ maps,
 20 NPCs, 10 quests, 50 items, several factions/merchants/dungeons, and authored encounter fixtures in
 memory, then validates data refs, tests mid-flow save/load, restores real data, and validates again.
@@ -255,20 +276,20 @@ save-aware, and covered by
 `tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete.
 
 ## 12. Recommended next step
-Start **M16 - persistence & UX hardening**: save UI, multiple slots, autosave rules, save migration/
-rejection handling, game-over/respawn, settings, input remapping, pause/menu flow, and UX error
-feedback.
+Start **M17 - art/audio pipeline**: art style guide, tileset/import + animation conventions, audio
+hooks, and a placeholder-replacement strategy. (M16 deferred input remapping - a small follow-up.)
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M0-M15, M10R, SR1, SR2, SR3, and SR4 are complete** (`.\test.bat` passes).
+GDScript, designed to scale. **M0-M16, M10R, SR1, SR2, SR3, and SR4 are complete** (`.\test.bat` passes).
 Village/Forest/Cave remain the playable dev slice and now show approved generated terrain/prop
 candidates. Save/load, progression, quest flow, dynamic pickups, quarantine checks, world-object
 states, M10R asset preview, M11 dialogue actions/branching, M12 faction reputation, SR3 hardening,
 M13 equipment/economy/container/merchant coverage, M14 combat/skills/magic coverage, M15
-dungeon/encounter coverage, and SR4 systems stress coverage are all in `.\test.bat`.
-Quest/faction authoring can be inspected in game with the F10 Quest Debug overlay. Next milestone is
-M16 persistence & UX hardening.
+dungeon/encounter coverage, SR4 systems stress coverage, and M16 persistence/UX (save slots,
+migration, game-over, autosave, settings) are all in `.\test.bat`. Quest/faction authoring can be
+inspected in game with the F10 Quest Debug overlay; Esc opens the pause/save/load/settings menu. Next
+milestone is M17 art/audio pipeline.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

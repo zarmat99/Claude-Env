@@ -42,3 +42,15 @@ signal faction_reputation_changed(faction_id: String, old_value: int, new_value:
 # --- Equipment / item use (M13) ---
 signal equipment_changed(slot: String, item_id: String)
 signal item_used(item_id: String)
+
+# --- Player lifecycle (M16) ---
+signal player_died()
+signal player_respawned()
+
+# --- Economy feedback (M16) ---
+signal trade_failed(item_id: String, reason: String)
+
+# --- Settings / persistence UX (M16) ---
+signal settings_changed()
+signal game_saved(slot: int)
+signal game_loaded(slot: int)

@@ -39,7 +39,7 @@ func _run() -> void:
 
 func _test_data_validation() -> void:
     _assert(DataRegistry.validate_all(), "DataRegistry validation failed: %s" % str(DataRegistry.get_validation_errors()))
-    for action in ["inventory_toggle", "quest_journal_toggle", "quest_debug_toggle", "attack_primary", "save_game", "load_game"]:
+    for action in ["inventory_toggle", "quest_journal_toggle", "quest_debug_toggle", "attack_primary", "save_game", "load_game", "pause_menu"]:
         _assert(InputMap.has_action(action), "Missing input action '%s'" % action)
 
 func _test_boot_and_map_transitions() -> void:

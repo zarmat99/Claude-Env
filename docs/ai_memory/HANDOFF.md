@@ -10,6 +10,13 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
+- **M16 (persistence & UX hardening) is complete and verified** (`.\test.bat` green, exit 0;
+  committed/pushed): multi-slot saves with metadata + delete, autosave on quest completion, save
+  version migration/rejection (`SAVE_VERSION = 2`), a real game-over/respawn flow (`GameOverManager`),
+  persisted master volume (`SettingsManager`), a player-facing `PauseMenu` (Esc) for
+  save/load/settings without debug keys, a HUD gold readout, and merchant affordability feedback.
+  Covered by `M16PersistenceUXRunner`. **M17 (art/audio pipeline) is next**; input remapping is
+  deferred (M16-F1). A manual in-game visual pass of the new menus is recommended (verification gate).
 - **SR4 (systems stress review) is complete and verified**: the `SR4SystemsStressRunner` injects a
   review-scale synthetic dataset in memory (10+ maps, 20 NPCs, 10 quests, 50 items, several
   factions/merchants/dungeons), validates it, exercises mid-flow save/load, restores the real data,
@@ -58,7 +65,8 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   chest/door/switch objects, validation) remains for M10R.
 - Live autoloads: `EventBus`, `GameState`, `DataRegistry`, `FactionManager`, `ProgressionManager`,
   `SceneLoader`, `SaveManager`, `InventoryManager`, `EquipmentManager`, `CombatSystem`,
-  `SkillManager`, `EconomyManager`, `QuestManager`, `DialogueManager`.
+  `SkillManager`, `EconomyManager`, `QuestManager`, `DialogueManager`, `SettingsManager`,
+  `GameOverManager`.
 - Save/load works via F5/F9 slot 0 and `SaveManager.save_game/load_game(slot)`. It restores current
   map, player position/stats/gold/inventory/equipment, quests, factions, flags, kills, and
   `world_objects`. Pickups stay collected, enemies stay dead, dynamic drops respawn while active,
@@ -98,19 +106,24 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   story content.
 - F10 Quest Debug now also shows faction reputation, hostile, and friendly state.
 - Latest verification passed: full `.\test.bat` is green (exit 0) - Godot import plus the M9, M10,
-  M10R, M11, M12, SR3, M13, M14, M15, and SR4 runners all OK.
-- On `master`, M0-M15 plus SR1-SR4 (including the SR4 review) are committed and pushed.
+  M10R, M11, M12, SR3, M13, M14, M15, SR4, and M16 runners all OK.
+- On `master`, M0-M16 plus SR1-SR4 are committed and pushed.
 
 ## Last thing done
-Completed SR4 systems stress review: in-memory stress dataset runner, mid-flow save/load check,
-written review, and regression-suite wiring.
+Completed **M16 - persistence & UX hardening**: multi-slot saves with metadata + delete, autosave on
+quest completion, save version migration/rejection (`SAVE_VERSION = 2`), a real game-over/respawn flow
+(`GameOverManager`), persisted master volume (`SettingsManager`), and a player-facing `PauseMenu`
+(Esc) for save/load/settings without debug keys, plus a HUD gold readout and merchant affordability
+feedback. Added `M16PersistenceUXRunner`; `.\test.bat` passes (exit 0).
 
 ## Next thing to do
-Start **M16 - persistence & UX hardening**: move save/load and core UX from debug/dev controls toward
-player-facing flows.
-- ⚠️ **Economy UX gaps for M16**: the HUD has no gold readout, the merchant gives no "can't afford"
-  feedback, and starting gold is 0 (gold comes from quests/selling). The merchant now always shows
-  its wares (Session 029). A real shop UI is M16.
+Start **M17 - art/audio pipeline** (see `ROADMAP.md`): art style guide, tileset/import + animation
+conventions, audio hooks, and a placeholder-replacement strategy.
+- ⚠️ **Recommended first**: a manual in-game visual pass of the new M16 menus (pause / save-load /
+  settings / game-over) per the ROADMAP verification gate - their logic is headless-tested but the UI
+  has not had a visual check.
+- Deferred M16 follow-up: **input remapping** (M16-F1). Economy UX gaps are now addressed (HUD gold +
+  merchant `trade_failed` feedback); starting gold stays 0 by design.
 
 ## Important warnings
 - ⚠️ **State source of truth in docs**: use `HANDOFF.md`, `TASKS.md`, and `SESSION_LOG.md` for live
@@ -138,10 +151,10 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 + M14 + M15 + SR4 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 + M14 + M15 + SR4 + M16 regression suites
 ```
 Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
-attack = left mouse | abilities = 1/2/3 | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.
+attack = left mouse | abilities = 1/2/3 | save = F5 | load = F9 | pause/menu = Esc. Code reads input actions, not raw keycodes. HUD shows HP, level, XP, and gold.
 Maps connect via walk-on pads (the colored rectangles near map edges).
 
 ## Screenshot trick (visual checks; delete temp files + clear .godot after)

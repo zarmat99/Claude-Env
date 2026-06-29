@@ -74,7 +74,22 @@ current codebase, so it should avoid "current milestone" language that can go st
   because a saved map is reloaded. M13 equipment stats stay derived: save/load preserves base
   `stats.max_health`, stores current health separately, and restores the live `HealthComponent`
   using equipment-derived effective max health. M14 saves/loads `player.skills` and normalizes
-  missing skill state from `skills.json`.
+  missing skill state from `skills.json`. M16 adds multiple slots with metadata
+  (`get_save_info`/`list_saves`/`has_save`/`delete_save`), autosave to `autosave.json` on quest
+  completion, and version migration (`SAVE_VERSION = 2`: migrate older saves, reject newer ones).
+
+## GameOverManager (autoload) — `scripts/core/GameOverManager.gd`
+- **Role**: handle player death and respawn (M16), replacing the M5 in-place placeholder.
+- **Depends on**: EventBus, GameState, SceneLoader, SaveManager, EquipmentManager.
+- **Implementation**: on `EventBus.player_died` it pauses the tree; the `GameOverOverlay` then offers
+  Respawn (apply a gold penalty, restore health to effective max, return to the current map's default
+  spawn) or Load last save (autosave, else the quicksave slot). Either path emits `player_respawned`.
+
+## SettingsManager (autoload) — `scripts/core/SettingsManager.gd`
+- **Role**: load/apply/persist player settings (M16); currently master audio volume.
+- **Depends on**: EventBus, AudioServer; persists to `user://settings.cfg` (`ConfigFile`).
+- **Implementation**: applies master volume to the Master bus on boot and on change, saves to disk,
+  and emits `settings_changed`. Input remapping is a deferred follow-up (M16-F1).
 
 ## IdUtils (static class) — `scripts/core/IdUtils.gd`
 - **Role**: helpers for IDs (validation, prefix checks, persistent-id formatting). Not an autoload.
@@ -191,9 +206,10 @@ current codebase, so it should avoid "current milestone" language that can go st
   can gate on reputation; `EnemyAI` checks faction hostility before chasing/attacking.
 
 ## UI — `scripts/ui/*`, `scenes/ui/*`
-- **Role**: `HUD` (health/level/active quest), `DialogueBox` (dialogue runner view),
-  `InventoryUI`, `QuestJournalUI`, and `QuestDebugUI`. UIs are passive views that subscribe to
-  EventBus and query managers; they never own game logic.
+- **Role**: `HUD` (health/level/quest/gold + transient toasts), `DialogueBox` (dialogue runner view),
+  `InventoryUI`, `QuestJournalUI`, `QuestDebugUI`, plus the M16 `PauseMenu` (Esc: per-slot
+  save/load/delete + master volume) and `GameOverOverlay` (Respawn / Load). UIs are passive views
+  that subscribe to EventBus and query/command managers; they never own game logic.
 - **Depends on**: EventBus + managers (queries and delegated commands).
 - **Implementation**: HUD (M1), DialogueBox (M2), QuestJournalUI (M3), InventoryUI (M4), and the
   M11 QuestDebugUI authoring overlay are live. M9 routes journal/inventory toggles through input

@@ -17,6 +17,7 @@ func _ready() -> void:
     # Equipment can change the effective max health (armor); item use can change current health.
     EventBus.equipment_changed.connect(func(_slot, _item): _sync_health_from_state())
     EventBus.item_used.connect(func(_item): _sync_health_from_state())
+    EventBus.player_respawned.connect(_sync_health_from_state)
 
 ## Mirror GameState health into the live component, using the equipment-derived effective max health.
 func _sync_health_from_state() -> void:
@@ -44,6 +45,6 @@ func _on_health_changed(current: int, _maximum: int) -> void:
     GameState.player["stats"]["health"] = current
 
 func _on_died(_source: Node) -> void:
-    # M5 placeholder: respawn at full health (no game-over screen yet).
-    print("[Valdombra] Player would die - respawning (M5 placeholder).")
-    _health.setup(_health.max_health, _health.max_health)
+    # M16: hand off to GameOverManager, which pauses and lets the player respawn or load a save.
+    GameState.player["stats"]["health"] = 0
+    EventBus.player_died.emit()

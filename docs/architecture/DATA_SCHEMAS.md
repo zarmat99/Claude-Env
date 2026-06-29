@@ -372,10 +372,15 @@ enemy, gate, and reward persistent IDs for validation and regression tests.
 
 ---
 
-## Save file schema (`user://saves/slot_N.json`) — implemented in M7
+## Save file schema (`user://saves/slot_N.json`) — M7; M16 adds slots, autosave & migration
+M16: saves live in numbered slots (`slot_N.json`) plus an `autosave.json`; `version` is now `2`, and
+`SaveManager` migrates older saves on load and rejects newer-than-supported ones.
+`SaveManager.get_save_info` / `list_saves` expose slot metadata (`saved_at`, `current_map`,
+`map_display`, `level`, `gold`) for the pause/save-load UI. Player settings persist separately in
+`user://settings.cfg` (`[audio] master_volume`).
 ```json
 {
-  "version": 1,
+  "version": 2,
   "saved_at": "2026-06-25T12:00:00Z",
   "current_map": "map_cave_01",
   "player": {

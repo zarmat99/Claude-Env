@@ -9,6 +9,8 @@ const DialogueBoxScene := preload("res://scenes/ui/DialogueBox.tscn")
 const QuestJournalScene := preload("res://scenes/ui/QuestJournalUI.tscn")
 const InventoryUIScene := preload("res://scenes/ui/InventoryUI.tscn")
 const QuestDebugScene := preload("res://scenes/ui/QuestDebugUI.tscn")
+const PauseMenuScene := preload("res://scenes/ui/PauseMenu.tscn")
+const GameOverScene := preload("res://scenes/ui/GameOverOverlay.tscn")
 
 const START_MAP := "map_village"
 const START_SPAWN := "spawn_default"
@@ -17,7 +19,7 @@ const START_SPAWN := "spawn_default"
 @onready var _ui: CanvasLayer = $UIRoot
 
 func _ready() -> void:
-    print("[Valdombra] Boot OK - Milestone 15.")
+    print("[Valdombra] Boot OK - Milestone 16.")
     var player := PlayerScene.instantiate()
     _world.add_child(player)
 
@@ -29,3 +31,5 @@ func _ready() -> void:
     _ui.add_child(QuestJournalScene.instantiate())
     _ui.add_child(InventoryUIScene.instantiate())
     _ui.add_child(QuestDebugScene.instantiate())
+    _ui.add_child(PauseMenuScene.instantiate())
+    _ui.add_child(GameOverScene.instantiate())

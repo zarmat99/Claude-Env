@@ -30,11 +30,14 @@ func buy(item_id: String, count: int = 1, merchant_id: String = "") -> bool:
         push_error("EconomyManager: invalid buy of '%s' x%d" % [item_id, count])
         return false
     if not _in_stock(merchant_id, item_id):
+        EventBus.trade_failed.emit(item_id, "out_of_stock")
         return false
     var cost := buy_price(item_id, merchant_id) * count
     if get_gold() < cost:
+        EventBus.trade_failed.emit(item_id, "insufficient_gold")
         return false
     if not InventoryManager.add(item_id, count):
+        EventBus.trade_failed.emit(item_id, "inventory_full")
         return false
     _set_gold(get_gold() - cost)
     return true

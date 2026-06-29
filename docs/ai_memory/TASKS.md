@@ -40,9 +40,13 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 - (none - complete)
 
 ### M16 - persistence & UX hardening
-- Detail M16 tasks from `docs/architecture/ROADMAP.md`: save UI/slots, autosave policy, save
-  migration/rejection feedback, game-over/respawn, settings/input remapping, pause/menu flow, and
-  player-facing error handling.
+- (none - complete)
+- **M16-F1 - Input remapping UI** - backlog: let players rebind input actions from the settings
+  menu (deferred from M16; the rest of M16 shipped).
+
+### M17 - art/audio pipeline (next)
+- Detail M17 tasks from `docs/architecture/ROADMAP.md`: art style guide, tileset/import + animation
+  conventions, audio hooks, and placeholder-replacement strategy.
 
 ### Noted early - economy UX (for M16 persistence & UX hardening)
 - Add a **HUD gold readout** (gold is currently only visible via the F10 Quest Debug overlay).
@@ -57,6 +61,32 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   becomes current.
 
 ## Done
+- **M16-T5 - Pause menu + save/load UI + settings** - M16 - files:
+  `scripts/ui/PauseMenu.gd`, `scenes/ui/PauseMenu.tscn`, `scripts/core/SettingsManager.gd`,
+  `scenes/main/Main.gd`, `project.godot` - **done** (2026-06-29): an Esc pause menu with per-slot
+  save/load/delete (using SaveManager metadata) and a master-volume slider persisted by
+  `SettingsManager` to `user://settings.cfg` - player-facing save/load/settings without debug keys.
+- **M16-T4 - HUD gold + merchant feedback** - M16 - files:
+  `scripts/ui/HUD.gd`, `scenes/ui/HUD.tscn`, `scripts/economy/EconomyManager.gd`,
+  `scripts/core/EventBus.gd` - **done** (2026-06-29): HUD shows gold and transient toasts;
+  `EconomyManager` emits `trade_failed` (insufficient gold / out of stock) for affordability feedback.
+- **M16-T3 - Autosave** - M16 - files: `scripts/core/SaveManager.gd` - **done** (2026-06-29):
+  SaveManager autosaves to `autosave.json` on quest completion (deferred), with `load_autosave`/
+  `has_autosave`.
+- **M16-T2 - Game-over & respawn** - M16 - files:
+  `scripts/core/GameOverManager.gd`, `scripts/player/PlayerCombat.gd`, `scripts/ui/GameOverOverlay.gd`,
+  `scenes/ui/GameOverOverlay.tscn`, `scripts/core/EventBus.gd`, `project.godot` - **done**
+  (2026-06-29): death emits `player_died`, pauses, and shows an overlay; Respawn applies a gold
+  penalty and restores health at the map spawn, Load reloads the last save. Replaces the M5 placeholder.
+- **M16-T1 - SaveManager slots/metadata/migration** - M16 - files:
+  `scripts/core/SaveManager.gd`, `scripts/core/EventBus.gd` - **done** (2026-06-29): multiple slots,
+  `get_save_info`/`list_saves`/`has_save`/`delete_save`, and version migration (v1->v2) with clear
+  rejection of newer-than-supported saves (`SAVE_VERSION = 2`).
+- **M16-V1 - Verify, commit, and push M16** - M16 - files: `test.bat`,
+  `tests/headless/M16PersistenceUXRunner.{gd,tscn}` - **done** (2026-06-29): added the M16 runner
+  (slots/metadata, migration+rejection, autosave, game-over/respawn, settings persistence, trade
+  feedback); full `.\test.bat` passes (exit 0); committed and pushed. Manual in-game visual pass of
+  the menus recommended per the verification gate.
 - **SR4-V1 - Full regression, commit, and push SR4** - SR4 - files: `test.bat`,
   `tests/headless/SR4SystemsStressRunner.{gd,tscn}`, `docs/**` - **done** (2026-06-29): full
   `.\test.bat` passes (Godot import + M9/M10/M10R/M11/M12/SR3/M13/M14/M15/SR4, exit 0); SR4 review,

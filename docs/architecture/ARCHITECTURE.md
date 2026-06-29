@@ -87,7 +87,9 @@ Load order matters (later ones may use earlier ones):
 7. **InventoryManager / EquipmentManager / EconomyManager / QuestManager / DialogueManager** —
    gameplay managers; read DataRegistry, mutate GameState, emit via EventBus. EquipmentManager and
    EconomyManager (M13) load after InventoryManager and before the quest/dialogue managers, since
-   dialogue `buy_item`/`sell_item` actions call EconomyManager. (Added per milestone; stubs from M0.)
+   dialogue `buy_item`/`sell_item` actions call EconomyManager. M14 adds `CombatSystem` and
+   `SkillManager`; M16 adds `SettingsManager` and `GameOverManager` (loaded after the other managers,
+   since GameOverManager uses SaveManager/SceneLoader/EquipmentManager). (Added per milestone.)
 
 `IdUtils` is **not** an autoload (static helper).
 

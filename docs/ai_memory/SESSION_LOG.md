@@ -4,6 +4,36 @@
 
 ---
 
+## 2026-06-29 - Session 040 - Complete M16 persistence & UX hardening
+
+- **Goal**: complete the next milestone (M16) - move persistence and core UX from debug keys to
+  player-facing, production-ready flows.
+- **M16-T1 SaveManager**: multiple slots with metadata (`get_save_info`/`list_saves`/`has_save`/
+  `delete_save`), refactored save/load through path helpers, and version migration (`SAVE_VERSION = 2`,
+  migrate v1 -> v2, reject newer).
+- **M16-T2 game-over/respawn**: new `GameOverManager` autoload; `PlayerCombat` now emits
+  `player_died` instead of the M5 in-place respawn. Death pauses and a `GameOverOverlay` offers
+  Respawn (25% gold penalty + restore health at the map spawn) or Load last save; both emit
+  `player_respawned`, which `PlayerCombat` mirrors to the live `HealthComponent`.
+- **M16-T3 autosave**: SaveManager autosaves to `autosave.json` on quest completion (deferred);
+  `load_autosave`/`has_autosave` added.
+- **M16-T4 economy UX**: HUD shows gold + transient toasts; `EconomyManager` emits `trade_failed`
+  (insufficient gold / out of stock) so the merchant gives feedback.
+- **M16-T5 menus/settings**: `PauseMenu` (Esc) with per-slot save/load/delete + a master-volume
+  slider; `SettingsManager` autoload persists volume to `user://settings.cfg`. New `pause_menu` input
+  action; both overlays wired into `Main`.
+- **Tests**: added `tests/headless/M16PersistenceUXRunner` (slots/metadata, migration + rejection,
+  autosave wiring, game-over/respawn, settings persistence, trade feedback), wired into `test.bat`.
+  Full `.\test.bat` passes (import + M9/M10/M10R/M11/M12/SR3/M13/M14/M15/SR4/M16, exit 0).
+- **Docs**: updated ROADMAP (M16 complete), SYSTEMS (SaveManager + GameOverManager/SettingsManager +
+  UI), DATA_SCHEMAS (save v2/migration/settings), ARCHITECTURE (autoloads), and the ai_memory tracker
+  (M16-T1..T5/V1 to Done; M16-F1 input remapping deferred).
+- **Note**: M16 systems are headless-verified; a manual in-game visual pass of the new menus is
+  recommended per the ROADMAP verification gate (I cannot do the windowed visual pass here).
+- **Next**: M17 - art/audio pipeline.
+
+---
+
 ## 2026-06-29 - Session 039 - Verify and ship SR4
 
 - **Context**: SR4 (review doc + `SR4SystemsStressRunner` + `test.bat`/docs) was implemented in
