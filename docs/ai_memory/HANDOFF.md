@@ -10,6 +10,10 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
 **Godot 4 + GDScript**, designed to scale.
 
 ## Current state
+- **M15 (dungeons/encounters) is complete and verified** (`.\test.bat` green, exit 0): data-authored
+  `map_trial_dungeon_01`, Cave transition/spawn, reusable `world_objects` definitions, keyed doors,
+  switch-opened gates, boss encounter metadata, reward chest, boss/reward save-load persistence, and
+  `M15DungeonEncounterRunner`.
 - **M14 (combat/skills/magic) is complete and verified** (`.\test.bat` green, exit 0): typed
   damage rules (`DamageData`, `CombatSystem`), skill XP/state (`SkillManager`), player abilities
   (`PlayerAbilities` with `ability_1/2/3`), three enemy archetypes (`chaser`, `skirmisher`,
@@ -32,7 +36,7 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   equipped-slot unequip buttons. It remains a passive UI layer: equipment and consumables are still
   handled by `EquipmentManager` / `InventoryManager`. `M13EconomyEquipmentRunner` covers the UI
   button flow.
-- M0-M14, M10R, SR1, SR2, and SR3 are complete. MV1 was started then explicitly interrupted by the
+- M0-M15, M10R, SR1, SR2, and SR3 are complete. MV1 was started then explicitly interrupted by the
   user, who requested moving on to M14.
 - **SR3 follow-ups are done** (shipped with the review cycle): SR3-F1 dialogue soft-lock guard
   (`DialogueManager.advance()` + Continue/Leave affordance + node-level `next`), SR3-F2
@@ -87,17 +91,17 @@ Valdombra: a from-scratch, **data-driven, component-based 2D top-down fantasy RP
   Village near the Branch Tester. It is a debug probe for trusted/hostile reputation outcomes, not
   story content.
 - F10 Quest Debug now also shows faction reputation, hostile, and friendly state.
-- Latest verification passed: Godot import/class cache, `M14CombatSkillsMagicRunner`, full
+- Latest verification passed: Godot import/class cache, `M15DungeonEncounterRunner`, full
   `.\test.bat`, and `git diff --check` are green.
-- On `master`, M14 and all earlier milestones/fixes are committed and pushed.
+- On `master`, M15 and all earlier milestones/fixes are committed and pushed.
 
 ## Last thing done
-Fixed enemy contact damage range so enemies can damage the player in game; M14 runner and full
-`.\test.bat` pass.
+Completed M15 dungeons/encounters: trial dungeon fixture, keyed door, switch gate, boss encounter,
+reward chest, and save/load regression coverage.
 
 ## Next thing to do
-Start **M15 - dungeons & encounters**: dungeon map conventions, locked doors/keys/levers, chests,
-boss/set-piece encounters, reward rooms, and save/load correctness.
+Start **SR4 - systems stress review**: stress the architecture with quantity before production
+region work.
 - ⚠️ **Economy UX gaps for M16**: the HUD has no gold readout, the merchant gives no "can't afford"
   feedback, and starting gold is 0 (gold comes from quests/selling). The merchant now always shows
   its wares (Session 029). A real shop UI is M16.
@@ -128,7 +132,7 @@ $g = "$env:LOCALAPPDATA\Programs\Godot\Godot_v4.3-stable_win64_console.exe"
 & $g --path "C:\Git\Claude-Env"                              # play (console shows print/errors)
 & $g --path "C:\Git\Claude-Env" --headless --editor --quit   # import / regenerate class cache
 & $g --path "C:\Git\Claude-Env" --headless --quit-after 40   # headless run, see boot output
-.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 + M14 regression suites
+.\test.bat                                                   # M9 + M10 + M10R + M11 + M12 + SR3 + M13 + M14 + M15 regression suites
 ```
 Controls: move = WASD/arrows | talk = E/Space | journal = J | inventory = I | quest debug = F10 |
 attack = left mouse | abilities = 1/2/3 | save = F5 | load = F9. Code reads input actions, not raw keycodes. HUD shows HP, level, and XP.

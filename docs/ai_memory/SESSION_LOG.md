@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-06-29 - Session 037 - Complete M15 dungeons and encounters
+
+- **Request**: complete the next milestone after M14.
+- **M15 systems**: added keyed-door support to `Door.gd`, authored collision rectangles to
+  `AuthoredMap`, encounter metadata validation in `DataRegistry`, reusable dungeon world-object
+  definitions, and a Trial Dungeon authored map reachable from Cave.
+- **M15 content**: added `item_trial_dungeon_key`, `item_sentinel_core`, `enemy_trial_sentinel`,
+  `map_trial_dungeon_01`, a locked entry door, switch-opened reward gate, trial sentinel boss, and
+  reward chest.
+- **Regression**: added `M15DungeonEncounterRunner` and wired it into `test.bat`; it covers data
+  validation, authored dungeon contract, key/door flow, switch gate, boss death, reward chest,
+  save/load persistence, and dead boss non-respawn.
+- **Tests**: Godot import passed; `M15DungeonEncounterRunner` passed; full `.\test.bat` passed.
+- **Next**: SR4 - systems stress review.
+
+---
+
 ## 2026-06-29 - Session 036 - Fix enemy contact damage range
 
 - **Report**: in game the player appeared not to receive damage from enemies.

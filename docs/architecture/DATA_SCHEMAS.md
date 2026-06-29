@@ -299,6 +299,9 @@ runtime metadata used when visual bounds and physical blocking differ.
 `kind` is currently `chest | door | switch | pickup | enemy`. `scene` must exist. If `asset_tile`
 is set, `asset_set` must point to a valid asset set and the tile must exist inside it. Persistent
 world objects need a stable `persistent_id` when placed in a scene or authored map.
+M15 uses these definitions as a reusable dungeon object library: `world_object_dungeon_chest`,
+`world_object_dungeon_door`, `world_object_dungeon_switch`, `world_object_dungeon_pickup`, and
+`world_object_dungeon_enemy`.
 
 ## maps/maps.json (index of map scenes + spawn points; authored maps in M10)
 ```json
@@ -321,6 +324,9 @@ world objects need a stable `persistent_id` when placed in a scene or authored m
         "ground": [["tile_stone_wall", "tile_stone_wall"], ["tile_stone_wall", "tile_stone_floor"]],
         "props": [["", ""], ["", "tile_floor_crack"]]
       },
+      "collision_rects": [
+        { "name": "north_wall", "position": { "x": 320, "y": -16 }, "size": { "x": 640, "y": 32 } }
+      ],
       "spawns": [{ "id": "spawn_probe_entry", "position": { "x": 96, "y": 352 } }],
       "transitions": [{
         "name": "ToForest",
@@ -335,6 +341,21 @@ world objects need a stable `persistent_id` when placed in a scene or authored m
         "persistent_id": "chest_probe_ruins_001",
         "position": { "x": 224, "y": 160 },
         "loot": [{ "id": "item_health_potion", "count": 2 }]
+      }, {
+        "name": "LockedDoor",
+        "world_object": "world_object_dungeon_door",
+        "persistent_id": "door_trial_locked_001",
+        "position": { "x": 256, "y": 160 },
+        "required_item_id": "item_trial_dungeon_key",
+        "consume_required_item": true
+      }],
+      "encounters": [{
+        "id": "encounter_trial_sentinel",
+        "name": "Trial Sentinel",
+        "kind": "boss",
+        "enemy_persistent_ids": ["enemy_trial_sentinel_001"],
+        "gate_persistent_ids": ["door_trial_reward_gate_001"],
+        "reward_persistent_ids": ["chest_trial_reward_001"]
       }]
     }
   }
@@ -344,7 +365,10 @@ Scene-authored maps are validated by instantiating their scene and checking `Spa
 `AreaTransition`, content references, and `persistent_id`s. M10 authored maps are validated directly
 from `authoring`: dimensions, layer row/cell counts, tile IDs, spawns, transition targets, object
 scene/data refs, loot/item/enemy refs, switch targets, and duplicate `persistent_id`s.
-`AuthoredMap.gd` consumes the same `authoring` block at runtime.
+`AuthoredMap.gd` consumes the same `authoring` block at runtime. M15 adds authored
+`collision_rects` for dungeon blockers, optional door `required_item_id` / `consume_required_item`,
+and map-local `encounters` metadata. Encounter IDs use the `encounter_` prefix and can group
+enemy, gate, and reward persistent IDs for validation and regression tests.
 
 ---
 

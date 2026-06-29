@@ -193,6 +193,9 @@ when the feature is player-facing.
   reward rooms, optional semi-modular dungeon pieces.
 - **Exit criteria**: one small dungeon can be built with persistent doors/chests/enemies, a boss or
   set-piece encounter, rewards, and save/load correctness.
+- **Status 2026-06-29**: complete and verified. `map_trial_dungeon_01` is reachable from Cave and
+  exercises authored dungeon collision, keyed doors, switch gates, a boss encounter, reward chest,
+  encounter metadata, and save/load persistence through `M15DungeonEncounterRunner`.
 
 ## SR4 — Systems stress review
 - **Goal**: stress the architecture with quantity before building lots of final content.

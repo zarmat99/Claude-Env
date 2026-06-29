@@ -49,10 +49,14 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 11. **Scalability before content**: a few clean data-driven systems beat many hardcoded ones.
 
 ## 5. Current state
-- **M14 (combat/skills/magic) is complete and verified** (`.\test.bat` green; committed/pushed):
+- **M15 (dungeons/encounters) is complete and verified** (`.\test.bat` green; committed/pushed):
+  a data-authored Trial Dungeon fixture is reachable from Cave and covers keyed doors, lever-opened
+  gates, persistent enemies/bosses, encounter metadata, reward chests, authored collision rects, and
+  save/load correctness. M0-M15, M10R, SR1, SR2, and SR3 are complete; SR4 systems stress review is
+  next.
+- **M14 (combat/skills/magic) is complete and verified**:
   typed damage rules, armor/resistances, skill XP/state, player abilities, three enemy archetypes,
-  Cave placements, data validation, and M14 regression coverage. M0-M14, M10R, SR1, SR2, and SR3
-  are complete; M15 (dungeons/encounters) is next.
+  Cave placements, data validation, and M14 regression coverage.
 - **M13 (items/equipment/economy/merchants) is complete and verified**: equipment + derived combat
   stats, consumable item use, buy/sell with merchant stock/pricing, a reusable container
   `InventoryComponent`, and a data-authored village merchant.
@@ -104,10 +108,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - Verification: JSON parses, `git diff --check` is clean, Godot import/class cache passes, and
   `.\test.bat` ran green with M9 regression, M10 quarantine/world-object smoke, M10R asset preview,
   M11 dialogue/branching regression, M12 faction reputation regression, SR3 narrative-hardening
-  regression, M13 economy/equipment/inventory UI regression, and M14 combat/skills/magic
-  regression.
+  regression, M13 economy/equipment/inventory UI regression, M14 combat/skills/magic regression,
+  and M15 dungeon/encounter regression.
 - Note: player death is still a placeholder (respawn full HP).
-- Next: start M15 - dungeons & encounters.
+- Next: start SR4 - systems stress review.
 
 ## 6. Implemented systems
 - **M1**: `PlayerController`, `Camera2D` follow, `Village` placeholder map, minimal `HUD`.
@@ -156,6 +160,10 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
   `SkillManager` stores skill level/XP under `GameState.player.skills`; `PlayerAbilities` executes
   `skills.json` abilities through `ability_1/2/3`; enemies support data-authored `chaser`,
   `skirmisher`, and `sentinel` AI variants. M14 is covered by `M14CombatSkillsMagicRunner`.
+- **M15**: `AuthoredMap` now supports authored collision rectangles and map-level encounter
+  metadata. `Door` supports optional key requirements and key consumption. `map_trial_dungeon_01`
+  is reachable from Cave and exercises keyed doors, switch gates, a boss encounter, a reward chest,
+  and save/load persistence. M15 is covered by `M15DungeonEncounterRunner`.
 - **Autoloads live**: EventBus, GameState, DataRegistry, FactionManager, ProgressionManager,
   SceneLoader, SaveManager, InventoryManager, EquipmentManager, CombatSystem, SkillManager,
   EconomyManager, QuestManager, DialogueManager.
@@ -166,7 +174,8 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 ## 7. Planned systems (by milestone — see `architecture/ROADMAP.md`)
 - M8 Progression, SR1 core review, M9 data/tooling hardening, M10 world authoring, M10R governed
   assets, SR2 map review, M11 quest/dialogue pipeline, M12 NPCs/factions/reputation, SR3 narrative
-  review, M13 items/equipment/economy/merchants, and M14 combat/skills/magic are all complete.
+  review, M13 items/equipment/economy/merchants, M14 combat/skills/magic, and M15
+  dungeons/encounters are all complete.
 - M11-M20 remain scheduled in `docs/architecture/ROADMAP.md` as the path from prototype skeleton
   to production content: quest/dialogue pipeline, factions, economy/equipment, combat/skills/magic,
   dungeons, UX/persistence hardening, art/audio pipeline, first real region/story act, world
@@ -206,14 +215,20 @@ skeleton that scales to a large, content-rich RPG **without rewrites**.
 - **Content IDs** (defined in `data/`): `item_iron_sword`, `item_health_potion`,
   `item_ancient_iron_fragment`, `quest_first_dungeon`, `npc_blacksmith_valdombra`,
   `enemy_cave_rat`, `faction_valdombra_village`, `dialogue_blacksmith_intro`, `map_village`,
-  `map_forest`, `map_cave_01`, `skill_one_handed`.
+  `map_forest`, `map_cave_01`, `map_trial_dungeon_01`, `skill_one_handed`,
+  `item_trial_dungeon_key`, `enemy_trial_sentinel`.
 - **Persistent world-object IDs** (`persistent_id`): every world object whose state must survive
   save/reload (chests, unique loot, doors, bosses, switches) carries a stable, globally-unique
   `persistent_id`: `chest_forest_001`, `enemy_cave_boss_001`, `door_mine_locked_001`,
-  `item_ancient_iron_world_001`.
+  `item_ancient_iron_world_001`, `door_trial_locked_001`, `enemy_trial_sentinel_001`.
 - IDs are **stable forever** once shipped in a save; never reuse or renumber.
 
 ## 11. Current milestone state
+**M15 - dungeons & encounters: COMPLETE.** `map_trial_dungeon_01` is a data-authored dungeon fixture
+reachable from Cave, with authored collision rects, keyed door/key consumption, switch-opened reward
+gate, boss encounter metadata, reward chest, persistent enemy/door/switch/chest state, and
+`M15DungeonEncounterRunner`. Godot import, full `.\test.bat`, and `git diff --check` passed.
+
 **M14 - combat, skills & magic: COMPLETE.** Typed damage, armor/resistances, skill persistence,
 player abilities, enemy archetypes, data validation, Cave placements, and regression coverage are
 live. Godot import, `M14CombatSkillsMagicRunner`, full `.\test.bat`, and `git diff --check` passed.
@@ -228,18 +243,18 @@ save-aware, and covered by
 `tests/headless/M13EconomyEquipmentRunner`. M0-M13 plus SR1/SR2/SR3 are complete.
 
 ## 12. Recommended next step
-Start **M15 - dungeons & encounters**: dungeon map conventions, locked doors/keys/levers, chests,
-boss/set-piece encounters, reward rooms, and save/load correctness.
+Start **SR4 - systems stress review**: stress the architecture with more maps/NPCs/quests/items/
+factions/merchants/dungeons and save/load in mid-flow before production region work.
 
 ## 13. Summary for a new agent (read this first)
 Valdombra is a from-scratch, data-driven, component-based 2D top-down fantasy RPG in Godot 4 +
-GDScript, designed to scale. **M0-M14, M10R, SR1, SR2, and SR3 are complete** (`.\test.bat` passes).
+GDScript, designed to scale. **M0-M15, M10R, SR1, SR2, and SR3 are complete** (`.\test.bat` passes).
 Village/Forest/Cave remain the playable dev slice and now show approved generated terrain/prop
 candidates. Save/load, progression, quest flow, dynamic pickups, quarantine checks, world-object
 states, M10R asset preview, M11 dialogue actions/branching, M12 faction reputation, SR3 hardening,
-M13 equipment/economy/container/merchant coverage, and M14 combat/skills/magic coverage are all in
-`.\test.bat`. Quest/faction authoring can be inspected in game with the F10 Quest Debug overlay.
-M13 includes the post-review armor save/load fix. Next milestone is M15 dungeons/encounters.
+M13 equipment/economy/container/merchant coverage, M14 combat/skills/magic coverage, and M15
+dungeon/encounter coverage are all in `.\test.bat`. Quest/faction authoring can be inspected in
+game with the F10 Quest Debug overlay. Next milestone is SR4 systems stress review.
 
 Read `HANDOFF.md` first for the exact current state and next action, then `TASKS.md` and
 `SESSION_LOG.md` for live progress. Use `architecture/ARCHITECTURE.md`,

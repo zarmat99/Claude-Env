@@ -25,9 +25,9 @@ res://
     main/        Main.tscn                 # boot scene: holds autoload-driven world + UI roots
     player/      Player.tscn
     actors/      ActorBase.tscn
-    enemies/     EnemyBase.tscn  Slime.tscn
+    enemies/     EnemyBase.tscn  Slime.tscn  CaveRat.tscn  BoneSentinel.tscn
     npcs/        NPCBase.tscn    Blacksmith.tscn
-    maps/        Village.tscn    Forest.tscn   Cave.tscn
+    maps/        Village.tscn    Forest.tscn   Cave.tscn   TrialDungeon.tscn
     world/       Chest.tscn      Door.tscn     Switch.tscn
     items/       PickupItem.tscn
     ui/          HUD.tscn DialogueBox.tscn InventoryUI.tscn QuestJournalUI.tscn
@@ -35,7 +35,7 @@ res://
     core/        GameState.gd EventBus.gd DataRegistry.gd SceneLoader.gd SaveManager.gd IdUtils.gd
     components/  HealthComponent.gd StatsComponent.gd InventoryComponent.gd
                  InteractionComponent.gd FactionComponent.gd LootComponent.gd EquipmentComponent.gd
-    progression/ ProgressionManager.gd
+    progression/ ProgressionManager.gd SkillManager.gd
     player/      PlayerController.gd PlayerInteraction.gd
     actors/      Actor.gd
     enemies/     EnemyAI.gd
@@ -108,10 +108,10 @@ Load order matters (later ones may use earlier ones):
   `SceneLoader`) and a `UIRoot` (HUD + windows). Autoloads exist above the tree.
 - Boot: autoloads initialize → DataRegistry loads JSON → GameState builds initial/new-game state
   → SceneLoader loads the start map into `WorldRoot` and places the player at a `SpawnPoint`.
-- Maps are separate scenes (`Village/Forest/Cave`) connected by `AreaTransition` nodes that carry
+- Maps are separate scenes (`Village/Forest/Cave/TrialDungeon`) connected by `AreaTransition` nodes that carry
   `target_map_id` + `target_spawn_point_id` (+ optional condition). Future governed asset-probe maps
-  may use `AuthoredMap.gd` to build tile layers, collisions, spawns, transitions, and objects from
-  `maps.json`.
+  may use `AuthoredMap.gd` to build tile layers, collision rectangles, spawns, transitions, objects,
+  and encounter metadata from `maps.json`.
 
 ## 6. Data flow (example: pick up an item)
 `PickupItem` (has `item_id`, `persistent_id`) → on player overlap calls `InventoryManager.add(item_id)`

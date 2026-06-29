@@ -74,6 +74,7 @@ const NPC_ROLES := ["blacksmith", "debug_tester", "quest_giver", "villager", "me
 const ASSET_TILE_COLLISIONS := ["none", "solid", "water"]
 const GENERATED_ASSET_CLASSES := ["terrain_tile", "transition_tile", "object_sprite", "actor_sprite"]
 const WORLD_OBJECT_KINDS := ["chest", "door", "switch", "pickup", "enemy"]
+const ENCOUNTER_KINDS := ["combat", "boss", "set_piece"]
 
 var _tables: Dictionary = {}
 var _validation_errors: Array[String] = []
@@ -566,8 +567,11 @@ func _validate_authored_map(map_id: String, map: Dictionary, persistent_ids: Dic
     if width <= 0 or height <= 0:
         _error("maps/%s.authoring width and height must be positive" % map_id)
     _validate_authored_layers(map_id, authoring, asset_set_id, width, height)
+    _validate_authored_collision_rects(map_id, authoring)
     out = _validate_authored_spawns(map_id, authoring)
-    _validate_authored_objects(map_id, authoring, persistent_ids)
+    var object_index: Dictionary = {}
+    _validate_authored_objects(map_id, authoring, persistent_ids, object_index)
+    _validate_authored_encounters(map_id, authoring, object_index)
     return out
 
 func _validate_authored_layers(map_id: String, authoring: Dictionary, asset_set_id: String, width: int, height: int) -> void:
@@ -619,7 +623,21 @@ func _validate_authored_spawns(map_id: String, authoring: Dictionary) -> Array[S
         _validate_vector2_dict(spawn.get("position", {}), "%s.position" % path)
     return out
 
-func _validate_authored_objects(map_id: String, authoring: Dictionary, persistent_ids: Dictionary) -> void:
+func _validate_authored_collision_rects(map_id: String, authoring: Dictionary) -> void:
+    var rects = authoring.get("collision_rects", [])
+    if not (rects is Array):
+        _error("maps/%s.authoring.collision_rects must be an array" % map_id)
+        return
+    for index in range(rects.size()):
+        var rect = rects[index]
+        var path := "maps/%s.authoring.collision_rects[%d]" % [map_id, index]
+        if not (rect is Dictionary):
+            _error("%s must be an object" % path)
+            continue
+        _validate_vector2_dict(rect.get("position", {}), "%s.position" % path)
+        _validate_positive_size_dict(rect.get("size", {}), "%s.size" % path)
+
+func _validate_authored_objects(map_id: String, authoring: Dictionary, persistent_ids: Dictionary, object_index: Dictionary) -> void:
     var objects = authoring.get("objects", [])
     if not (objects is Array):
         _error("maps/%s.authoring.objects must be an array" % map_id)
@@ -648,10 +666,15 @@ func _validate_authored_objects(map_id: String, authoring: Dictionary, persisten
                 _error("Duplicate persistent_id '%s' in %s and %s" % [persistent_id, persistent_ids[persistent_id], path])
             persistent_ids[persistent_id] = path
             local_persistent_ids[persistent_id] = true
+            object_index[persistent_id] = {"path": path, "kind": kind, "enemy_id": String(object.get("enemy_id", ""))}
 
         match kind:
             "chest":
                 _validate_object_loot(object.get("loot", []), "%s.loot" % path)
+            "door":
+                var required_item_id := String(object.get("required_item_id", ""))
+                if required_item_id != "":
+                    _require_ref("items", required_item_id, "%s.required_item_id" % path)
             "pickup":
                 _require_ref("items", String(object.get("item_id", "")), "%s.item_id" % path)
                 if int(object.get("count", 1)) <= 0:
@@ -669,6 +692,47 @@ func _validate_authored_objects(map_id: String, authoring: Dictionary, persisten
         var target := String(switch_target.get("target", ""))
         if not local_persistent_ids.has(target):
             _error("%s.target_persistent_id references missing local persistent object '%s'" % [switch_target.get("path", ""), target])
+
+func _validate_authored_encounters(map_id: String, authoring: Dictionary, object_index: Dictionary) -> void:
+    var encounters = authoring.get("encounters", [])
+    if not (encounters is Array):
+        _error("maps/%s.authoring.encounters must be an array" % map_id)
+        return
+    var ids: Dictionary = {}
+    for index in range(encounters.size()):
+        var encounter = encounters[index]
+        var path := "maps/%s.authoring.encounters[%d]" % [map_id, index]
+        if not (encounter is Dictionary):
+            _error("%s must be an object" % path)
+            continue
+        var encounter_id := String(encounter.get("id", ""))
+        if not encounter_id.begins_with("encounter_"):
+            _error("%s.id must use encounter_ prefix" % path)
+        if ids.has(encounter_id):
+            _error("maps/%s has duplicate encounter id '%s'" % [map_id, encounter_id])
+        ids[encounter_id] = true
+        _require_string(encounter, path, "name")
+        var kind := String(encounter.get("kind", "combat"))
+        if not ENCOUNTER_KINDS.has(kind):
+            _error("%s.kind has unsupported value '%s'" % [path, kind])
+        _validate_encounter_refs(encounter.get("enemy_persistent_ids", []), "enemy", object_index, "%s.enemy_persistent_ids" % path)
+        _validate_encounter_refs(encounter.get("reward_persistent_ids", []), "chest", object_index, "%s.reward_persistent_ids" % path)
+        _validate_encounter_refs(encounter.get("gate_persistent_ids", []), "door", object_index, "%s.gate_persistent_ids" % path)
+
+func _validate_encounter_refs(value, expected_kind: String, object_index: Dictionary, path: String) -> void:
+    if not (value is Array):
+        _error("%s must be an array" % path)
+        return
+    if expected_kind == "enemy" and value.is_empty():
+        _error("%s must reference at least one enemy" % path)
+    for index in range(value.size()):
+        var persistent_id := String(value[index])
+        if not object_index.has(persistent_id):
+            _error("%s[%d] references missing object persistent_id '%s'" % [path, index, persistent_id])
+            continue
+        var entry: Dictionary = object_index[persistent_id]
+        if String(entry.get("kind", "")) != expected_kind:
+            _error("%s[%d] references %s but expected %s" % [path, index, persistent_id, expected_kind])
 
 func _validate_authored_transitions(map_id: String, authoring: Dictionary, map_spawn_points: Dictionary) -> void:
     var transitions = authoring.get("transitions", [])

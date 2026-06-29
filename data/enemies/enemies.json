@@ -28,5 +28,15 @@
     "stats": { "max_health": 18, "damage": 4, "move_speed": 0, "armor": 2, "resistances": { "fire": -0.25, "poison": 0.5 } },
     "loot_table": [ { "id": "item_health_potion", "chance": 0.35, "count": 1 } ],
     "xp_reward": 16
+  },
+  "enemy_trial_sentinel": {
+    "id": "enemy_trial_sentinel",
+    "name": "Trial Sentinel",
+    "faction": "faction_monsters",
+    "ai": { "type": "sentinel", "aggro_range": 170, "attack_range": 82, "attack_cooldown": 1.1 },
+    "damage_type": "physical",
+    "stats": { "max_health": 26, "damage": 5, "move_speed": 0, "armor": 3, "resistances": { "fire": -0.15, "poison": 0.65 } },
+    "loot_table": [ { "id": "item_sentinel_core", "chance": 1.0, "count": 1 } ],
+    "xp_reward": 28
   }
 }

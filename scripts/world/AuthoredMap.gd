@@ -34,6 +34,7 @@ func _build_from_data() -> void:
     _atlas = load(String(_asset_set.get("atlas", ""))) as Texture2D
 
     _build_tile_collisions()
+    _build_collision_rects()
     _build_spawns()
     _build_transitions()
     _build_objects()
@@ -45,6 +46,7 @@ func _draw() -> void:
     var layers: Dictionary = _authoring.get("layers", {})
     for layer_name in layers.keys():
         _draw_layer(layers[layer_name])
+    _draw_collision_rects()
     _draw_object_tiles()
 
 func _draw_layer(layer) -> void:
@@ -120,6 +122,36 @@ func _build_tile_collisions() -> void:
                 collision.position = Vector2((x + 0.5) * _world_tile_size, (y + 0.5) * _world_tile_size)
                 body.add_child(collision)
 
+func _build_collision_rects() -> void:
+    var rects = _authoring.get("collision_rects", [])
+    if not (rects is Array) or rects.is_empty():
+        return
+    var body := StaticBody2D.new()
+    body.name = "AuthoredSolids"
+    add_child(body)
+    for rect in rects:
+        if not (rect is Dictionary):
+            continue
+        var shape := RectangleShape2D.new()
+        shape.size = _dict_to_vector(rect.get("size", {}))
+        var collision := CollisionShape2D.new()
+        collision.name = _node_name(String(rect.get("name", "Solid")))
+        collision.shape = shape
+        collision.position = _dict_to_vector(rect.get("position", {}))
+        body.add_child(collision)
+
+func _draw_collision_rects() -> void:
+    var rects = _authoring.get("collision_rects", [])
+    if not (rects is Array):
+        return
+    for rect in rects:
+        if not (rect is Dictionary):
+            continue
+        var size := _dict_to_vector(rect.get("size", {}))
+        var position := _dict_to_vector(rect.get("position", {}))
+        var color := Color(0.12, 0.12, 0.14, 0.95)
+        draw_rect(Rect2(position - size * 0.5, size), color)
+
 func _tile_collision(tile_id: String) -> String:
     var tiles: Dictionary = _asset_set.get("tiles", {})
     var tile: Dictionary = tiles.get(tile_id, {})
@@ -175,6 +207,10 @@ func _configure_object(node: Node, object: Dictionary, kind: String) -> void:
         "door":
             if _has_property(node, "starts_open"):
                 node.set("starts_open", bool(object.get("starts_open", false)))
+            if _has_property(node, "required_item_id"):
+                node.set("required_item_id", String(object.get("required_item_id", "")))
+            if _has_property(node, "consume_required_item"):
+                node.set("consume_required_item", bool(object.get("consume_required_item", false)))
         "switch":
             if _has_property(node, "target_persistent_id"):
                 node.set("target_persistent_id", String(object.get("target_persistent_id", "")))

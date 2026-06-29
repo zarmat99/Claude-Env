@@ -43,5 +43,25 @@
     "weight": 4.0,
     "stats": { "max_health": 10, "armor": 2 },
     "description": "Boiled leather that turns a glancing blow."
+  },
+  "item_trial_dungeon_key": {
+    "id": "item_trial_dungeon_key",
+    "name": "Trial Dungeon Key",
+    "type": "quest",
+    "stackable": false,
+    "max_stack": 1,
+    "value": 0,
+    "weight": 0.1,
+    "description": "A simple iron key for the trial dungeon lock."
+  },
+  "item_sentinel_core": {
+    "id": "item_sentinel_core",
+    "name": "Sentinel Core",
+    "type": "material",
+    "stackable": true,
+    "max_stack": 10,
+    "value": 35,
+    "weight": 1.0,
+    "description": "A cold core pulled from an old dungeon guardian."
   }
 }

@@ -25,7 +25,7 @@ current codebase, so it should avoid "current milestone" language that can go st
     `skill_used(skill_id)`
   - Economy: `gold_changed(new_total)`
   - Factions: `faction_reputation_changed(faction_id, old_value, new_value)`
-- **Implementation**: live; signals used by the M1-M14 systems.
+- **Implementation**: live; signals used by the M1-M15 systems.
 
 ## DataRegistry (autoload) — `scripts/core/DataRegistry.gd`
 - **Role**: load + validate every `data/*.json` at boot; expose typed lookups
@@ -40,7 +40,8 @@ current codebase, so it should avoid "current milestone" language that can go st
   definitions, authored map dimensions/layers/spawns/transitions/objects, switch targets, and
   asset-tile references. M12 adds faction reputation conditions/actions plus NPC role/service/
   quest-offer metadata validation. M14 adds skill ability/damage schema checks plus enemy AI,
-  damage type, armor, and resistance validation. Lookups push errors for missing IDs instead of quietly
+  damage type, armor, and resistance validation. M15 adds authored collision-rect, keyed-door, and
+  encounter metadata validation. Lookups push errors for missing IDs instead of quietly
   accepting them.
 
 ## GameState (autoload) — `scripts/core/GameState.gd`
@@ -88,8 +89,9 @@ current codebase, so it should avoid "current milestone" language that can go st
   `PersistentWorldObject` are live. Static pickups/enemies apply `collected` / `dead` state on map
   load. M9 adds active dynamic pickup state so runtime loot drops can be saved and respawned until
   collected. M10 adds `AuthoredMap` for data-authored tile layers, collisions, spawns, transitions,
-  and placed objects, plus reusable `Chest`, `Door`, and `Switch` scenes/scripts. Chest/door/switch
-  state persists as `opened`, `open`, and `on` in `GameState.world_objects`.
+  and placed objects, plus reusable `Chest`, `Door`, and `Switch` scenes/scripts. M15 adds authored
+  collision rectangles, keyed doors, and map-level encounter metadata for dungeon fixtures.
+  Chest/door/switch state persists as `opened`, `open`, and `on` in `GameState.world_objects`.
 
 ## QuestManager (autoload) — `scripts/quest/*`
 - **Role**: start/advance/complete quests; evaluate `advance_on` conditions against GameState;
@@ -148,6 +150,15 @@ current codebase, so it should avoid "current milestone" language that can go st
   `merchant`) and the `gold_at_least` condition let merchants be authored in JSON;
   `npc_merchant_valdombra` is a live in-village example. A dedicated merchant/trade UI is M16.
 
+## Dungeon fixtures & encounters â€” `AuthoredMap`, `Door`, `world_objects`, map authoring
+- **Role**: compose dungeon rooms from authored map data: collision rectangles, persistent placed
+  objects, locked/keyed doors, switches/gates, enemies/bosses, reward chests, and encounter metadata.
+- **Depends on**: DataRegistry, AuthoredMap, InventoryManager, PersistentWorldObject, SaveManager.
+- **Implementation**: M15. `Door` can require and optionally consume an item before opening.
+  `AuthoredMap` builds `collision_rects` into StaticBody2D blockers and draws them as simple
+  dungeon walls. `maps.json` can declare `encounters` that group enemy, gate, and reward persistent
+  IDs. The dev Trial Dungeon is reachable from Cave and covered by `M15DungeonEncounterRunner`.
+
 ## Combat — `scripts/combat/*`, components
 - **Role**: `Hitbox`/`Hurtbox` (Area2D) detect hits; `DamageData` carries amount/type/source;
   `HealthComponent` applies damage + emits `actor_damaged`/`actor_died`; `StatsComponent` holds
@@ -202,4 +213,6 @@ current codebase, so it should avoid "current milestone" language that can go st
   adds `M12FactionReputationRunner` for faction defaults, reputation actions/gates, hostile/friendly
   state, and save/load persistence. M13 adds `M13EconomyEquipmentRunner` for equipment, economy,
   containers, save/load, and inventory UI actions. M14 adds `M14CombatSkillsMagicRunner` for typed damage,
-  armor/resistance mitigation, skill save/load, player abilities, and enemy archetype loading.
+  armor/resistance mitigation, skill save/load, player abilities, and enemy archetype loading. M15
+  adds `M15DungeonEncounterRunner` for keyed doors, switch gates, boss encounters, reward chests,
+  and dungeon save/load persistence.

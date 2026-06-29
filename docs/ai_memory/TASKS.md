@@ -33,6 +33,9 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
 ### M14 - combat, skills & magic
 - (none - complete)
 
+### M15 - dungeons & encounters
+- (none - complete)
+
 ### Noted early - economy UX (for M16 persistence & UX hardening)
 - Add a **HUD gold readout** (gold is currently only visible via the F10 Quest Debug overlay).
 - Add a **merchant/shop UI** with affordability feedback (the merchant now always shows its wares,
@@ -46,6 +49,20 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   becomes current.
 
 ## Done
+- **M15-T1 - Data-authored dungeon fixture** - M15 - files:
+  `data/maps/maps.json`, `scenes/maps/TrialDungeon.tscn`, `scenes/maps/Cave.tscn`,
+  `scripts/world/AuthoredMap.gd`, `scripts/core/DataRegistry.gd` - **done** (2026-06-29): added
+  `map_trial_dungeon_01`, Cave transition/spawn, authored collision rectangles, and map-level
+  encounter metadata validation.
+- **M15-T2 - Locked doors, key flow, switch gates, rewards** - M15 - files:
+  `scripts/world/Door.gd`, `data/items/items.json`, `data/world/world_objects.json`,
+  `data/enemies/enemies.json` - **done** (2026-06-29): added optional keyed doors with key
+  consumption, reusable dungeon world-object definitions, trial key, sentinel core reward, and a
+  trial sentinel boss enemy.
+- **M15-T3 - M15 regression runner** - M15 - files:
+  `tests/headless/M15DungeonEncounterRunner.{gd,tscn}`, `test.bat` - **done** (2026-06-29):
+  verifies data validation, dungeon authoring contract, key/door flow, switch gate, boss death,
+  reward chest, save/load persistence, and dead boss non-respawn.
 - **M14-F2 - Enemy contact damage range** - M14 follow-up - files:
   `data/enemies/enemies.json`, `scripts/core/WorldScale.gd`,
   `tests/headless/M14CombatSkillsMagicRunner.gd` - **done** (2026-06-29): fixed slime contact damage
