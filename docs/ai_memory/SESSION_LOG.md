@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-06-29 - Session 036 - Fix enemy contact damage range
+
+- **Report**: in game the player appeared not to receive damage from enemies.
+- **Cause**: the slime's `attack_range` was 34px, shorter than the practical center-to-center
+  distance created by player/enemy body collisions, so a chasing enemy could stop at contact but
+  still be just outside attack range.
+- **Fix**: raised the base enemy contact attack range and `enemy_slime` attack range to 48px.
+- **Regression**: `M14CombatSkillsMagicRunner` now spawns a real player/enemy pair, lets the enemy
+  move in through physics, and verifies player HP plus GameState health decrease.
+- **Tests**: M14 runner passed; full `.\test.bat` passed.
+
+---
+
 ## 2026-06-29 - Session 035 - Fix Hurtbox legacy damage cast
 
 - **Report**: launching via `play.bat` crashed when a legacy hit path passed numeric damage into

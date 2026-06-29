@@ -3,7 +3,7 @@
     "id": "enemy_slime",
     "name": "Slime",
     "faction": "faction_monsters",
-    "ai": { "type": "chaser", "aggro_range": 160, "attack_range": 34, "attack_cooldown": 0.8 },
+    "ai": { "type": "chaser", "aggro_range": 160, "attack_range": 48, "attack_cooldown": 0.8 },
     "damage_type": "physical",
     "stats": { "max_health": 12, "damage": 2, "move_speed": 45, "armor": 0 },
     "loot_table": [ { "id": "item_health_potion", "chance": 0.5, "count": 1 } ],

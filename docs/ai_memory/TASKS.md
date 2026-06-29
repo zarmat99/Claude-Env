@@ -46,6 +46,10 @@ Legend: status ∈ { backlog, in_progress, done, blocked }.
   becomes current.
 
 ## Done
+- **M14-F2 - Enemy contact damage range** - M14 follow-up - files:
+  `data/enemies/enemies.json`, `scripts/core/WorldScale.gd`,
+  `tests/headless/M14CombatSkillsMagicRunner.gd` - **done** (2026-06-29): fixed slime contact damage
+  by raising attack range beyond physical body separation; added an AI movement-to-hit regression.
 - **M14-F1 - Hurtbox legacy numeric damage crash** - M14 follow-up - files:
   `scripts/combat/Hurtbox.gd`, `tests/headless/M14CombatSkillsMagicRunner.gd`,
   `scenes/main/Main.gd` - **done** (2026-06-29): fixed `play.bat` crash when old hit paths pass a

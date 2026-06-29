@@ -17,6 +17,7 @@ func _run() -> void:
     _test_hurtbox_legacy_numeric_damage()
     _test_skill_growth_and_save_load()
     await _test_player_abilities()
+    await _test_enemy_ai_damages_player()
     await _test_enemy_archetypes()
     _cleanup_save_slot(SAVE_SLOT)
     await _frames(2)
@@ -132,6 +133,28 @@ func _test_player_abilities() -> void:
     enemy.free()
     player.free()
 
+func _test_enemy_ai_damages_player() -> void:
+    GameState.reset_to_new_game()
+    FactionManager.ensure_defaults()
+    var player: Node2D = PlayerScene.instantiate() as Node2D
+    add_child(player)
+    player.global_position = Vector2.ZERO
+    await _frames(3)
+
+    var enemy: Node2D = EnemyBaseScene.instantiate() as Node2D
+    enemy.set("enemy_id", "enemy_slime")
+    enemy.set("persistent_id", "m14_enemy_attack_probe")
+    add_child(enemy)
+    enemy.global_position = Vector2(80, 0)
+    await _physics_frames(90)
+
+    var player_health: HealthComponent = player.get_node("HealthComponent") as HealthComponent
+    _assert(player_health.health < 30, "Enemy AI should move into contact range and damage the player")
+    _assert(int(GameState.player.get("stats", {}).get("health", 30)) == player_health.health, "Enemy damage should sync to GameState health")
+
+    enemy.free()
+    player.free()
+
 func _test_enemy_archetypes() -> void:
     GameState.reset_to_new_game()
     var expected: Dictionary = {
@@ -165,6 +188,10 @@ func _make_actor(node_name: String, stats: Dictionary) -> Node2D:
 func _frames(count: int) -> void:
     for _i in range(count):
         await get_tree().process_frame
+
+func _physics_frames(count: int) -> void:
+    for _i in range(count):
+        await get_tree().physics_frame
 
 func _cleanup_save_slot(slot: int) -> void:
     var dir := DirAccess.open("user://saves")
